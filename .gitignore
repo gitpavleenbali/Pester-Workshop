@@ -1,0 +1,18 @@
+# Workshop internal files
+.internal/
+
+# GitHub config
+.github/
+
+# Pester artifacts
+coverage.xml
+testResults.xml
+*.nunit.xml
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store

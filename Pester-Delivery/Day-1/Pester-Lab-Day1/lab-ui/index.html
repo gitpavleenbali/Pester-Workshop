@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pester Lab</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#0a0e17;--pn:#111827;--sb:#0d1220;--br:#1e293b;--tx:#e2e8f0;--mt:#64748b;--gn:#22c55e;--rd:#ef4444;--bl:#3b82f6;--pu:#8b5cf6;--yl:#eab308;--cy:#06b6d4;--tb:#0c0c0c}html,body{height:100%;overflow:hidden}body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:14px}.top{height:40px;background:#060a12;border-bottom:1px solid var(--br);display:flex;align-items:center;padding:0 16px;gap:14px}.top .logo{font-weight:800;font-size:14px;color:var(--cy)}.top .mid{font-size:12px;color:var(--mt)}.top .r{margin-left:auto;display:flex;gap:16px;font-size:12px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}.dg{background:var(--gn)}.dr{background:var(--rd)}.dp{background:var(--pu)}.wrap{display:flex;height:calc(100vh - 40px)}.sb{width:250px;background:var(--sb);border-right:1px solid var(--br);display:flex;flex-direction:column;flex-shrink:0}.sb-s{flex:1;overflow-y:auto}.sh{padding:12px 16px 6px;font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--mt);font-weight:700}.si{padding:8px 16px 8px 20px;cursor:pointer;font-size:12.5px;color:var(--mt);border-left:3px solid transparent;display:flex;align-items:center;gap:6px}.si:hover{background:rgba(255,255,255,.03);color:var(--tx)}.si.a{background:rgba(59,130,246,.08);color:var(--bl);border-left-color:var(--bl)}.si .nm{flex:1}.si .tm{font-size:9px;color:var(--mt)}.ck{font-size:11px;width:16px;text-align:center;flex-shrink:0}.prog{padding:12px 16px;border-top:1px solid var(--br)}.prog-l{display:flex;justify-content:space-between;font-size:10px;color:var(--mt);margin-bottom:4px}.prog-b{height:6px;background:var(--br);border-radius:99px;overflow:hidden}.prog-f{height:100%;background:linear-gradient(90deg,var(--gn),var(--bl));border-radius:99px;transition:width .4s}.ctr{flex:1;display:flex;flex-direction:column;overflow:hidden}.dash{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--br);background:var(--pn);flex-shrink:0;flex-wrap:wrap}.dc{flex:1;min-width:90px;background:var(--bg);border:1px solid var(--br);border-radius:8px;padding:10px 14px;text-align:center}.dc .dv{font-size:24px;font-weight:700;line-height:1.2}.dc .dl{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--mt);margin-top:2px}.dc.p .dv{color:var(--gn)}.dc.f .dv{color:var(--rd)}.dc.t .dv{color:var(--bl)}.dc.c .dv{color:var(--pu)}.cvb{margin-top:6px}.cvb-b{height:5px;background:var(--br);border-radius:99px;overflow:hidden}.cvb-f{height:100%;background:var(--pu);border-radius:99px;transition:width .5s}.sp{flex:1;display:flex;overflow:hidden}.ins{flex:1;overflow-y:auto;padding:20px 24px;border-right:1px solid var(--br)}.ins h2{font-size:17px;margin-bottom:4px}.bg2{font-size:9px;padding:2px 8px;border-radius:99px;font-weight:700;text-transform:uppercase;margin-left:6px;vertical-align:middle}.bref{background:rgba(59,130,246,.12);color:var(--bl)}.blab{background:rgba(234,179,8,.12);color:var(--yl)}.ins .de{color:var(--mt);font-size:12.5px;margin:8px 0 14px;line-height:1.6}.st{padding:10px 14px;margin:6px 0;background:rgba(255,255,255,.015);border:1px solid var(--br);border-radius:7px;cursor:pointer}.st:hover{border-color:rgba(59,130,246,.25)}.st h3{font-size:12.5px;display:flex;align-items:center;gap:8px}.sn2{width:20px;height:20px;border-radius:50%;background:var(--br);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}.sb3{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--br);font-size:12px;color:var(--mt);line-height:1.7}.st.o .sb3{display:block}.cd2{background:#0d1117;border:1px solid var(--br);border-radius:5px;padding:8px 12px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11.5px;line-height:1.5;margin:6px 0;white-space:pre-wrap;color:#c9d1d9;overflow-x:auto}.tp3{display:flex;gap:6px;padding:7px 10px;margin:5px 0;background:rgba(139,92,246,.05);border-left:2px solid var(--pu);border-radius:0 4px 4px 0;font-size:11px;color:var(--mt)}.tp3 b{color:var(--pu)}.kw{color:#ff7b72}.fn{color:#d2a8ff}.str{color:#a5d6ff}.cm{color:#6e7681}.trm{width:50%;display:flex;flex-direction:column;background:var(--tb);min-width:0}.tb2{height:34px;background:#1a1a1a;display:flex;align-items:center;padding:0 12px;gap:6px;border-bottom:1px solid #333;flex-shrink:0}.tdot{width:10px;height:10px;border-radius:50%}.tdr{background:#ff5f57}.tdy{background:#febc2e}.tdgr{background:#28c840}.tt2{font-size:10px;color:#666;margin-left:8px;font-family:monospace}.to2{flex:1;overflow-y:auto;padding:10px 14px;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:11.5px;line-height:1.55;color:#ccc;white-space:pre-wrap}.ti2{display:flex;align-items:center;padding:5px 14px;background:#111;border-top:1px solid #333;flex-shrink:0}.tpr2{color:var(--gn);font-family:monospace;font-size:11px;margin-right:6px}.ti2 input{flex:1;background:0;border:0;color:#ccc;font-family:'Cascadia Code',monospace;font-size:11px;outline:0}.ti2 button{background:var(--gn);color:#000;border:0;padding:4px 14px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer}.ti2 button:hover{background:#16a34a}.lp{color:#4ade80}.lf{color:#f87171}.li{color:#555}.lc{color:#22d3ee}.lw{color:#fbbf24}.ls{color:#555;font-style:italic}.sbar2{height:24px;background:#060a12;border-top:1px solid var(--br);display:flex;align-items:center;padding:0 14px;font-size:10px;color:var(--mt);gap:16px;flex-shrink:0}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}.running{animation:pulse 1s ease infinite}::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+</style></head><body>
+<div class="top"><span class="logo">PESTER LAB</span><span class="mid">Day 1 · Unit Testing & Mocking · Workshop 2026</span><div class="r"><span><span class="dot dg"></span><b id="hP">0</b> passed</span><span><span class="dot dr"></span><b id="hF">0</b> failed</span><span><span class="dot dp"></span><b id="hC">-</b> cov</span></div></div>
+<div class="wrap"><div class="sb"><div class="sb-s" id="sbL"></div><div class="prog"><div class="prog-l"><span>Progress</span><span id="pP">0/9</span></div><div class="prog-b"><div class="prog-f" id="pB" style="width:0%"></div></div></div></div>
+<div class="ctr"><div class="dash"><div class="dc p"><div class="dv" id="dP">0</div><div class="dl">Passed</div></div><div class="dc f"><div class="dv" id="dF">0</div><div class="dl">Failed</div></div><div class="dc t"><div class="dv" id="dT">0</div><div class="dl">Total</div></div><div class="dc c"><div class="dv" id="dC">-</div><div class="dl">Coverage</div><div class="cvb"><div class="cvb-b"><div class="cvb-f" id="cB" style="width:0%"></div></div></div></div></div>
+<div class="sp"><div class="ins" id="iP"></div>
+<div class="trm"><div class="tb2"><span class="tdot tdr"></span><span class="tdot tdy"></span><span class="tdot tdgr"></span><span class="tt2" id="tT">PowerShell - Pester v5.7.1</span></div>
+<div class="to2" id="tO"><span class="li">Welcome to Pester Lab.
+Select an exercise then click Run.
+Or type: 1-9, all, cov, setup</span></div>
+<div class="ti2"><span class="tpr2">PS&gt;</span><input id="tI" placeholder="1-9, all, cov, setup" onkeydown="if(event.key==='Enter')ex()"><button onclick="ex()">Run</button></div></div></div>
+<div class="sbar2"><span id="sM">Ready</span></div></div></div>
+<script>
+var D=[
+{id:1,nm:'01 Knowledge Refresh',c:'ps',tg:'Module 01',tm:'5m',f:'PSCode-01-KnowledgeRefresh.Tests.ps1',ds:'Tests for Get-AzureResourceInsights. Mocks Get-AzResource to verify resource analysis logic. From PSCode/01_knowledge_refresh/.',ss:[{t:'What is tested',b:'<div class="cd2">Get-AzureResourceInsights</div><div class="tp3"><b>PESTER:</b> Mock Get-AzResource, test Scope/TotalResources/UniqueTypes properties.</div>'}]},
+{id:2,nm:'02 Advanced Functions',c:'ps',tg:'Module 02',tm:'5m',f:'PSCode-02-AdvancedFunctions.Tests.ps1',ds:'Tests for Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus. Mocks Azure cmdlets. From PSCode/02_advanced_functions/.',ss:[{t:'What is tested',b:'<div class="cd2">Get-AzureResourceSummary — Mock Get-AzResource\nNew-AzureResourceGroup — ValidateSet, defaults, tags\nGet-VMStatus — ParameterFilter mocking</div>'}]},
+{id:3,nm:'03 Parameters',c:'ps',tg:'Module 03',tm:'5m',f:'PSCode-03-Parameters.Tests.ps1',ds:'Tests for parameter validation: ValidateSet, Mandatory metadata, default values. From PSCode/03_mastering_parameters/.',ss:[{t:'What is tested',b:'<div class="cd2">ValidateSet enforcement (invalid location throws)\nMandatory checked via Get-Command metadata\nDefault parameter values</div>'}]},
+{id:4,nm:'04 Classes',c:'ps',tg:'Module 04',tm:'5m',f:'PSCode-04-Classes.Tests.ps1',ds:'Tests for AzureResource and AzureVirtualMachine classes: constructors, methods, inheritance, state transitions, -TestCases for VM sizes. From PSCode/04_powershell_classes/.',ss:[{t:'What is tested',b:'<div class="cd2">AzureResource — constructor, GetDisplayName, AddTag, IsInRegion\nAzureVirtualMachine — inheritance, Start/Stop, EstimateMonthlyCost\n-TestCases for VM size mapping (B1/B2/D4/E8)</div>'}]},
+{id:5,nm:'05 Error Handling',c:'ps',tg:'Module 05',tm:'5m',f:'PSCode-05-ErrorHandling.Tests.ps1',ds:'Tests for Deploy-AzureResourceWithValidation: input validation, mocked Azure calls, Should -Throw with wildcard patterns. From PSCode/05_error_handling/.',ss:[{t:'What is tested',b:'<div class="cd2">Deploy-AzureResourceWithValidation\n  - Valid deployment returns Deployed\n  - Short name throws *3 characters*\n  - Special chars throws *invalid characters*\n  - Missing RG throws *does not exist*</div>'}]},
+{id:6,nm:'06 Debugging',c:'ps',tg:'Module 06',tm:'5m',f:'PSCode-06-Debugging.Tests.ps1',ds:'Tests for the full data processing pipeline: Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData. From PSCode/06_debugging/.',ss:[{t:'What is tested',b:'<div class="cd2">Test-InputValidation — valid/invalid input\nSplit-DataIntoChunks — chunking logic\nProcess-DataChunk — Level 1/2/3 transforms\nGet-ProcessedData — end-to-end pipeline</div>'}]},
+{id:7,nm:'07 Git Integration',c:'ps',tg:'Module 07',tm:'5m',f:'PSCode-07-GitIntegration.Tests.ps1',ds:'Tests for Test-GitEnvironment and Deploy-ResourceGroup. Mocks native git commands and Azure cmdlets. From PSCode/07_git_integration/.',ss:[{t:'What is tested',b:'<div class="cd2">Test-GitEnvironment — mocked git --version, config, rev-parse\nDeploy-ResourceGroup — mock Get-AzResourceGroup/New-AzResourceGroup\n  Context: RG exists vs RG does not exist</div>'}]},
+{id:8,nm:'08 Runspaces',c:'ps',tg:'Module 08',tm:'5m',f:'PSCode-08-Runspaces.Tests.ps1',ds:'Tests for Get-AzureResourceCount and Invoke-ParallelWork. Pure function testing and edge cases. From PSCode/08_runspaces/.',ss:[{t:'What is tested',b:'<div class="cd2">Get-AzureResourceCount — string format output\nInvoke-ParallelWork — processes items, Processed=$true\n  Edge case: empty array input</div>'}]},
+{id:9,nm:'09 Capstone',c:'ps',tg:'Module 09',tm:'5m',f:'PSCode-09-Capstone.Tests.ps1',ds:'Tests for Invoke-SafeAzureCall (retry logic) and Send-CostAlert (mocked email, boundary -TestCases). From PSCode/09_final_solution_apply_learnings/.',ss:[{t:'What is tested',b:'<div class="cd2">Invoke-SafeAzureCall — success/failure/retry scenarios\nSend-CostAlert — Mock Send-MailMessage\n  Boundary: Cost=100 vs Threshold=100</div>'}]}
+];
+var cur=1,done=new Set();
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function clr(t){if(!t)return'';return t.split('\n').map(function(l){if(l.indexOf('[+]')>-1)return'<span class="lp">'+esc(l)+'</span>';if(l.indexOf('[.]')>-1)return'<span class="li">'+esc(l)+'</span>';if(l.indexOf('[-]')>-1)return'<span class="lf">'+esc(l)+'</span>';if(/^Tests? Passed|^Coverage:/.test(l))return'<span class="lp">'+esc(l)+'</span>';if(/^Failed:|Error:/.test(l))return'<span class="lf">'+esc(l)+'</span>';if(/Describing|Context/.test(l))return'<span class="lc">'+esc(l)+'</span>';if(/Covered|threshold/.test(l))return'<span class="lw">'+esc(l)+'</span>';return'<span class="li">'+esc(l)+'</span>';}).join('\n')}
+function bSB(){var h='<div class="sh">PSCode Modules</div>';D.filter(function(e){return e.c==='ps'}).forEach(function(e){h+='<div class="si'+(e.id===1?' a':'')+'" data-i="'+e.id+'" onclick="ld('+e.id+')"><span class="ck" id="k'+e.id+'">o</span><span class="nm">'+e.id+'. '+e.nm+'</span><span class="tm">'+e.tm+'</span></div>'});h+='<div class="sh"></div>';D.filter(function(e){return e.c==='xx'}).forEach(function(e){h+='<div class="si" data-i="'+e.id+'" onclick="ld('+e.id+')"><span class="ck" id="k'+e.id+'">o</span><span class="nm">'+e.id+'. '+e.nm+'</span><span class="tm">'+e.tm+'</span></div>'});h+='<div class="sh">Actions</div><div class="si" onclick="ap(\'/api/setup\')"><span class="ck">S</span><span class="nm">Environment Check</span></div><div class="si" onclick="ap(\'/api/all\')"><span class="ck">A</span><span class="nm">Run All Tests</span></div><div class="si" onclick="ap(\'/api/cov\')"><span class="ck">C</span><span class="nm">Code Coverage</span></div>';document.getElementById('sbL').innerHTML=h}
+function ld(id){cur=id;var e=D[id-1];document.querySelectorAll('.si[data-i]').forEach(function(el){el.classList.toggle('a',parseInt(el.dataset.i)===id)});document.getElementById('tT').textContent='PS - '+e.f;
+var h='<h2>'+e.id+'. '+esc(e.nm)+' <span class="bg2 bref">'+e.tg+' '+e.tm+'</span></h2><div class="de">'+e.ds+'</div>';
+
+// Action buttons
+h+='<div style="margin:12px 0;display:flex;gap:8px;flex-wrap:wrap">';
+h+='<button onclick="ap(\'\/api\/run\/'+id+'\')" style="background:var(--gn);color:#000;border:0;padding:8px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">▶ Run All Tests</button>';
+h+='<button onclick="vf(\''+e.f+'\')" style="background:var(--bl);color:#000;border:0;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">View Source</button>';
+h+='</div>';
+
+// Source code viewer (hidden until clicked)
+h+='<div id="sv" style="display:none;margin:8px 0"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:11px;color:var(--cy);font-weight:600" id="sfn"></span><button onclick="document.getElementById(\'sv\').style.display=\'none\'" style="background:var(--br);color:var(--mt);border:0;padding:2px 10px;border-radius:4px;font-size:9px;cursor:pointer">Close</button></div><div class="cd2" id="sfc" style="max-height:300px;overflow-y:auto;font-size:10.5px;line-height:1.4"></div></div>';
+
+// Individual tests section — auto-loaded
+h+='<div style="margin-top:12px"><div style="font-size:12px;font-weight:600;color:var(--cy);margin-bottom:8px">Individual Tests <span style="font-size:10px;color:var(--mt);font-weight:400">click ▶ to run one test</span></div>';
+h+='<div id="tlc"><span class="li">Loading tests...</span></div></div>';
+
+document.getElementById('iP').innerHTML=h;
+// Auto-load the test list
+lt(id)}
+function us(d){if(d.passed!==undefined){document.getElementById('hP').textContent=d.passed;document.getElementById('hF').textContent=d.failed;document.getElementById('dP').textContent=d.passed;document.getElementById('dF').textContent=d.failed;document.getElementById('dT').textContent=d.total}if(d.coverage&&d.coverage!=='-'){document.getElementById('hC').textContent=d.coverage;document.getElementById('dC').textContent=d.coverage;document.getElementById('cB').style.width=(d.coveragePct||parseFloat(d.coverage)||0)+'%'}}
+function up(id,p,f){var k=document.getElementById('k'+id);if(k){if(f===0&&p>0){k.textContent='V';k.style.color='var(--gn)';done.add(id)}else if(f>0){k.textContent='X';k.style.color='var(--rd)'}}document.getElementById('pB').style.width=Math.round(done.size/9*100)+'%';document.getElementById('pP').textContent=done.size+'/9'}
+async function vf(name){var sv=document.getElementById('sv'),sc=document.getElementById('sfc'),sn=document.getElementById('sfn');sv.style.display='block';sc.textContent='Loading...';sn.textContent='tests/'+name;try{var r=await fetch('/api/file/tests/'+encodeURIComponent(name));var d=await r.json();if(d.content){sc.innerHTML=d.content.split('\n').map(function(l,i){return'<span style="color:#444;user-select:none">'+String(i+1).padStart(3,' ')+'</span>  '+esc(l)}).join('\n')}else{sc.textContent='Not found'}}catch(e){sc.textContent='Error: '+e.message}}
+async function ap(url){var o=document.getElementById('tO'),s=document.getElementById('sM');var t0=Date.now();s.textContent='Running...';s.style.color='var(--yl)';o.innerHTML+='<span class="lw">\nPS> '+esc(url.replace('/api/',''))+'</span>\n';var tid='rt'+t0;o.innerHTML+='<span class="lw running" id="'+tid+'">Running Pester tests... 0.0s</span>';o.scrollTop=o.scrollHeight;var btns=document.querySelectorAll('button');btns.forEach(function(b){b.disabled=true;b.style.opacity='.4'});var iv=setInterval(function(){var el=document.getElementById(tid);if(el){el.textContent='Running Pester tests... '+((Date.now()-t0)/1000).toFixed(1)+'s'}},100);try{var r=await fetch(url);var d=await r.json();clearInterval(iv);var el=document.getElementById(tid);if(el)el.remove();var sec=((Date.now()-t0)/1000).toFixed(1);us(d);var m=url.match(/run\/(\d)/);if(m)up(parseInt(m[1]),d.passed,d.failed);o.innerHTML+=clr(d.output)+'\n<span class="lp">Done in '+sec+'s</span>\n';s.textContent='P:'+d.passed+' F:'+d.failed+(d.coverage&&d.coverage!=='-'?' Cov:'+d.coverage:'')+' '+sec+'s';s.style.color=d.failed===0?'var(--gn)':'var(--rd)'}catch(e){clearInterval(iv);var el=document.getElementById(tid);if(el)el.remove();o.innerHTML+='<span class="lf">Error: '+esc(e.message)+'</span>\n';s.textContent='Error';s.style.color='var(--rd)'}btns.forEach(function(b){b.disabled=false;b.style.opacity='1'});o.scrollTop=o.scrollHeight}
+function ex(){var v=document.getElementById('tI').value.trim();document.getElementById('tI').value='';if(!v){ap('/api/run/'+cur);return}if(/^[1-9]$/.test(v)){ap('/api/run/'+v);ld(parseInt(v));return}if(/^all$/i.test(v)){ap('/api/all');return}if(/^cov/i.test(v)){ap('/api/cov');return}if(/^setup|^env/i.test(v)){ap('/api/setup');return}document.getElementById('tO').innerHTML+='<span class="li">\nCommands: 1-9, all, cov, setup</span>\n'}
+
+async function lt(id){var tc=document.getElementById('tlc');if(!tc)return;tc.innerHTML='<span class="li">Loading tests...</span>';
+try{var r=await fetch('/api/tests/'+id);var d=await r.json();
+window._tests=d.tests;
+var h='<div style="font-size:11px;color:var(--mt);margin-bottom:8px">'+d.count+' tests — click row to expand code</div>';
+d.tests.forEach(function(t,i){
+var tid='tx'+id+'_'+i;
+var ctx=t.context?' <span style="color:var(--mt);font-size:9px">['+esc(t.context)+']</span>':'';
+h+='<div style="margin:3px 0;border:1px solid var(--br);border-radius:5px;overflow:hidden">';
+// Row header
+h+='<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;cursor:pointer;background:rgba(255,255,255,.02);font-size:11.5px" onclick="var p=document.getElementById(\''+tid+'\');p.style.display=p.style.display===\'block\'?\'none\':\'block\'">';
+h+='<span style="color:var(--cy);font-size:10px">▸</span>';
+h+='<span style="flex:1">'+esc(t.name)+ctx+'</span>';
+h+='<span style="font-size:9px;color:var(--mt)">line '+(t.startLine||'?')+'</span>';
+h+='</div>';
+// Expanded panel
+h+='<div id="'+tid+'" style="display:none;border-top:1px solid var(--br);padding:8px 10px;background:#0d1117">';
+// Buttons: Explain + Run
+h+='<div style="display:flex;gap:6px;margin-bottom:6px">';
+h+='<button onclick="rt('+id+',\''+esc(t.name).replace(/'/g,"\\'")+'\')\" style="background:var(--gn);color:#000;border:0;padding:4px 14px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer">▶ Run This Test</button>';
+h+='<button onclick="explain(\''+tid+'_exp\','+i+')" style="background:var(--pu);color:#fff;border:0;padding:4px 14px;border-radius:4px;font-size:10px;font-weight:600;cursor:pointer">💡 Explain</button>';
+h+='</div>';
+// Code
+if(t.code){
+var codeHtml=esc(t.code);
+codeHtml=codeHtml.replace(/\b(Should|Mock|Describe|Context|It|BeforeAll|BeforeEach|AfterAll|AfterEach)\b/g,'<span style="color:#ff7b72">$1</span>');
+codeHtml=codeHtml.replace(/(-Be\b|-Match\b|-Throw\b|-Invoke\b|-BeNullOrEmpty|-BeGreaterThan|-BeOfType|-Not\b|-Times\b|-Exactly|-ParameterFilter|-HaveCount)/g,'<span style="color:#d2a8ff">$1</span>');
+codeHtml=codeHtml.replace(/(#[^\n]*)/g,'<span style="color:#6e7681">$1</span>');
+h+='<pre style="font-family:\'Cascadia Code\',monospace;font-size:10.5px;line-height:1.45;color:#c9d1d9;margin:0;white-space:pre-wrap;max-height:250px;overflow-y:auto">'+codeHtml+'</pre>';
+}else{h+='<span style="color:var(--mt);font-size:10px">No code preview</span>';}
+// Explain output area
+h+='<div id="'+tid+'_exp" style="display:none;margin-top:6px;padding:6px 8px;background:rgba(139,92,246,.06);border-left:2px solid var(--pu);border-radius:0 4px 4px 0;font-size:10.5px;color:var(--mt);line-height:1.5;white-space:pre-wrap"></div>';
+h+='</div></div>';
+});
+tc.innerHTML=h}catch(e){tc.innerHTML='<span class="lf">Error: '+esc(e.message)+'</span>'}}
+
+function explain(panelId,idx){
+var panel=document.getElementById(panelId);
+if(!panel)return;
+if(panel.style.display==='block'){panel.style.display='none';return}
+panel.style.display='block';
+var t=window._tests[idx];
+var name=t?t.name:'Unknown';
+var code=t?t.code||'':'';
+var lines=[];
+lines.push('TEST: '+name);
+lines.push('');
+if(!code){lines.push('No code available.');panel.textContent=lines.join('\n');return}
+if(code.match(/Mock\s/)){lines.push('PESTER: Mock');lines.push('  Replaces a real command with a fake so no real Azure/AD/API calls happen.');lines.push('');}
+if(code.match(/Should\s+-Invoke/)){lines.push('PESTER: Should -Invoke');lines.push('  Verifies a mocked command was called. -Times N = exact count. -Times 0 = NOT called.');lines.push('');}
+if(code.match(/Should\s+-Be\b/)){lines.push('PESTER: Should -Be');lines.push('  Asserts equality (case-insensitive). $actual | Should -Be $expected');lines.push('');}
+if(code.match(/Should\s+-Throw/)){lines.push('PESTER: Should -Throw');lines.push('  Asserts the code in { } throws an exception. Use \'*pattern*\' for wildcard matching.');lines.push('');}
+if(code.match(/Should\s+-Match/)){lines.push('PESTER: Should -Match');lines.push('  Regex pattern match on a string value.');lines.push('');}
+if(code.match(/Should\s+-BeNullOrEmpty/)){lines.push('PESTER: Should -BeNullOrEmpty');lines.push('  Asserts the value is $null or an empty string/array.');lines.push('');}
+if(code.match(/Should\s+-BeGreaterThan/)){lines.push('PESTER: Should -BeGreaterThan');lines.push('  Numeric comparison: actual must be > expected.');lines.push('');}
+if(code.match(/Should\s+-Not\b/)){lines.push('PESTER: Should -Not');lines.push('  Negates the assertion. e.g. Should -Not -BeNullOrEmpty = must have a value.');lines.push('');}
+if(code.match(/-ParameterFilter/)){lines.push('PESTER: -ParameterFilter');lines.push('  Routes different mock responses based on input. Same command, different data per call.');lines.push('');}
+if(code.match(/-TestCases/)){lines.push('PESTER: -TestCases');lines.push('  Data-driven: one It block runs multiple times with different @{} data sets.');lines.push('');}
+if(code.match(/BeforeAll|BeforeEach/)){lines.push('PESTER: Setup Block');lines.push('  BeforeAll = once before all tests. BeforeEach = before every test.');lines.push('');}
+if(code.match(/Context\s/)){lines.push('PESTER: Context');lines.push('  Groups tests by scenario. Each Context can have its own mocks.');lines.push('');}
+if(lines.length<=2){lines.push('Standard Pester assertion test.');}
+panel.textContent=lines.join('\n');
+}
+
+async function rt(id,name){ap('/api/run/'+id+'/'+encodeURIComponent(name))}
+bSB();ld(1);
+</script></body></html>
