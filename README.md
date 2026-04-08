@@ -1,5 +1,13 @@
 # Pester Workshop
 
+[![Deploy to GitHub Pages](https://github.com/gitpavleenbali/Pester-Workshop/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/gitpavleenbali/Pester-Workshop/actions/workflows/deploy-pages.yml)
+[![Pester Tests](https://img.shields.io/badge/tests-96%20passed-brightgreen)](https://gitpavleenbali.github.io/Pester-Workshop/)
+[![Pester](https://img.shields.io/badge/Pester-5.x-8b5cf6)](https://pester.dev/)
+[![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue)](https://learn.microsoft.com/en-us/powershell/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+> **Workshop Website:** [**gitpavleenbali.github.io/Pester-Workshop**](https://gitpavleenbali.github.io/Pester-Workshop/)
+
 A comprehensive 2-day workshop for PowerShell testing with [Pester](https://pester.dev/) — the ubiquitous test and mock framework for PowerShell.
 
 ## Why This Workshop?
