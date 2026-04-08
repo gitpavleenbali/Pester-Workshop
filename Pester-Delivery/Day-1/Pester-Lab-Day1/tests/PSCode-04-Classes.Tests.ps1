@@ -18,14 +18,22 @@ Describe 'Module 04 · AzureResource Base Class' {
     }
 
     # PESTER: Test constructor sets properties correctly
-    It 'Constructor sets Name' { $r.Name | Should -Be 'my-storage' }
-        Write-Host "  → PROPERTY: Verifying property value — Constructor sets Name" -ForegroundColor Gray
-    It 'Constructor sets Type' { $r.Type | Should -Be 'StorageAccount' }
-        Write-Host "  → PROPERTY: Verifying property value — Constructor sets Type" -ForegroundColor Gray
-    It 'Constructor sets Location' { $r.Location | Should -Be 'westeurope' }
-        Write-Host "  → PROPERTY: Verifying property value — Constructor sets Location" -ForegroundColor Gray
-    It 'Status defaults to Created' { $r.Status | Should -Be 'Created' }
-        Write-Host "  → PROPERTY: Verifying property value — Status defaults to Created" -ForegroundColor Gray
+    It 'Constructor sets Name' {
+        Write-Host "  → Checking Name = 'my-storage'" -ForegroundColor Gray
+        $r.Name | Should -Be 'my-storage'
+    }
+    It 'Constructor sets Type' {
+        Write-Host "  → Checking Type = 'StorageAccount'" -ForegroundColor Gray
+        $r.Type | Should -Be 'StorageAccount'
+    }
+    It 'Constructor sets Location' {
+        Write-Host "  → Checking Location = 'westeurope'" -ForegroundColor Gray
+        $r.Location | Should -Be 'westeurope'
+    }
+    It 'Status defaults to Created' {
+        Write-Host "  → Checking Status defaults to 'Created'" -ForegroundColor Gray
+        $r.Status | Should -Be 'Created'
+    }
 
     # PESTER: Test methods return expected values
     It 'GetDisplayName() returns Type/Name format' {
@@ -55,13 +63,13 @@ Describe 'Module 04 · AzureVirtualMachine Inheritance' {
 
     # PESTER: -TestCases tests the constructor VM size mapping
     It 'Maps <Size> to <Cores> cores, <Mem> GB' -TestCases @(
-        Write-Host "  → Running: Maps <Size> to <Cores> cores, <Mem> GB" -ForegroundColor Gray
         @{ Size = 'Standard_B1s'; Cores = 1; Mem = 1 }
         @{ Size = 'Standard_B2s'; Cores = 2; Mem = 4 }
         @{ Size = 'Standard_D4s'; Cores = 4; Mem = 16 }
         @{ Size = 'Standard_E8s'; Cores = 2; Mem = 8 }
     ) {
         param($Size, $Cores, $Mem)
+        Write-Host "  → Testing VM size $Size → expecting $Cores cores, $Mem GB" -ForegroundColor Gray
         $vm = [AzureVirtualMachine]::new('test', 'westeurope', $Size)
         $vm.CpuCores | Should -Be $Cores
         $vm.MemoryGB | Should -Be $Mem
@@ -94,3 +102,4 @@ Describe 'Module 04 · AzureVirtualMachine Inheritance' {
         $vm.GetDisplayName() | Should -Be 'VirtualMachine/vm-01'
     }
 }
+

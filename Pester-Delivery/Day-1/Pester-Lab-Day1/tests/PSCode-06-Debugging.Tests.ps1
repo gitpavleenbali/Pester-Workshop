@@ -81,13 +81,13 @@ Describe 'Module 06 · Process-DataChunk — Data-Driven' {
 
     # PESTER: -TestCases runs the same test with different transformation levels
     It "Level <Level>: '<InputText>' -> '<Expected>'" -TestCases @(
-        Write-Host "  → Running: Level <Level>: '<InputText>' -> '<Expected>'" -ForegroundColor Gray
         @{ InputText = 'hello';    Level = 1; Expected = 'HELLO' }
         @{ InputText = 'WORLD';    Level = 2; Expected = 'world' }
         @{ InputText = 'hi there'; Level = 3; Expected = 'hi_there' }
         @{ InputText = 'keep';     Level = 0; Expected = 'keep' }
     ) {
         param($InputText, $Level, $Expected)
+        Write-Host "  → Processing '$InputText' at Level $Level → expecting '$Expected'" -ForegroundColor Gray
         $r = Process-DataChunk -ChunkData $InputText -Level $Level
         $r.Processed | Should -Be $Expected
         $r.Original | Should -Be $InputText
@@ -115,3 +115,4 @@ Describe 'Module 06 · Get-ProcessedData Pipeline' {
         $r.OriginalData | Should -Be 'TestData'
     }
 }
+

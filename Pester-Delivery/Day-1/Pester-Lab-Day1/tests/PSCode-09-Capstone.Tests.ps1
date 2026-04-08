@@ -54,7 +54,6 @@ Describe 'Module 09 · Send-CostAlert — Boundary Testing' {
     # PESTER: -TestCases for systematic boundary testing
     # Testing the exact boundary: 100 vs 100 catches off-by-one bugs
     It 'Cost <Cost> vs Threshold <Threshold> -> AlertSent=<Expected>' -TestCases @(
-        Write-Host "  → Running: Cost <Cost> vs Threshold <Threshold> -> AlertSent=<Expected>" -ForegroundColor Gray
         @{ Cost = 10;     Threshold = 100; Expected = $false }
         @{ Cost = 99;     Threshold = 100; Expected = $false }
         @{ Cost = 100;    Threshold = 100; Expected = $false }   # boundary: equal = no alert
@@ -63,6 +62,7 @@ Describe 'Module 09 · Send-CostAlert — Boundary Testing' {
         @{ Cost = 500;    Threshold = 200; Expected = $true }
     ) {
         param($Cost, $Threshold, $Expected)
+        Write-Host "  → Testing Cost=$Cost vs Threshold=$Threshold → expecting AlertSent=$Expected" -ForegroundColor Gray
         $r = Send-CostAlert -ResourceName 'vm-test' -CurrentCost $Cost -Threshold $Threshold
         $r.AlertSent | Should -Be $Expected
     }
@@ -95,10 +95,17 @@ Describe 'Module 09 · Get-VMStatus — Mocked Azure' {
         Mock Get-AzVM { $null } -ParameterFilter { $Name -eq 'vm-gone' }
     }
 
-    It 'Running VM returns Running'     { Get-VMStatus -VMName 'vm-web'  | Should -Be 'Running' }
-        Write-Host "  → ASSERT: Checking return value — Running VM returns Running" -ForegroundColor Gray
-    It 'Stopped VM returns Deallocated' { Get-VMStatus -VMName 'vm-db'   | Should -Be 'Deallocated' }
-        Write-Host "  → ASSERT: Checking return value — Stopped VM returns Deallocated" -ForegroundColor Gray
-    It 'Missing VM returns null'        { Get-VMStatus -VMName 'vm-gone' | Should -BeNullOrEmpty }
-        Write-Host "  → ASSERT: Checking return value — Missing VM returns null" -ForegroundColor Gray
+    It 'Running VM returns Running' {
+        Write-Host "  → Mocked Get-AzVM('vm-web') → PowerState/running → expecting 'Running'" -ForegroundColor Gray
+        Get-VMStatus -VMName 'vm-web' | Should -Be 'Running'
+    }
+    It 'Stopped VM returns Deallocated' {
+        Write-Host "  → Mocked Get-AzVM('vm-db') → PowerState/deallocated → expecting 'Deallocated'" -ForegroundColor Gray
+        Get-VMStatus -VMName 'vm-db' | Should -Be 'Deallocated'
+    }
+    It 'Missing VM returns null' {
+        Write-Host "  → Mocked Get-AzVM('vm-gone') → returns null → expecting null" -ForegroundColor Gray
+        Get-VMStatus -VMName 'vm-gone' | Should -BeNullOrEmpty
+    }
 }
+
