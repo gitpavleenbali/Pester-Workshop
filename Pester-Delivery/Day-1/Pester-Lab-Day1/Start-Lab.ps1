@@ -50,7 +50,15 @@ if ($Web) {
 function Run-StepByStep ($testFile) {
     $cfg = New-PesterConfiguration
     $cfg.Run.Path = $testFile; $cfg.Run.PassThru = $true; $cfg.Output.Verbosity = 'None'
-    $r = Invoke-Pester -Configuration $cfg
+    # Capture Write-Host output via stream 6
+    $allOut = Invoke-Pester -Configuration $cfg 6>&1
+    $r = $allOut | Where-Object { $_ -isnot [System.Management.Automation.InformationRecord] }
+    $infoRecs = $allOut | Where-Object { $_ -is [System.Management.Automation.InformationRecord] }
+    $infoMsgs = @()
+    foreach ($ir in $infoRecs) {
+        $msg = if ($ir.MessageData -is [System.Management.Automation.HostInformationMessage]) { $ir.MessageData.Message } else { "$ir" }
+        if ($msg) { $infoMsgs += $msg.Trim() }
+    }
     foreach ($c in $r.Containers) { foreach ($b in $c.Blocks) {
         Write-Host "`n  Describing $($b.Name)" -ForegroundColor Cyan
         foreach ($t in $b.Tests) {
@@ -72,6 +80,12 @@ function Run-StepByStep ($testFile) {
         }
         Read-Host "`n  [Enter to continue]"
     }}
+    # Show test execution log
+    if ($infoMsgs.Count -gt 0) {
+        Write-Host ""
+        Write-Host "  ── Test Execution Log ──" -ForegroundColor Yellow
+        foreach ($msg in $infoMsgs) { Write-Host "  $msg" -ForegroundColor Gray }
+    }
     $pc = if ($r.FailedCount -eq 0) { 'Green' } else { 'Red' }
     Write-Host "`n  Summary: Passed $($r.PassedCount) | Failed $($r.FailedCount) | Total $($r.TotalCount)" -ForegroundColor $pc
 }
