@@ -267,6 +267,13 @@ try {
                 Send-Response $res ($r | ConvertTo-Json -Compress -Depth 5) 'application/json'
                 Write-Host "$($r.coverage)" -ForegroundColor Cyan
             }
+            elseif ($path -eq '/api/exit') {
+                Write-Host "[EXIT] Shutting down server..." -ForegroundColor Red
+                Send-Response $res '{"status":"stopped"}' 'application/json'
+                $res.Close()
+                $listener.Stop()
+                break
+            }
             else {
                 $res.StatusCode = 404
                 Send-Response $res '{"error":"not found"}' 'application/json'
