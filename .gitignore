@@ -10,11 +10,10 @@ testResults.xml
 .vscode/
 .idea/
 
-# Node.js (docs-site build artifacts)
-docs-site/node_modules/
-docs-site/out/
-docs-site/.next/
-docs/
+# Node.js (website build artifacts)
+website/node_modules/
+website/out/
+website/.next/
 
 # OS
 Thumbs.db
