@@ -2,8 +2,20 @@
 # Lab Source: Cost Monitor Helpers
 # Origin: Extracted from PSCode/09_final_solution_apply_learnings
 # Purpose: Functions with external dependencies — ideal for mocking exercises
+#
+# TESTING NOTES:
+#   Invoke-SafeAzureCall accepts a ScriptBlock, so tests pass fake blocks
+#   directly — no mocking needed (dependency injection pattern).
+#   Send-CostAlert calls Send-MailMessage which MUST be mocked to prevent
+#   real emails. Tests use boundary -TestCases to catch off-by-one bugs.
+#   See: tests/PSCode-09-Capstone.Tests.ps1
 # ============================================================================
 
+# TESTABILITY: Uses DEPENDENCY INJECTION via ScriptBlock parameter.
+# Instead of hardcoding the Azure call, the caller passes what to execute.
+# In tests, we pass { 'data' } or { throw 'error' } to simulate success/failure
+# WITHOUT needing Mock at all. This is the cleanest testable pattern.
+# TESTED IN: PSCode-09-Capstone.Tests.ps1
 function Invoke-SafeAzureCall {
     <#
     .SYNOPSIS
@@ -100,6 +112,11 @@ function Get-ResourceActualCost {
     }
 }
 
+# TESTABILITY: Calls Send-MailMessage which sends REAL emails.
+# In tests, Mock Send-MailMessage {} prevents that.
+# Tests use boundary -TestCases: Cost=100 vs Threshold=100 catches the
+# off-by-one question: does equal-to trigger an alert? (Answer: no, only >).
+# TESTED IN: PSCode-09-Capstone.Tests.ps1
 function Send-CostAlert {
     <#
     .SYNOPSIS
@@ -125,6 +142,10 @@ function Send-CostAlert {
         [string]$RecipientEmail = "admin@company.com"
     )
 
+    # BOUNDARY LOGIC: Note the -le (less-than-or-equal) comparison.
+    # Cost=100 and Threshold=100 returns AlertSent=$false (no alert).
+    # Cost=100.01 and Threshold=100 returns AlertSent=$true (alert sent).
+    # This exact boundary is tested with -TestCases in the Pester tests.
     if ($CurrentCost -le $Threshold) {
         return [PSCustomObject]@{
             AlertSent = $false
@@ -132,7 +153,9 @@ function Send-CostAlert {
         }
     }
 
-    # Send email alert (to be mocked in tests!)
+    # DANGEROUS: This sends a REAL email. Always mock in tests!
+    # Mock Send-MailMessage {} — empty body means "do nothing".
+    # Then use Should -Invoke Send-MailMessage -Times 1 to verify it was called.
     Send-MailMessage -To $RecipientEmail `
                      -From "azure-alerts@company.com" `
                      -Subject "Cost Alert: $ResourceName" `

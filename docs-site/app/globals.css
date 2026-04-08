@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0a0e17;
+  --card: #111827;
+  --border: #1e293b;
+  --tx: #e2e8f0;
+  --mt: #94a3b8;
+}
+
+body {
+  background: var(--bg);
+  color: var(--tx);
+}
+
+/* Mermaid container */
+.mermaid-container svg {
+  max-width: 100%;
+  height: auto;
+}

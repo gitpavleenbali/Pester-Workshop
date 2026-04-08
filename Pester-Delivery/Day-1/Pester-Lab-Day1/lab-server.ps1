@@ -1,11 +1,40 @@
+# ============================================================================
 # lab-server.ps1 — Pester Lab HTTP Server
+#
+# A lightweight HTTP server built with .NET HttpListener that serves the
+# lab web UI and exposes REST API endpoints to run Pester tests, view
+# source code, and generate code coverage reports.
+#
+# ARCHITECTURE:
+#   Browser (index.html) → HTTP requests → lab-server.ps1 → Invoke-Pester
+#   Results flow back as JSON to the browser for display.
+#
+# API ENDPOINTS:
+#   GET /               → Serves the lab web UI (index.html)
+#   GET /api/run/{1-9}   → Run all tests in a specific module
+#   GET /api/run/{n}/{name} → Run a single test by name filter
+#   GET /api/tests/{1-9} → Discover tests (names, code) without running them
+#   GET /api/all         → Run ALL 9 test files at once
+#   GET /api/cov         → Run all tests WITH code coverage analysis
+#   GET /api/setup       → Run Setup-Lab.ps1 environment check
+#   GET /api/file/{path} → Read and return a source file's content
+#   GET /api/exit        → Gracefully shut down the server
+#
+# USAGE:
+#   .\lab-server.ps1                  # Start on default port 8080
+#   .\lab-server.ps1 -Port 9090       # Start on custom port
+# ============================================================================
 param([int]$Port = 8080, [string]$LabRoot)
 if (-not $LabRoot) { $LabRoot = $PSScriptRoot }
 
+# PESTER SETUP: Import Pester 5+ and verify it loaded.
+# The server requires Pester to be installed (Setup-Lab.ps1 handles this).
 Import-Module Pester -MinimumVersion 5.0.0 -ErrorAction Stop
 $pv = (Get-Module Pester).Version
 Write-Host "[OK] Pester $pv" -ForegroundColor Green
 
+# TEST FILE REGISTRY: Maps module numbers (1-9) to their test file paths.
+# This lets the API accept /api/run/3 to run Module 03 tests.
 $testFiles = @{
     '1'='tests/PSCode-01-KnowledgeRefresh.Tests.ps1'
     '2'='tests/PSCode-02-AdvancedFunctions.Tests.ps1'
@@ -17,8 +46,18 @@ $testFiles = @{
     '8'='tests/PSCode-08-Runspaces.Tests.ps1'
     '9'='tests/PSCode-09-Capstone.Tests.ps1'
 }
+# SOURCE FILE PATHS: Used for code coverage analysis.
+# When /api/cov is called, Pester measures which lines in these files
+# were executed by the test suite and reports coverage percentage.
 $srcPaths = @('src/DataProcessing.ps1','src/AzureResourceHelpers.ps1','src/CostMonitorHelpers.ps1','src/PSCodeModuleExtracts.ps1','src/PSCodeModulesAdditional.ps1')
 
+# CORE FUNCTION: Runs Pester tests and returns structured results.
+# Uses New-PesterConfiguration (Pester 5 API) for full control over:
+#   - Run.Path: which test files to execute
+#   - Run.PassThru: returns result object instead of just console output
+#   - CodeCoverage: optionally measures tested vs untested source lines
+#   - Output.Verbosity 'None': suppresses console output (we parse results programmatically)
+# The 6>&1 redirect captures Write-Host output from inside tests.
 function Invoke-Lab {
     param([string[]]$Path, [switch]$Coverage)
     $cfg = New-PesterConfiguration
@@ -108,12 +147,17 @@ function Invoke-Lab {
     }
 }
 
+# HTTP RESPONSE HELPER: Sends data back to the browser.
+# Handles both binary (byte[]) and string data with proper Content-Type.
 function Send-Response ($res, $data, $type) {
     $bytes = if ($data -is [byte[]]) { $data } else { [System.Text.Encoding]::UTF8.GetBytes($data) }
     $res.ContentType = $type
     $res.OutputStream.Write($bytes, 0, $bytes.Length)
 }
 
+# HTTP LISTENER: .NET HttpListener creates a lightweight web server.
+# No IIS, no external dependencies — just PowerShell + .NET.
+# The while loop processes one request at a time (synchronous).
 $listener = [System.Net.HttpListener]::new()
 $listener.Prefixes.Add("http://localhost:$Port/")
 try { $listener.Start() } catch { Write-Host "[ERROR] Port $Port in use" -ForegroundColor Red; exit 1 }

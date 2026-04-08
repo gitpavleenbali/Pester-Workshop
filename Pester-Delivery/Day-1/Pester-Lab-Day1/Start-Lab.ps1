@@ -1,6 +1,19 @@
-﻿# Start-Lab.ps1 — Pester Lab Day 1
-# .\Start-Lab.ps1         Terminal mode
-# .\Start-Lab.ps1 -Web    Browser mode
+﻿# ============================================================================
+# Start-Lab.ps1 — Pester Lab Day 1 Launcher
+#
+# Two modes:
+#   .\Start-Lab.ps1         Terminal mode (interactive menu in console)
+#   .\Start-Lab.ps1 -Web    Browser mode (launches HTTP server + web UI)
+#
+# Terminal mode features:
+#   - Run individual test modules (1-9) with step-by-step output
+#   - Run ALL tests at once
+#   - Code coverage report with visual progress bar
+#   - Environment setup check
+#   - Launch web UI from the menu
+#
+# The -Web switch starts lab-server.ps1 (HTTP API) and opens the browser.
+# ============================================================================
 param([switch]$Web, [int]$Port = 8080)
 
 $labRoot = $PSScriptRoot
@@ -47,6 +60,11 @@ if ($Web) {
     exit 0
 }
 
+# PESTER INTEGRATION: Run-StepByStep uses New-PesterConfiguration to:
+#   - Run.PassThru = $true: returns result object for programmatic inspection
+#   - Output.Verbosity = 'None': we format our own output instead of Pester's
+#   - 6>&1 redirect: captures Write-Host output from inside test files
+# This is the same pattern used in CI pipelines to parse test results.
 function Run-StepByStep ($testFile) {
     $cfg = New-PesterConfiguration
     $cfg.Run.Path = $testFile; $cfg.Run.PassThru = $true; $cfg.Output.Verbosity = 'None'
@@ -90,6 +108,10 @@ function Run-StepByStep ($testFile) {
     Write-Host "`n  Summary: Passed $($r.PassedCount) | Failed $($r.FailedCount) | Total $($r.TotalCount)" -ForegroundColor $pc
 }
 
+# CODE COVERAGE: Uses New-PesterConfiguration with CodeCoverage enabled.
+# Pester instruments the source files and tracks which lines were executed.
+# The visual bar shows coverage % vs the 75% threshold.
+# Enterprise teams typically set 80% — we use 75% for the workshop.
 function Run-Coverage {
     $ap = $items.Values | ForEach-Object { Join-Path $labRoot $_.File }
     $cfg = New-PesterConfiguration

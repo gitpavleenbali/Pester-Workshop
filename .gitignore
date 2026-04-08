@@ -1,9 +1,6 @@
 # Workshop internal files
 .internal/
 
-# GitHub config
-.github/
-
 # Pester artifacts
 coverage.xml
 testResults.xml
@@ -12,6 +9,12 @@ testResults.xml
 # IDE
 .vscode/
 .idea/
+
+# Node.js (docs-site build artifacts)
+docs-site/node_modules/
+docs-site/out/
+docs-site/.next/
+docs/
 
 # OS
 Thumbs.db

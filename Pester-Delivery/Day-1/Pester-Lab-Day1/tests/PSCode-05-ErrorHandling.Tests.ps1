@@ -6,18 +6,29 @@
 # PESTER CONCEPTS: Should -Throw with wildcards, Mock override per Context
 # ============================================================================
 
+# PESTER ▶ BeforeAll {}
+# Loads the source functions once before all tests in this file.
 BeforeAll {
     . $PSScriptRoot/../src/PSCodeModuleExtracts.ps1
 }
 
+# PESTER ▶ Describe '...'
+# Test suite for the Deploy-AzureResourceWithValidation function.
+# This function validates input THEN calls Azure — mocks prevent real API calls.
 Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
 
-    # PESTER: Mock Azure cmdlets — function validates THEN calls Azure
+    # PESTER ▶ BeforeAll with Mocks at Describe level
+    # These mocks apply to ALL Contexts/It blocks inside this Describe.
+    # Inner Contexts can OVERRIDE these with their own mocks (see below).
     BeforeAll {
+        # PESTER ▶ Mock Get-AzResourceGroup — simulates finding an existing RG.
         Mock Get-AzResourceGroup { return @{ ResourceGroupName = 'rg-prod' } }
+        # PESTER ▶ Mock New-AzResource — simulates a successful deployment.
         Mock New-AzResource { return @{ ProvisioningState = 'Succeeded' } }
     }
 
+    # PESTER ▶ Context — "happy path" scenario
+    # Tests what happens when inputs are valid and Azure resources exist.
     Context 'Valid deployment' {
         It 'Returns Deployed status' {
             Write-Host "  → ASSERT: Checking return value — Returns Deployed status" -ForegroundColor Gray
@@ -25,7 +36,9 @@ Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
             $r.Status | Should -Be 'Deployed'
         }
 
-        # PESTER: Should -Invoke verifies the function checked the RG first
+        # PESTER ▶ Should -Invoke <MockedCommand>
+        # Verifies the function internally called Get-AzResourceGroup.
+        # This proves the function checks the RG exists BEFORE attempting deployment.
         It 'Validates RG exists before deploying' {
             Write-Host "  → Running: Validates RG exists before deploying" -ForegroundColor Gray
             Deploy-AzureResourceWithValidation -ResourceGroupName 'rg-prod' -ResourceName 'myres' | Out-Null
@@ -33,8 +46,12 @@ Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
         }
     }
 
+    # PESTER ▶ Context — "sad path" for input validation
+    # Tests that the function rejects bad input BEFORE calling Azure.
     Context 'Input validation failures' {
-        # PESTER: Should -Throw '*pattern*' — wildcard matches error message
+        # PESTER ▶ Should -Throw '*pattern*'
+        # The wildcard '*3 characters*' matches any error message containing that text.
+        # This is more resilient than matching the exact error string, which can change.
         It 'Rejects name < 3 chars' {
             Write-Host "  → ERROR TEST: Expecting exception — Rejects name < 3 chars" -ForegroundColor Gray
             { Deploy-AzureResourceWithValidation -ResourceGroupName 'rg' -ResourceName 'ab' } |
@@ -54,9 +71,15 @@ Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
         }
     }
 
+    # PESTER ▶ Context-scoped Mock Override
+    # This Context redefines Get-AzResourceGroup to return $null.
+    # The OVERRIDE only applies within this Context — sibling Contexts
+    # still use the parent Describe's mock that returns a valid RG.
+    # This is how you test different scenarios without duplicate test files.
     Context 'Resource group not found' {
         BeforeAll {
-            # PESTER: Override mock for this Context — RG not found
+            # PESTER ▶ Mock override — RG not found (returns $null).
+            # This replaces the parent's mock ONLY for tests inside this Context.
             Mock Get-AzResourceGroup { return $null }
         }
 

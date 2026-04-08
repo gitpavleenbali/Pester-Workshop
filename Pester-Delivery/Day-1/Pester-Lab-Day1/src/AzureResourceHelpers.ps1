@@ -2,8 +2,19 @@
 # Lab Source: Azure Resource Helpers
 # Origin: Extracted from PSCode/02_advanced_functions & 03_mastering_parameters
 # Purpose: Testable utility functions for the Pester lab
+#
+# TESTING NOTES:
+#   These functions call Azure cmdlets (Get-AzResource, Get-AzVM) which
+#   MUST be mocked in Pester tests to avoid real Azure API calls.
+#   See: tests/PSCode-02-AdvancedFunctions.Tests.ps1
+#        tests/PSCode-03-Parameters.Tests.ps1
 # ============================================================================
 
+# TESTABILITY: This function calls Get-AzResource which is an Azure cmdlet.
+# In Pester tests, we Mock Get-AzResource to return fake data, so this function
+# can be tested without an Azure subscription. The mock controls exactly what
+# resources "exist", making assertions deterministic.
+# TESTED IN: PSCode-02-AdvancedFunctions.Tests.ps1
 function Get-AzureResourceSummary {
     <#
     .SYNOPSIS
@@ -39,6 +50,11 @@ function Get-AzureResourceSummary {
     }
 }
 
+# TESTABILITY: This is a SIMULATED function — it never calls Azure.
+# It uses PowerShell validation attributes (ValidateSet, Mandatory) which
+# can be tested by Pester. ValidateSet throws before the function body runs,
+# so { New-AzureResourceGroup -Location 'mars' } | Should -Throw works.
+# TESTED IN: PSCode-02-AdvancedFunctions.Tests.ps1, PSCode-03-Parameters.Tests.ps1
 function New-AzureResourceGroup {
     <#
     .SYNOPSIS
@@ -63,8 +79,10 @@ function New-AzureResourceGroup {
         }
     )
 
-    # Simulate creation — never hits real Azure
-    return [PSCustomObject]@{
+        # SIMULATION: Returns a PSCustomObject instead of calling Azure.
+        # This makes the function safe for workshops while still testing
+        # parameter validation, defaults, and return object structure.
+        return [PSCustomObject]@{
         ResourceGroupName = $Name
         Location          = $Location
         ProvisioningState = "Succeeded"
@@ -73,6 +91,11 @@ function New-AzureResourceGroup {
     }
 }
 
+# TESTABILITY: Calls Get-AzVM which MUST be mocked.
+# In tests, we use -ParameterFilter on Mock to return different VM states
+# (Running, Stopped, Deallocated) based on the -Name parameter.
+# This demonstrates multi-behavior mocking — same command, different results.
+# TESTED IN: PSCode-02-AdvancedFunctions.Tests.ps1
 function Get-VMStatus {
     <#
     .SYNOPSIS

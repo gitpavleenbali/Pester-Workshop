@@ -1,9 +1,22 @@
 # ============================================================================
 # Lab Source: Data Processing Utilities
 # Origin: Extracted from PSCode/06_debugging/Debug-Demo.ps1
-# Purpose: Pure logic functions — perfect for unit testing
+# Purpose: Pure logic functions — perfect for unit testing (NO mocking needed)
+#
+# TESTING NOTES:
+#   These are PURE FUNCTIONS: they take input, return output, have no side
+#   effects, and don't call external services. This makes them the easiest
+#   type of code to unit test — just call the function and assert the result.
+#   They also demonstrate the data processing pipeline pattern where each
+#   function does one thing and can be tested independently.
+#   See: tests/PSCode-06-Debugging.Tests.ps1
 # ============================================================================
 
+# TESTABILITY: Pure validation function — no external dependencies.
+# Returns a structured result object instead of throwing, which makes
+# it easy to test: (Test-InputValidation -Data '' -Level 1).IsValid | Should -Be $false
+# Tests check: empty strings, short strings, invalid levels, multiple errors.
+# TESTED IN: PSCode-06-Debugging.Tests.ps1
 function Test-InputValidation {
     <#
     .SYNOPSIS
@@ -44,6 +57,10 @@ function Test-InputValidation {
     }
 }
 
+# TESTABILITY: Pure string manipulation — no dependencies.
+# Tests verify: correct chunk count, first/last chunk content, edge cases
+# (chunk larger than input, empty input).
+# TESTED IN: PSCode-06-Debugging.Tests.ps1
 function Split-DataIntoChunks {
     <#
     .SYNOPSIS
@@ -73,6 +90,10 @@ function Split-DataIntoChunks {
     return $chunks
 }
 
+# TESTABILITY: Pure transformation — uses -TestCases in the Pester test
+# to verify Level 1=upper, Level 2=lower, Level 3=replace-spaces.
+# The same It block runs 4 times with different input/expected data.
+# TESTED IN: PSCode-06-Debugging.Tests.ps1
 function Process-DataChunk {
     <#
     .SYNOPSIS
@@ -101,6 +122,11 @@ function Process-DataChunk {
     }
 }
 
+# TESTABILITY: Pipeline function — calls the three functions above in sequence.
+# This tests the integration of validate → split → process.
+# No mocking needed because all sub-functions are pure.
+# Tests verify both valid input (returns result) and invalid (returns $null).
+# TESTED IN: PSCode-06-Debugging.Tests.ps1
 function Get-ProcessedData {
     <#
     .SYNOPSIS

@@ -2,10 +2,25 @@
 # Lab Source: PSCode Module Correlation — Error Handling & Classes
 # Origin: PSCode/05_error_handling + PSCode/04_powershell_classes
 # Purpose: Enterprise patterns for testing error handling and OOP
+#
+# TESTING NOTES:
+#   Deploy-AzureResourceWithValidation calls Azure cmdlets → must be mocked.
+#   AzureResource/AzureVirtualMachine are pure classes → no mocking needed.
+#   Classes are loaded via dot-sourcing in BeforeAll and tested by creating
+#   instances and asserting property values and method results.
+#   See: tests/PSCode-04-Classes.Tests.ps1
+#        tests/PSCode-05-ErrorHandling.Tests.ps1
 # ============================================================================
 
 # ── From Module 05: Error Handling ──────────────────────────────────────
 
+# TESTABILITY: This function validates input THEN calls Azure cmdlets.
+# Tests cover three scenarios using separate Context blocks:
+#   1. Valid deployment (mocks return success) → Should -Be 'Deployed'
+#   2. Invalid input (short name, special chars) → Should -Throw '*pattern*'
+#   3. Missing RG (mock returns $null) → Should -Throw '*does not exist*'
+# The mock for Get-AzResourceGroup is OVERRIDDEN in Context 3 to return $null.
+# TESTED IN: PSCode-05-ErrorHandling.Tests.ps1
 function Deploy-AzureResourceWithValidation {
     <#
     .SYNOPSIS
@@ -90,6 +105,10 @@ class AzureResource {
     }
 }
 
+# DERIVED CLASS: Inherits from AzureResource, adds VM-specific behavior.
+# The constructor maps VM size strings to CPU/memory specs using switch.
+# Start()/Stop() change the Status property (state transition pattern).
+# EstimateMonthlyCost() is a calculated property: CpuCores * 35.50.
 class AzureVirtualMachine : AzureResource {
     [string]$VMSize
     [int]$CpuCores

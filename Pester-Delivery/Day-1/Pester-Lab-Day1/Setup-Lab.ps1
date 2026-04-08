@@ -2,6 +2,17 @@
 # Setup-Lab.ps1 — Pester Lab Environment Bootstrap
 # Run this FIRST before starting any exercises.
 #
+# This script checks 4 prerequisites:
+#   1. PowerShell version (5.1+ required, 7+ recommended)
+#   2. Pester framework installed (auto-installs 5.x if missing)
+#   3. Pester module can be imported into the session
+#   4. All 14 lab files exist (5 source + 9 test files)
+#
+# WHY THIS MATTERS:
+#   Pester 5.x has breaking changes from 4.x (shipped with Windows).
+#   This script ensures the correct version is installed and working
+#   before attendees start the workshop, preventing setup issues.
+#
 # Usage: .\Setup-Lab.ps1
 # ============================================================================
 
@@ -26,7 +37,11 @@ if ($psVer.Major -ge 7) {
     $allGood = $false
 }
 
-# ── STEP 2: Install / Update Pester ─────────────────────────────────────
+# STEP 2: Install / Update Pester ─────────────────────────────────────────
+# Windows ships with Pester 3.x/4.x which is INCOMPATIBLE with this lab.
+# We need Pester 5.x for: New-PesterConfiguration, Should -Invoke,
+# Discovery/Run phase separation, and modern mock scoping.
+# -SkipPublisherCheck bypasses the signature check for the bundled 3.x version.
 Write-Host "[2/4] Checking Pester framework..." -ForegroundColor White
 $pester = Get-Module -Name Pester -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
 
@@ -59,7 +74,12 @@ try {
     $allGood = $false
 }
 
-# ── STEP 4: Verify Lab Files ───────────────────────────────────────────
+# STEP 4: Verify Lab Files ───────────────────────────────────────────
+# Checks that all 5 source files and 9 test files are present.
+# Source files are in src/ — these contain the functions being tested.
+# Test files are in tests/ — these contain the Pester test suites.
+# The separation follows enterprise best practice: production code and
+# test code live in different directories but the same repository.
 Write-Host "[4/4] Verifying lab files..." -ForegroundColor White
 $labRoot = $PSScriptRoot
 $requiredFiles = @(

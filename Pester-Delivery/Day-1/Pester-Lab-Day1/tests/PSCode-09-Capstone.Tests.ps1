@@ -6,14 +6,22 @@
 # PESTER CONCEPTS: Retry logic, boundary testing, mocking dangerous commands
 # ============================================================================
 
+# PESTER ▶ BeforeAll {}
+# Loads MULTIPLE source files — the capstone project combines helpers from different modules.
+# You can dot-source multiple files in the same BeforeAll block.
 BeforeAll {
     . $PSScriptRoot/../src/CostMonitorHelpers.ps1
     . $PSScriptRoot/../src/AzureResourceHelpers.ps1
 }
 
-# PESTER: Testing retry logic — no mocking needed, pass scriptblocks directly
+# PESTER ▶ Testing retry logic without mocking
+# Invoke-SafeAzureCall accepts a ScriptBlock parameter, so we pass test scriptblocks
+# directly — no need to mock anything. This is a pattern called "dependency injection".
 Describe 'Module 09 · Invoke-SafeAzureCall — Retry Pattern' {
 
+    # PESTER ▶ Testing the happy path
+    # Passes a scriptblock that succeeds immediately { 'data' }.
+    # Verifies Success=$true, the returned Data, and that only 1 attempt was needed.
     It 'Succeeds on first try' {
         Write-Host "  → Running: Succeeds on first try" -ForegroundColor Gray
         $r = Invoke-SafeAzureCall -ScriptBlock { 'data' } -OperationName 'Test'
@@ -22,6 +30,10 @@ Describe 'Module 09 · Invoke-SafeAzureCall — Retry Pattern' {
         $r.Attempts | Should -Be 1
     }
 
+    # PESTER ▶ Testing failure after exhausting retries
+    # Passes a scriptblock that ALWAYS throws { throw 'err' }.
+    # Verifies the function gives up after MaxRetries attempts.
+    # -WarningAction SilentlyContinue suppresses retry warning messages in test output.
     It 'Fails after max retries' {
         Write-Host "  → Running: Fails after max retries" -ForegroundColor Gray
         $r = Invoke-SafeAzureCall -ScriptBlock { throw 'err' } -MaxRetries 2 -OperationName 'Fail' -WarningAction SilentlyContinue
@@ -29,7 +41,10 @@ Describe 'Module 09 · Invoke-SafeAzureCall — Retry Pattern' {
         $r.Attempts | Should -Be 2
     }
 
-    # PESTER: $script: scope tracks state across scriptblock calls
+    # PESTER ▶ $script: scope for stateful test scriptblocks
+    # $script:n persists across multiple invocations of the scriptblock.
+    # First call ($n=1) throws "transient", second call ($n=2) succeeds.
+    # This simulates a real-world transient failure that resolves on retry.
     It 'Retries and recovers from transient error' {
         Write-Host "  → Running: Retries and recovers from transient error" -ForegroundColor Gray
         $script:n = 0
@@ -44,15 +59,23 @@ Describe 'Module 09 · Invoke-SafeAzureCall — Retry Pattern' {
     }
 }
 
-# PESTER: Mocking Send-MailMessage — CRITICAL to prevent real emails
+# PESTER ▶ Mocking dangerous commands
+# Send-MailMessage sends REAL emails — mocking prevents that during tests.
+# This is why mocking exists: to test code that has side effects
+# (emails, API calls, database writes) without actually performing them.
 Describe 'Module 09 · Send-CostAlert — Boundary Testing' {
 
+    # PESTER ▶ Mock Send-MailMessage {}
+    # Empty body {} — the mock does nothing. We just need to prevent the real
+    # Send-MailMessage from firing. We'll use Should -Invoke to verify call count.
     BeforeAll {
         Mock Send-MailMessage {}
     }
 
-    # PESTER: -TestCases for systematic boundary testing
-    # Testing the exact boundary: 100 vs 100 catches off-by-one bugs
+    # PESTER ▶ -TestCases for boundary testing
+    # Boundary testing checks values at, just below, and just above the threshold.
+    # This catches off-by-one bugs (e.g., should 100 == 100 trigger an alert?).
+    # Each hashtable is a test case with Cost, Threshold, and Expected result.
     It 'Cost <Cost> vs Threshold <Threshold> -> AlertSent=<Expected>' -TestCases @(
         @{ Cost = 10;     Threshold = 100; Expected = $false }
         @{ Cost = 99;     Threshold = 100; Expected = $false }
@@ -67,12 +90,18 @@ Describe 'Module 09 · Send-CostAlert — Boundary Testing' {
         $r.AlertSent | Should -Be $Expected
     }
 
+    # PESTER ▶ Should -Invoke -Times 0
+    # Proves Send-MailMessage was NOT called when cost is below threshold.
+    # This is a safety check — no unnecessary emails sent.
     It 'Does NOT call Send-MailMessage when below threshold' {
         Write-Host "  → Running: Does NOT call Send-MailMessage when below threshold" -ForegroundColor Gray
         Send-CostAlert -ResourceName 'vm' -CurrentCost 50 -Threshold 100 | Out-Null
         Should -Invoke Send-MailMessage -Times 0
     }
 
+    # PESTER ▶ Should -Invoke -Times 1 -Exactly
+    # Proves Send-MailMessage was called EXACTLY 1 time (not 0, not 2).
+    # -Exactly makes -Times an exact count instead of "at least".
     It 'Calls Send-MailMessage when above threshold' {
         Write-Host "  → Running: Calls Send-MailMessage when above threshold" -ForegroundColor Gray
         Send-CostAlert -ResourceName 'vm' -CurrentCost 200 -Threshold 100 | Out-Null
@@ -80,18 +109,25 @@ Describe 'Module 09 · Send-CostAlert — Boundary Testing' {
     }
 }
 
-# PESTER: ParameterFilter — different VMs return different states
+# PESTER ▶ ParameterFilter — different mock results per parameter value
+# Multiple mocks for Get-AzVM, each activating only for a specific -Name value.
+# This simulates an Azure environment with VMs in different power states.
 Describe 'Module 09 · Get-VMStatus — Mocked Azure' {
 
+    # PESTER ▶ BeforeAll with multiple -ParameterFilter mocks
+    # Pester evaluates filters in order and uses the FIRST match.
     BeforeAll {
+        # PESTER ▶ Mock for 'vm-web' — returns running state.
         Mock Get-AzVM {
             [PSCustomObject]@{ Statuses = @([PSCustomObject]@{ Code = 'PowerState/running'; DisplayStatus = 'VM running' }) }
         } -ParameterFilter { $Name -eq 'vm-web' }
 
+        # PESTER ▶ Mock for 'vm-db' — returns deallocated state.
         Mock Get-AzVM {
             [PSCustomObject]@{ Statuses = @([PSCustomObject]@{ Code = 'PowerState/deallocated'; DisplayStatus = 'VM deallocated' }) }
         } -ParameterFilter { $Name -eq 'vm-db' }
 
+        # PESTER ▶ Mock for 'vm-gone' — returns $null (VM doesn't exist).
         Mock Get-AzVM { $null } -ParameterFilter { $Name -eq 'vm-gone' }
     }
 
