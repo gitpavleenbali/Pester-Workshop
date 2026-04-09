@@ -37,7 +37,7 @@ var h='<h2>'+e.id+'. '+esc(e.nm)+' <span class="bg2 bref">'+e.tg+' '+e.tm+'</spa
 h+='<div style="margin:12px 0;display:flex;gap:8px;flex-wrap:wrap">';
 h+='<button onclick="ap(\'\/api\/run\/'+id+'\')" style="background:var(--gn);color:#000;border:0;padding:8px 20px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">▶ Run All Tests</button>';
 h+='<button onclick="vf(\''+e.f+'\',\'tests/'+e.f+'\')" style="background:var(--bl);color:#fff;border:0;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">View Test File</button>';
-if(e.ps){h+='<button onclick="vps('+id+',\''+e.ps.split(\'/\').pop()+'\')" style="background:var(--cy);color:#000;border:0;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">View PSCode Source</button>';}
+if(e.ps){var psLabel=e.ps.split('/').pop();h+='<button onclick="vps('+id+',\''+psLabel+'\')" style="background:var(--cy);color:#000;border:0;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">View PSCode Source</button>';}
 h+='</div>';
 
 // Source code viewer (hidden until clicked)
