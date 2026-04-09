@@ -6,6 +6,14 @@
 # PESTER CONCEPTS: Mock, ValidateSet, default parameters, PSCustomObject
 # ============================================================================
 
+# PESTER ▶ BeforeDiscovery {}
+# Runs during the DISCOVERY phase (before any tests execute).
+# Use it to dynamically generate test data that feeds into -ForEach or -TestCases.
+# Code here runs BEFORE BeforeAll — it's for building the test plan, not for test setup.
+BeforeDiscovery {
+    $ValidLocations = @('eastus', 'westus', 'westeurope', 'eastus2')
+}
+
 # PESTER ▶ BeforeAll {}
 # Runs ONCE before all tests in this file. Used here to dot-source the helper functions
 # so every Describe/It block can call them. This is the Pester 5 way to load dependencies.
@@ -191,4 +199,5 @@ Describe 'Module 02 · Get-VMStatus' {
         Should -Invoke Get-AzVM -ParameterFilter { $Name -eq 'vm-web' }
     }
 }
+
 

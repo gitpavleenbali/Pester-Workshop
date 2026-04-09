@@ -152,5 +152,18 @@ Describe 'Module 09 · Get-VMStatus — Mocked Azure' {
         $status = Get-VMStatus -VMName 'real-production-vm'
         $status | Should -Not -BeNullOrEmpty
     }
+
+    # PESTER ▶ Set-ItResult — manually override the test result
+    # Use when a test runs but you want to mark it as Inconclusive or Skipped
+    # based on runtime conditions (unlike -Skip which is decided at discovery).
+    It 'Conditional skip based on environment' {
+        Write-Host "  → Using Set-ItResult to conditionally skip at runtime" -ForegroundColor Gray
+        if (-not (Get-Command Get-AzContext -ErrorAction SilentlyContinue)) {
+            Set-ItResult -Inconclusive -Because 'Az module not loaded — cannot test real Azure'
+        }
+        # If Az IS loaded, this would run a real check
+        $true | Should -BeTrue
+    }
 }
+
 
