@@ -45,6 +45,15 @@ Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
             Deploy-AzureResourceWithValidation -ResourceGroupName 'rg-prod' -ResourceName 'myres' | Out-Null
             Should -Invoke Get-AzResourceGroup
         }
+
+        # PESTER ▶ Should -InvokeVerifiable — checks ALL -Verifiable mocks were called
+        # New-AzResource was marked -Verifiable in BeforeAll above.
+        # This asserts it was actually invoked during the valid deployment test.
+        It 'All verifiable mocks were called' {
+            Write-Host "  → Using Should -InvokeVerifiable — all -Verifiable mocks must have been called" -ForegroundColor Gray
+            Deploy-AzureResourceWithValidation -ResourceGroupName 'rg-prod' -ResourceName 'deploy01' | Out-Null
+            Should -InvokeVerifiable
+        }
     }
 
     # PESTER ▶ Context — "sad path" for input validation
@@ -91,4 +100,5 @@ Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
         }
     }
 }
+
 

@@ -106,4 +106,46 @@ Describe 'Module 01 · Get-AzureResourceInsights' {
             $result.TotalResources | Should -Be 0
         }
     }
+
+    # PESTER ▶ Additional Should operators demonstrated
+    Context 'Additional assertion operators' {
+        BeforeEach {
+            Mock Get-AzResource {
+                return @(
+                    [PSCustomObject]@{ Name = 'vm-Web-01'; ResourceType = 'Microsoft.Compute/virtualMachines' }
+                    [PSCustomObject]@{ Name = 'sa-Logs';   ResourceType = 'Microsoft.Storage/storageAccounts' }
+                )
+            }
+        }
+
+        # PESTER ▶ Should -BeExactly — case-SENSITIVE equality
+        # Unlike -Be (case-insensitive), -BeExactly fails if casing differs.
+        It 'Scope is exactly "Subscription-wide" (case-sensitive)' {
+            Write-Host "  → Using Should -BeExactly for case-sensitive check" -ForegroundColor Gray
+            $result = Get-AzureResourceInsights
+            $result.Scope | Should -BeExactly 'Subscription-wide'
+        }
+
+        # PESTER ▶ Should -BeLike — wildcard match (like PowerShell's -like)
+        It 'Scope starts with "Subscription" (wildcard match)' {
+            Write-Host "  → Using Should -BeLike for wildcard pattern" -ForegroundColor Gray
+            $result = Get-AzureResourceInsights
+            $result.Scope | Should -BeLike 'Subscription*'
+        }
+
+        # PESTER ▶ Should -Contain — asserts a collection contains a specific value
+        It 'Resource names contain "vm-Web-01"' {
+            Write-Host "  → Using Should -Contain to check collection membership" -ForegroundColor Gray
+            $resources = (Get-AzResource).Name
+            $resources | Should -Contain 'vm-Web-01'
+        }
+
+        # PESTER ▶ Should -BeIn — asserts a value is in a collection (reverse of -Contain)
+        It 'Scope value is in allowed scopes list' {
+            Write-Host "  → Using Should -BeIn to check value exists in allowed list" -ForegroundColor Gray
+            $result = Get-AzureResourceInsights
+            $result.Scope | Should -BeIn @('Subscription-wide', 'Resource Group: rg-prod')
+        }
+    }
 }
+

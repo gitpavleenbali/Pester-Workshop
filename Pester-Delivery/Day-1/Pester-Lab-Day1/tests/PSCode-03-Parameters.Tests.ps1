@@ -74,5 +74,43 @@ Describe 'Module 03 · Parameter Validation Patterns' {
             $nameParam.Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] } |
                 ForEach-Object { $_.Mandatory | Should -Be $true }
         }
+
+        # PESTER ▶ Should -HaveParameter — clean way to test parameter attributes
+        # Checks if a function has a specific parameter with specific properties.
+        # Much cleaner than manually inspecting Get-Command metadata.
+        It 'Has a mandatory Name parameter (using -HaveParameter)' {
+            Write-Host "  → Using Should -HaveParameter to check Name is Mandatory" -ForegroundColor Gray
+            Get-Command New-AzureResourceGroup | Should -HaveParameter Name -Mandatory
+        }
+
+        # PESTER ▶ Should -HaveParameter with -Type
+        # Verifies the parameter exists AND has the correct type.
+        It 'Location parameter is type string' {
+            Write-Host "  → Using Should -HaveParameter to check Location type" -ForegroundColor Gray
+            Get-Command New-AzureResourceGroup | Should -HaveParameter Location -Type [string]
+        }
+
+        # PESTER ▶ Should -HaveParameter with -DefaultValue
+        It 'Location has default value eastus' {
+            Write-Host "  → Checking Location default = eastus" -ForegroundColor Gray
+            Get-Command New-AzureResourceGroup | Should -HaveParameter Location -DefaultValue 'eastus'
+        }
+
+        # PESTER ▶ Should -BeTrue — asserts a boolean value is $true
+        It 'Mandatory attribute is true (using Should -BeTrue)' {
+            Write-Host "  → Using Should -BeTrue for boolean check" -ForegroundColor Gray
+            $cmd = Get-Command New-AzureResourceGroup
+            $isMandatory = ($cmd.Parameters['Name'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] }).Mandatory
+            $isMandatory | Should -BeTrue
+        }
+
+        # PESTER ▶ Should -BeFalse — asserts a boolean value is $false
+        It 'Location is NOT mandatory (using Should -BeFalse)' {
+            Write-Host "  → Using Should -BeFalse for boolean check" -ForegroundColor Gray
+            $cmd = Get-Command New-AzureResourceGroup
+            $isMandatory = ($cmd.Parameters['Location'].Attributes | Where-Object { $_ -is [System.Management.Automation.ParameterAttribute] }).Mandatory
+            $isMandatory | Should -BeFalse
+        }
     }
 }
+
