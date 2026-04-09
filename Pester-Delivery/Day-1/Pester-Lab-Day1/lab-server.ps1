@@ -58,6 +58,19 @@ $srcPaths = @(
     '../../../PSCode/08_runspaces/Azure-Runspaces.ps1',
     '../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
 )
+# PSOURCE FILE REGISTRY: Maps module numbers to PSCode source files.
+# Used by /api/psfile/{n} to serve source code to the UI.
+$psFiles = @{
+    '1'='../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1'
+    '2'='../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1'
+    '3'='../../../PSCode/03_mastering_parameters/Azure-Parameter-Mastery.ps1'
+    '4'='../../../PSCode/04_powershell_classes/Azure-Classes.ps1'
+    '5'='../../../PSCode/05_error_handling/Azure-Error-Handling.ps1'
+    '6'='../../../PSCode/06_debugging/Debug-Demo.ps1'
+    '7'='../../../PSCode/07_git_integration/Azure-Git-Training.ps1'
+    '8'='../../../PSCode/08_runspaces/Azure-Runspaces.ps1'
+    '9'='../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
+}
 
 # CORE FUNCTION: Runs Pester tests and returns structured results.
 # Uses New-PesterConfiguration (Pester 5 API) for full control over:
@@ -293,6 +306,22 @@ try {
                 $result = @{passed=[int]$r2.PassedCount;failed=[int]$r2.FailedCount;total=[int]$r2.TotalCount;coverage='-';coveragePct=0;output=($lines -join "`n")}
                 Send-Response $res ($result | ConvertTo-Json -Compress -Depth 5) 'application/json'
                 Write-Host "P:$($r2.PassedCount) F:$($r2.FailedCount)" -ForegroundColor $(if($r2.FailedCount -eq 0){'Green'}else{'Red'})
+            }
+            elseif ($path -match '^/api/psfile/(\d)$') {
+                $n = $Matches[1]
+                if ($psFiles.ContainsKey($n)) {
+                    $filePath = Join-Path $LabRoot $psFiles[$n]
+                    if (Test-Path $filePath) {
+                        $content = [System.IO.File]::ReadAllText($filePath)
+                        Send-Response $res (@{content=$content;file=$psFiles[$n]} | ConvertTo-Json -Compress -Depth 3) 'application/json'
+                    } else {
+                        $res.StatusCode = 404
+                        Send-Response $res '{"error":"source file not found"}' 'application/json'
+                    }
+                } else {
+                    $res.StatusCode = 404
+                    Send-Response $res '{"error":"unknown module"}' 'application/json'
+                }
             }
             elseif ($path -match '^/api/file/(.+)$') {
                 $fileName = [System.Web.HttpUtility]::UrlDecode($Matches[1])
