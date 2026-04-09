@@ -50,13 +50,13 @@ $testFiles = @{
 # When /api/cov is called, Pester measures which lines in these files
 # were executed by the test suite and reports coverage percentage.
 $srcPaths = @(
-    '../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.Functions.ps1',
-    '../../../PSCode/02_advanced_functions/Azure-Resource-Manager.Functions.ps1',
-    '../../../PSCode/04_powershell_classes/Azure-Classes.Functions.ps1',
-    '../../../PSCode/06_debugging/Debug-Demo.Functions.ps1',
-    '../../../PSCode/07_git_integration/Azure-Git-Training.Functions.ps1',
-    '../../../PSCode/08_runspaces/Azure-Runspaces.Functions.ps1',
-    '../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.Functions.ps1'
+    '../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1',
+    '../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1',
+    '../../../PSCode/04_powershell_classes/Azure-Classes.ps1',
+    '../../../PSCode/06_debugging/Debug-Demo.ps1',
+    '../../../PSCode/07_git_integration/Azure-Git-Training.ps1',
+    '../../../PSCode/08_runspaces/Azure-Runspaces.ps1',
+    '../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
 )
 
 # CORE FUNCTION: Runs Pester tests and returns structured results.

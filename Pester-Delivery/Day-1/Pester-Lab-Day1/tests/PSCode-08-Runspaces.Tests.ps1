@@ -9,7 +9,7 @@
 # PESTER ▶ BeforeAll {}
 # Loads all functions once before tests. No mocking needed — these are pure functions.
 BeforeAll {
-    . $PSScriptRoot/../../../../PSCode/08_runspaces/Azure-Runspaces.Functions.ps1
+    . $PSScriptRoot/../../../../PSCode/08_runspaces/Azure-Runspaces.ps1
 }
 
 # PESTER ▶ Testing pure functions — no mocking required

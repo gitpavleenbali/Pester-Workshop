@@ -9,7 +9,7 @@
 # PESTER ▶ BeforeAll {}
 # Loads all functions for this test file once before any tests run.
 BeforeAll {
-    . $PSScriptRoot/../../../../PSCode/07_git_integration/Azure-Git-Training.Functions.ps1
+    . $PSScriptRoot/../../../../PSCode/07_git_integration/Azure-Git-Training.ps1
 }
 
 # PESTER ▶ Mocking native executables

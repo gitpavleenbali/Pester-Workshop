@@ -19,7 +19,7 @@ BeforeDiscovery {
 # so every Describe/It block can call them. This is the Pester 5 way to load dependencies.
 BeforeAll {
     # PESTER ▶ Dot-sourcing loads all functions from the file into the test's scope.
-    . $PSScriptRoot/../../../../PSCode/02_advanced_functions/Azure-Resource-Manager.Functions.ps1
+    . $PSScriptRoot/../../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1
 }
 
 # PESTER ▶ Describe '...'

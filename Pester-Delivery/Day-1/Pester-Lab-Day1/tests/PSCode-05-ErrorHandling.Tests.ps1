@@ -9,7 +9,7 @@
 # PESTER ▶ BeforeAll {}
 # Loads the source functions once before all tests in this file.
 BeforeAll {
-    . $PSScriptRoot/../../../../PSCode/04_powershell_classes/Azure-Classes.Functions.ps1
+    . $PSScriptRoot/../../../../PSCode/04_powershell_classes/Azure-Classes.ps1
 }
 
 # PESTER ▶ Describe '...'

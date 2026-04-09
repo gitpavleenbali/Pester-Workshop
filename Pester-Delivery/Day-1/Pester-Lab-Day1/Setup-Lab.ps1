@@ -75,19 +75,19 @@ try {
 }
 
 # STEP 4: Verify Lab Files ───────────────────────────────────────────
-# Checks that all PSCode .Functions.ps1 source files and 9 test files are present.
-# Source functions live directly in PSCode/ modules — no separate src/ folder.
-# Tests dot-source PSCode/.Functions.ps1 files — single source of truth.
+# Checks that all PSCode source files and 9 test files are present.
+# Source functions live directly in PSCode/ modules — one file per module.
+# Tests dot-source PSCode/*.ps1 files — single source of truth.
 Write-Host "[4/4] Verifying lab files..." -ForegroundColor White
 $labRoot = $PSScriptRoot
 $requiredFiles = @(
-    "../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.Functions.ps1",
-    "../../../PSCode/02_advanced_functions/Azure-Resource-Manager.Functions.ps1",
-    "../../../PSCode/04_powershell_classes/Azure-Classes.Functions.ps1",
-    "../../../PSCode/06_debugging/Debug-Demo.Functions.ps1",
-    "../../../PSCode/07_git_integration/Azure-Git-Training.Functions.ps1",
-    "../../../PSCode/08_runspaces/Azure-Runspaces.Functions.ps1",
-    "../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.Functions.ps1",
+    "../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1",
+    "../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1",
+    "../../../PSCode/04_powershell_classes/Azure-Classes.ps1",
+    "../../../PSCode/06_debugging/Debug-Demo.ps1",
+    "../../../PSCode/07_git_integration/Azure-Git-Training.ps1",
+    "../../../PSCode/08_runspaces/Azure-Runspaces.ps1",
+    "../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1",
     "tests/PSCode-01-KnowledgeRefresh.Tests.ps1",
     "tests/PSCode-02-AdvancedFunctions.Tests.ps1",
     "tests/PSCode-03-Parameters.Tests.ps1",
