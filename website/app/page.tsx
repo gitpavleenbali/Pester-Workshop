@@ -86,8 +86,11 @@ export default function Home() {
 
           <div className="flex gap-3 justify-center flex-wrap">
             <Link href="/lab" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-bold text-sm transition-colors">
-              <FlaskConical size={16} /> Start the Lab
+              <FlaskConical size={16} /> Check the Lab
             </Link>
+            <a href="https://github.com/gitpavleenbali/Pester-Workshop" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold text-sm transition-colors">
+              <GitCompare size={16} /> Clone Pester Workshop
+            </a>
             <a href="https://pester.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 font-semibold text-sm transition-colors">
               pester.dev <ArrowRight size={14} />
             </a>
@@ -136,14 +139,38 @@ export default function Home() {
       <section className="max-w-5xl mx-auto px-4 py-16">
         <h2 className="text-2xl font-bold mb-2">Architecture</h2>
         <p className="text-slate-400 text-sm mb-6">How PSCode modules flow into testable source files, Pester tests, and the interactive lab.</p>
-        <Mermaid chart={`graph LR
-    A["PSCode/<br/>9 PS modules"] --> B["src/<br/>5 extracted files"]
-    B --> C["tests/<br/>9 Pester files<br/>96 tests"]
-    C --> D["Lab UI<br/>Terminal + Browser"]
-    style A fill:#1e1b4b,stroke:#818cf8,color:#f8fafc
-    style B fill:#1e293b,stroke:#8b5cf6,color:#f8fafc
-    style C fill:#052e16,stroke:#22c55e,color:#f8fafc
-    style D fill:#0c4a6e,stroke:#06b6d4,color:#f8fafc`}
+        <Mermaid chart={`graph TB
+    subgraph INPUT["Source Material"]
+        direction LR
+        PS["PSCode/<br/>9 PowerShell Modules"]
+        MOD["Modules/<br/>3 Knowledge Decks"]
+    end
+    subgraph ENGINE["Test Engine"]
+        direction LR
+        SRC["src/<br/>5 Extracted Files"]
+        TST["tests/<br/>9 Pester Files<br/>96 Tests"]
+    end
+    subgraph OUTPUT["Delivery"]
+        direction LR
+        TERM["Terminal Lab<br/>Interactive Menu"]
+        WEB["Browser Lab<br/>localhost:8080"]
+        SITE["Workshop Website<br/>GitHub Pages"]
+    end
+    PS --> SRC
+    SRC --> TST
+    MOD --> SITE
+    TST --> TERM
+    TST --> WEB
+    style INPUT fill:#0f172a,stroke:#818cf8,color:#f8fafc,stroke-width:2px
+    style ENGINE fill:#0f172a,stroke:#22c55e,color:#f8fafc,stroke-width:2px
+    style OUTPUT fill:#0f172a,stroke:#06b6d4,color:#f8fafc,stroke-width:2px
+    style PS fill:#1e1b4b,stroke:#818cf8,color:#f8fafc
+    style MOD fill:#1e1b4b,stroke:#a78bfa,color:#f8fafc
+    style SRC fill:#1e293b,stroke:#8b5cf6,color:#f8fafc
+    style TST fill:#052e16,stroke:#22c55e,color:#f8fafc
+    style TERM fill:#0c4a6e,stroke:#06b6d4,color:#f8fafc
+    style WEB fill:#0c4a6e,stroke:#06b6d4,color:#f8fafc
+    style SITE fill:#0c4a6e,stroke:#38bdf8,color:#f8fafc`}
         />
       </section>
 
