@@ -1,0 +1,660 @@
+# Enterprise Positioning — Pester Architecture for Large Organizations
+
+> **Agenda:** 11:30–12:00 · Architectural Overview in an Enterprise
+
+---
+
+<details open>
+<summary><h2>The Big Picture — Testing at Enterprise Scale</h2></summary>
+
+
+In a billion-euro enterprise, PowerShell scripts are not "just scripts" — they are **infrastructure as code** that provisions Azure resources, configures Active Directory, enforces compliance, and drives CI/CD pipelines. Testing these scripts is not a nice-to-have — it is a **risk control**.
+
+```mermaid
+graph TB
+    ENT["Enterprise PowerShell Estate"]
+
+    ENT --> TEAM1["Platform Team\nAzure provisioning"]
+    ENT --> TEAM2["Identity Team\nAD & Entra ID"]
+    ENT --> TEAM3["DevOps Team\nCI/CD pipelines"]
+    ENT --> TEAM4["Security Team\nCompliance scripts"]
+
+    TEAM1 --> REPO1["Repo + Pester Tests"]
+    TEAM2 --> REPO2["Repo + Pester Tests"]
+    TEAM3 --> REPO3["Repo + Pester Tests"]
+    TEAM4 --> REPO4["Repo + Pester Tests"]
+
+    REPO1 --> CICD["Shared CI/CD\nQuality Gates"]
+    REPO2 --> CICD
+    REPO3 --> CICD
+    REPO4 --> CICD
+
+    CICD --> PROD["Production"]
+
+    style ENT fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:3px
+    style TEAM1 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style TEAM2 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style TEAM3 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style TEAM4 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style REPO1 fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style REPO2 fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style REPO3 fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style REPO4 fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style CICD fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:3px
+    style PROD fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:2px
+```
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Microsoft's DevOps Test Principles</h2></summary>
+
+
+These principles come from Microsoft's engineering teams and the [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable). Apply them to your PowerShell testing strategy.
+
+| Principle | What It Means | How Pester Helps |
+|---|---|---|
+| **Shift left** | Test earlier in the pipeline, not at the end | Run `Invoke-Pester` locally before every commit |
+| **Test at the lowest level** | Prefer unit tests over heavy integration tests | Pester's `Mock` lets you test logic without real Azure/AD |
+| **Aim for reliability** | Tests must pass consistently, every time | Mocks remove external flakiness (API timeouts, etc.) |
+| **Treat test code as product code** | Same code review, same quality bar | Store tests in Git, review in PRs, enforce style with PSScriptAnalyzer |
+| **Code owners own their tests** | The person writing the code writes the tests | Tests live in the same repo, same PR |
+| **Design for testability** | Write code that is easy to test | Small functions, dependency injection, no hardcoded paths |
+| **Use shared test infrastructure** | Standardize across teams | Shared `PesterConfiguration.psd1` template, pinned version |
+
+> *Source: [Microsoft — Shift left to make testing fast & reliable](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable)*
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Where Tests Live in Repositories</h2></summary>
+
+
+### Recommended: Separate Folders (Enterprise Standard)
+
+```
+my-automation-module/
+├── src/
+│   ├── Public/
+│   │   ├── Get-UserInfo.ps1
+│   │   └── Set-Permissions.ps1
+│   ├── Private/
+│   │   └── Resolve-Identity.ps1
+│   └── MyModule.psd1
+├── tests/
+│   ├── Unit/
+│   │   ├── Get-UserInfo.Tests.ps1
+│   │   ├── Set-Permissions.Tests.ps1
+│   │   └── Resolve-Identity.Tests.ps1
+│   └── Integration/
+│       └── Module-Import.Tests.ps1
+├── .github/
+│   └── workflows/
+│       └── pester.yml
+├── PesterConfiguration.psd1
+└── README.md
+```
+
+### Alternative: Side-by-Side (Small Projects)
+
+```
+scripts/
+├── Get-UserInfo.ps1
+├── Get-UserInfo.Tests.ps1
+├── Set-Permissions.ps1
+└── Set-Permissions.Tests.ps1
+```
+
+| Aspect | Separate Folders | Side-by-Side |
+|---|---|---|
+| **Scalability** | Scales to 100+ scripts | Gets messy quickly |
+| **CI filtering** | Simple path-based exclusion | Harder to separate |
+| **Public/Private split** | Clean module structure | Flat |
+| **Enterprise recommendation** | **Yes** | Small utilities only |
+
+> **Rule:** Always use `.Tests.ps1` suffix — Pester discovers tests by this naming convention.
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Separation of Production Code and Tests</h2></summary>
+
+
+Tests must **never** ship to production. The boundary is clear:
+
+```mermaid
+graph LR
+    subgraph Repo["Git Repository"]
+        direction TB
+        SRC["src/\nProduction code"]
+        TST["tests/\nPester tests"]
+        CFG["PesterConfiguration.psd1"]
+    end
+
+    SRC -->|"dot-sourced\nin BeforeAll"| TST
+    TST -->|"validates"| SRC
+    CFG -->|"configures"| TST
+
+    SRC --> PROD["Production\nDeployment"]
+    TST --> CI["CI Pipeline Only\nNever deployed"]
+
+    style Repo fill:#0f172a,stroke:#334155,color:#f8fafc,stroke-width:2px
+    style SRC fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style TST fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style CFG fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style PROD fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:2px
+    style CI fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+```
+
+**How tests import production code:**
+
+```powershell
+# For standalone scripts — dot-source the file
+BeforeAll {
+    . $PSScriptRoot/../src/Public/Get-UserInfo.ps1
+}
+
+# For modules — preferred at enterprise scale
+BeforeAll {
+    Import-Module $PSScriptRoot/../src/MyModule.psd1 -Force
+}
+```
+
+**Mocking into module scope** — use `-ModuleName` on `Mock` instead of wrapping everything in `InModuleScope`:
+
+```powershell
+# ✅ Preferred — mock into the module scope
+Mock -ModuleName MyModule Get-ADUser { return @{ Name = 'Jane' } }
+
+# ⚠️ Avoid — InModuleScope around Describe/It blocks
+# (slows discovery, hides publishing issues, breaks test isolation)
+```
+
+> *Source: [pester.dev — Unit Testing within Modules](https://pester.dev/docs/usage/modules) — "Aim to avoid InModuleScope altogether by using -ModuleName on Mock."*
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Pester Test Structure — Deep Dive</h2></summary>
+
+
+### The Building Blocks
+
+```mermaid
+graph TB
+    DESC["Describe\nTop-level grouping\nNamed after the function under test"]
+    CTX["Context\nSub-grouping by scenario\nOptional, but recommended"]
+    IT["It\nSingle test case\nOne assertion per test ideally"]
+    SHOULD["Should\nAssertion operator\n-Be, -Throw, -Exist, etc."]
+
+    DESC --> CTX --> IT --> SHOULD
+
+    style DESC fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:3px
+    style CTX fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style IT fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style SHOULD fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+```
+
+### Full Structure with Setup/Teardown
+
+```powershell
+Describe 'Get-UserInfo' {
+    BeforeAll {
+        . $PSScriptRoot/../src/Get-UserInfo.ps1    # Runs ONCE — imports
+    }
+
+    Context 'When user exists' {
+        BeforeEach {
+            Mock Get-ADUser { return @{ Name = 'Jane' } }   # Fresh mock per test
+        }
+
+        It 'Returns the user name' {
+            (Get-UserInfo -UserId 'jane01').Name | Should -Be 'Jane'
+        }
+
+        It 'Does not return null' {
+            Get-UserInfo -UserId 'jane01' | Should -Not -BeNullOrEmpty
+        }
+    }
+
+    Context 'When user does not exist' {
+        BeforeEach {
+            Mock Get-ADUser { return $null }   # Override mock for this scenario
+        }
+
+        It 'Returns null' {
+            Get-UserInfo -UserId 'ghost' | Should -BeNullOrEmpty
+        }
+    }
+}
+```
+
+### Setup & Teardown — When Each Runs
+
+```mermaid
+graph LR
+    BA["BeforeAll\nOnce before the block"]
+    BE["BeforeEach\nBefore every It"]
+    IT["It\nYour test"]
+    AE["AfterEach\nAfter every It"]
+    AA["AfterAll\nOnce after the block"]
+
+    BA --> BE --> IT --> AE --> AA
+
+    style BA fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style BE fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style IT fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:3px
+    style AE fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style AA fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+```
+
+| Block | Runs | Use Case |
+|---|---|---|
+| `BeforeAll` | Once per Describe/Context | Import modules, dot-source functions |
+| `BeforeEach` | Before every `It` | Set up mocks, reset state |
+| `It` | The test itself | One assertion per test |
+| `AfterEach` | After every `It` | Clean up per-test artifacts |
+| `AfterAll` | Once per Describe/Context | Clean up shared resources |
+
+### Discovery vs Execution — The Pester 5 Rule
+
+| Phase | What Happens | Keep Here | Never Here |
+|---|---|---|---|
+| **Discovery** | Scans files, parses block names | Block names (`Describe 'X'`) | Variables, function calls, logic |
+| **Execution** | Runs `BeforeAll` → `BeforeEach` → `It` → ... | All test logic, mocks, assertions | — |
+
+> **Common mistake:** `$data = Get-Something` directly inside a Describe block runs during Discovery, not Execution. Move it to `BeforeAll`.
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Common Assertion Operators</h2></summary>
+
+
+| Operator | What it checks | Example |
+|---|---|---|
+| `Should -Be` | Equality (case-insensitive) | `$x \| Should -Be 5` |
+| `Should -BeExactly` | Equality (case-sensitive) | `$x \| Should -BeExactly 'Hello'` |
+| `Should -BeNullOrEmpty` | Null or empty | `$x \| Should -BeNullOrEmpty` |
+| `Should -Not -Be` | Inequality | `$x \| Should -Not -Be 0` |
+| `Should -BeGreaterThan` | Greater than | `$x \| Should -BeGreaterThan 10` |
+| `Should -Exist` | File/path exists | `'C:\log.txt' \| Should -Exist` |
+| `Should -Throw` | Throws an exception | `{ Bad-Func } \| Should -Throw` |
+| `Should -HaveCount` | Collection count | `$arr \| Should -HaveCount 3` |
+| `Should -Match` | Regex match | `$x \| Should -Match '^\d+$'` |
+| `Should -Invoke` | Mock was called | `Should -Invoke Get-ADUser -Times 1` |
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Local Execution vs CI Execution</h2></summary>
+
+
+```mermaid
+graph TB
+    subgraph Local["Developer Machine"]
+        direction TB
+        DEV["Write code + tests"]
+        RUN["Invoke-Pester ./tests\nSeconds, console output"]
+        FIX["Fix and iterate"]
+        DEV --> RUN --> FIX --> DEV
+    end
+
+    subgraph CI["CI Pipeline"]
+        direction TB
+        TRIGGER["Git push / PR"]
+        LINT["PSScriptAnalyzer\nCode quality scan"]
+        TEST["Invoke-Pester -CI\nFull suite + coverage + XML"]
+        GATE{"Quality Gate"}
+        PASS["Deploy"]
+        FAIL["Block + notify"]
+        TRIGGER --> LINT --> TEST --> GATE
+        GATE -- Pass --> PASS
+        GATE -- Fail --> FAIL
+    end
+
+    Local -->|"push"| CI
+
+    style Local fill:#0f172a,stroke:#10b981,color:#f8fafc,stroke-width:3px
+    style CI fill:#0f172a,stroke:#f59e0b,color:#f8fafc,stroke-width:3px
+    style DEV fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style RUN fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style FIX fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style TRIGGER fill:#1e293b,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style LINT fill:#1e293b,stroke:#a78bfa,color:#f8fafc,stroke-width:2px
+    style TEST fill:#1e293b,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style GATE fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style PASS fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style FAIL fill:#7f1d1d,stroke:#ef4444,color:#f8fafc,stroke-width:2px
+```
+
+| Concern | Local Execution | CI Execution |
+|---|---|---|
+| **Speed** | Seconds — single file/module | Minutes — full suite |
+| **Coverage** | Optional, for dev insight | **Enforced** — gates the build |
+| **Output** | Console (Detailed verbosity) | XML (NUnit/JUnit) + JaCoCo coverage |
+| **Linting** | Optional PSScriptAnalyzer | **Mandatory** before tests run |
+| **Purpose** | Fast feedback loop | Quality gate + compliance artifact |
+
+### Enterprise CI Configuration (New-PesterConfiguration)
+
+```powershell
+$config = New-PesterConfiguration
+$config.Run.Path                        = './tests'
+$config.Run.Exit                        = $true              # Non-zero exit on failure
+$config.CodeCoverage.Enabled            = $true
+$config.CodeCoverage.Path               = './src'
+$config.CodeCoverage.CoveragePercentTarget = 80              # Enterprise threshold
+$config.CodeCoverage.OutputFormat       = 'JaCoCo'           # Standard CI format
+$config.TestResult.Enabled              = $true
+$config.TestResult.OutputFormat         = 'NUnitXml'         # Publish to dashboards
+$config.Output.Verbosity                = 'Detailed'
+$config.Output.CIFormat                 = 'GithubActions'    # Native CI annotations
+
+Invoke-Pester -Configuration $config
+```
+
+### GitHub Actions — Ready-to-Use Workflow
+
+> *Source: [pester.dev — Code Coverage / GitHub Actions Integration](https://pester.dev/docs/usage/code-coverage)*
+
+```yaml
+name: Run Pester Tests
+on:
+  push:
+    branches: ["dev", "main"]
+  pull_request:
+    branches: ["dev"]
+
+jobs:
+  pester:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Pester
+      shell: pwsh
+      run: Install-Module -Name Pester -Force -Scope CurrentUser
+
+    - name: Run Pester Tests
+      shell: pwsh
+      run: |
+        $config = New-PesterConfiguration
+        $config.Run.Path = "./tests"
+        $config.CodeCoverage.Enabled = $true
+        $config.CodeCoverage.Path = "./src"
+        $config.TestResult.Enabled = $true
+        $config.Output.CIFormat = 'GithubActions'
+        Invoke-Pester -Configuration $config
+
+    - name: Upload coverage report
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-coverage-report
+        path: coverage.xml
+```
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Governance and Standardization</h2></summary>
+
+
+In a large enterprise, testing is **governed** — not left to individual preference.
+
+```mermaid
+graph TB
+    GOV["Enterprise Test Governance"]
+
+    GOV --> STD["Standards"]
+    GOV --> ENFORCE["Enforcement"]
+    GOV --> REPORT["Reporting"]
+
+    STD --> NAMING["Naming Convention\n*.Tests.ps1"]
+    STD --> STRUCTURE["Folder Structure\nsrc/ + tests/"]
+    STD --> VERSION["Pester Version Pinned\ne.g. 5.7.x"]
+    STD --> LINT["PSScriptAnalyzer Rules\nEnforced in CI"]
+
+    ENFORCE --> PR["PR Policy\nTests required to merge"]
+    ENFORCE --> GATE["Quality Gate\n80%+ coverage, 0 failures"]
+    ENFORCE --> BRANCH["Branch Protection\nNo direct push to main"]
+
+    REPORT --> DASH["Test Dashboards\nPass rate, coverage trends"]
+    REPORT --> AUDIT["Compliance Artifacts\nXML reports for auditors"]
+    REPORT --> ALERT["Alerting\nNotify on regressions"]
+
+    style GOV fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:3px
+    style STD fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style ENFORCE fill:#1e293b,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style REPORT fill:#1e293b,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style NAMING fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style STRUCTURE fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style VERSION fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style LINT fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style PR fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style GATE fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style BRANCH fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style DASH fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style AUDIT fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style ALERT fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+```
+
+### Enterprise Standardization Checklist
+
+- [ ] All repos use `src/` + `tests/Unit/` + `tests/Integration/` layout
+- [ ] Test files follow `<FunctionName>.Tests.ps1` naming
+- [ ] CI pipeline includes `Invoke-Pester` with `New-PesterConfiguration`
+- [ ] Minimum code coverage threshold set to **80%**
+- [ ] PRs cannot merge without passing tests (branch protection)
+- [ ] Pester version is pinned in `RequiredModules` or pipeline
+- [ ] PSScriptAnalyzer runs before Pester in CI
+- [ ] Test results published as NUnit XML artifacts
+- [ ] Coverage reports exported as JaCoCo for dashboard integration
+- [ ] Shared `PesterConfiguration.psd1` template across all team repos
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Well-Architected Testing — Do's and Don'ts</h2></summary>
+
+
+### Do
+
+| Practice | Why |
+|---|---|
+| **One assertion per `It` block** | Clear failure messages, easy to debug |
+| **Use `-ModuleName` on Mock** | Inject mocks into module scope cleanly |
+| **Tag tests** (`-Tag 'Unit'`, `'Integration'`) | Run subsets in CI, skip slow tests locally |
+| **Use `BeforeAll` for imports** | Code runs in Execution phase, not Discovery |
+| **Use `TestDrive:\`** for temp files | Auto-cleaned after each Describe block |
+| **Pin Pester version** | Consistent behavior across dev and CI |
+| **Use `New-PesterConfiguration`** | Full control over run, coverage, output |
+| **Use `$PSScriptRoot`** for paths | Tests work regardless of working directory |
+| **Run PSScriptAnalyzer first** | Catch code quality issues before testing |
+| **Export test results as XML** | Feed dashboards, audits, compliance tools |
+
+### Don't
+
+| Anti-Pattern | Problem |
+|---|---|
+| **Logic in Discovery phase** | Code outside `BeforeAll`/`It` runs during scan, causes side effects |
+| **`InModuleScope` around Describe** | Slows discovery, hides broken exports |
+| **Hardcoded paths** | Tests break on other machines or CI agents |
+| **Testing private functions directly** | Couples tests to implementation, not behavior |
+| **Skipping tests with `#` comments** | Use `-Skip` parameter instead — tracked in reports |
+| **Mocking everything** | Over-mocking hides real bugs — mock only external deps |
+| **No `-ErrorAction Stop` on pre-conditions** | Test continues with invalid state |
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Gaps, Limitations, and Mitigations</h2></summary>
+
+
+Every tool has boundaries. Understanding Pester's limits helps you architect around them.
+
+| Gap | Detail | Mitigation |
+|---|---|---|
+| **Binary module mocking** | `Mock -ModuleName` and `InModuleScope` don't work with `.dll` modules | Wrap binary calls in a thin PowerShell function, mock that wrapper |
+| **PS class method caching** | Windows PowerShell 5.1 caches class definitions, breaking mocks | Run tests in a fresh session (`Start-Job` or CI runner) |
+| **No native parallel execution** | Pester runs tests sequentially | Split suites across parallel CI jobs; use `ForEach-Object -Parallel` |
+| **Coverage with breakpoints** | Default breakpoint-based coverage can be slow on large codebases | Set `CodeCoverage.UseBreakpoints = $false` (Profiler-based tracer) |
+| **Cross-platform paths** | Hardcoded `C:\` paths break on Linux/macOS | Use `TestDrive:\`, `$PSScriptRoot`, and `Join-Path` |
+| **No approval/snapshot testing** | No `Should -MatchSnapshot` equivalent | Use golden-file pattern: compare output to a saved baseline |
+| **Limited async/event testing** | Testing async PowerShell is awkward | Isolate async logic into testable functions; mock the event layer |
+
+> *Source: [pester.dev — Modules](https://pester.dev/docs/usage/modules) — "Injecting mocks inside a Binary module is not possible. Exported commands can still be tested and mocked for calls made in script or other modules."*
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Complementary Enterprise Tools</h2></summary>
+
+
+Pester is the core — but a well-architected enterprise pairs it with:
+
+| Tool | Purpose | How It Fits |
+|---|---|---|
+| **PSScriptAnalyzer** | Static analysis / linting | Run before Pester in CI — catches code smells, enforces style |
+| **PSRule** | Infrastructure validation rules | Validate ARM/Bicep/Azure policy alongside Pester tests |
+| **Plaster** | Project scaffolding templates | Generate new modules with `src/`, `tests/`, Pester config pre-wired |
+| **PSake / InvokeBuild** | Build automation | Orchestrate lint → test → coverage → publish in one build script |
+| **GitHub Actions / Azure Pipelines** | CI/CD | Run Pester, publish NUnit results, enforce quality gates |
+| **Codecov / SonarQube** | Coverage dashboards | Consume JaCoCo coverage XML from Pester |
+| **GitHub Copilot** | AI-assisted test generation | Scaffold Pester tests from function signatures (Day 2 topic) |
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Key Test Metrics for Enterprise Reporting</h2></summary>
+
+
+| Metric | Target | Why It Matters |
+|---|---|---|
+| **Pass rate** | 100% on `main` | Broken tests = blocked deployments |
+| **Code coverage** | 80%+ per module | Untested code is risky in production |
+| **Test count** | Growing with each PR | More tests = more confidence |
+| **Execution time** | < 30s for unit suite | Slow suites discourage running tests |
+| **Flaky rate** | 0% | Intermittent failures erode team trust |
+| **Test-to-code ratio** | 1:1 or higher | Every function has at least one test |
+| **Mean time to resolve** | < 1 day | How fast broken tests get fixed |
+
+> *Microsoft teams track these metrics on scorecards. One team runs 60,000 unit tests in parallel in under 6 minutes.* ([source](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable))
+
+### Generating Reports for Dashboards
+
+```powershell
+$config = New-PesterConfiguration
+$config.TestResult.Enabled       = $true
+$config.TestResult.OutputFormat  = 'NUnitXml'         # For CI dashboards
+$config.TestResult.OutputPath    = './testResults.xml'
+$config.CodeCoverage.Enabled     = $true
+$config.CodeCoverage.OutputFormat = 'JaCoCo'           # For Codecov/SonarQube
+$config.CodeCoverage.OutputPath  = './coverage.xml'
+
+Invoke-Pester -Configuration $config
+```
+
+> *Pester supports NUnit 2.5 and JUnit 4 schemas for test results, and JaCoCo format for coverage.* ([source](https://pester.dev/docs/usage/test-results))
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Enterprise Maturity Model</h2></summary>
+
+
+Where does your team sit today?
+
+| Level | Name | Characteristics |
+|---|---|---|
+| **0** | No Testing | Scripts run manually, "works on my machine" |
+| **1** | Ad Hoc | Some `.Tests.ps1` files, not in CI |
+| **2** | Consistent | All modules have tests, CI runs Pester, but no coverage gates |
+| **3** | Governed | Coverage thresholds enforced, PSScriptAnalyzer mandatory, test reports published |
+| **4** | Optimized | Parallel test runs, AI-assisted test generation, flaky test tracking, test health dashboards |
+
+```mermaid
+graph LR
+    L0["Level 0\nNo Testing"] --> L1["Level 1\nAd Hoc"]
+    L1 --> L2["Level 2\nConsistent"]
+    L2 --> L3["Level 3\nGoverned"]
+    L3 --> L4["Level 4\nOptimized"]
+
+    style L0 fill:#7f1d1d,stroke:#ef4444,color:#f8fafc,stroke-width:2px
+    style L1 fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style L2 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style L3 fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:3px
+    style L4 fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:3px
+```
+
+**Workshop goal: Move every team to at least Level 3.**
+
+
+</details>
+
+---
+
+<details>
+<summary><h2>Key Takeaways</h2></summary>
+
+
+1. **Tests are first-class** — they live in version control, structured under `tests/Unit/` and `tests/Integration/`.
+2. **Separate but connected** — `src/` for production code, `tests/` for Pester, linked via dot-sourcing or `Import-Module`.
+3. **Shift left** — developers run Pester locally for seconds-fast feedback; CI enforces quality gates.
+4. **Standardize across teams** — naming, folder structure, coverage thresholds, Pester version, PSScriptAnalyzer rules.
+5. **Know the gaps** — binary module mocking, class caching, no parallel execution; architect around them.
+6. **Complementary tooling** — PSScriptAnalyzer for linting, PSRule for infra validation, Plaster for scaffolding.
+7. **Measure and report** — pass rate, coverage, flaky rate, MTTR — make testing health visible to leadership.
+
+### Further Reading
+
+| Resource | Link |
+|---|---|
+| Microsoft Shift-Left Testing | [learn.microsoft.com — shift-left-make-testing-fast-reliable](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable) |
+| Pester Modules Testing | [pester.dev/docs/usage/modules](https://pester.dev/docs/usage/modules) |
+| Pester Code Coverage | [pester.dev/docs/usage/code-coverage](https://pester.dev/docs/usage/code-coverage) |
+| Pester CI Test Results | [pester.dev/docs/usage/test-results](https://pester.dev/docs/usage/test-results) |
+
+---
+
+> *Next → Lunch Break (12:00) · Then → Mocking & Test Isolation (13:00)*
+
+</details>

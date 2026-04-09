@@ -2,6 +2,7 @@
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import DocsSidebar from "@/components/DocsSidebar";
 import { CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
 
 const mapping = [
@@ -27,7 +28,9 @@ export default function MappingPage() {
   return (
     <>
       <Nav />
-      <div className="max-w-6xl mx-auto px-4 py-16">
+      <div className="flex min-h-[calc(100vh-56px)]">
+        <DocsSidebar />
+      <div className="flex-1 max-w-6xl px-4 py-16">
         <div className="text-xs uppercase tracking-widest text-violet-400 font-bold mb-1">Complete Traceability</div>
         <h1 className="text-3xl font-extrabold mb-2">PSCode → Source → Test Mapping</h1>
         <p className="text-slate-400 mb-10 max-w-2xl">
@@ -120,6 +123,7 @@ export default function MappingPage() {
             </div>
           ))}
         </div>
+      </div>
       </div>
       <Footer />
     </>

@@ -2,6 +2,7 @@
 
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import DocsSidebar from "@/components/DocsSidebar";
 import { Layers, Shield, Beaker, Database, Box, BarChart3 } from "lucide-react";
 
 const categories = [
@@ -96,7 +97,9 @@ export default function ConceptsPage() {
   return (
     <>
       <Nav />
-      <div className="max-w-5xl mx-auto px-4 py-16">
+      <div className="flex min-h-[calc(100vh-56px)]">
+        <DocsSidebar />
+      <div className="flex-1 max-w-5xl px-4 py-16">
         <div className="text-xs uppercase tracking-widest text-violet-400 font-bold mb-1">Reference</div>
         <h1 className="text-3xl font-extrabold mb-2">Pester Concepts Covered</h1>
         <p className="text-slate-400 mb-10 max-w-2xl">
@@ -125,6 +128,7 @@ export default function ConceptsPage() {
             </div>
           ))}
         </div>
+      </div>
       </div>
       <Footer />
     </>

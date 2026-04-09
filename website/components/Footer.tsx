@@ -22,7 +22,7 @@ export default function Footer() {
           </a>
         ))}
       </div>
-      <p>Pester Workshop 2026 — Built with Next.js, Tailwind CSS, and Pester</p>
+      <p>Pester Workshop 2026</p>
     </footer>
   );
 }
