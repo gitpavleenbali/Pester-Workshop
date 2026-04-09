@@ -146,3 +146,22 @@ Describe 'Module 06 · Get-ProcessedData Pipeline' {
     }
 }
 
+# PESTER ▶ TestDrive: — Pester's temporary file system
+# TestDrive:\ is a temp folder that Pester auto-creates and auto-cleans per Describe.
+# Use it to test file operations without polluting the real file system.
+Describe 'Module 06 · TestDrive Demo' {
+    It 'Can write and read from TestDrive' {
+        Write-Host "  → Writing to TestDrive:\test.txt and reading back" -ForegroundColor Gray
+        Set-Content -Path TestDrive:\test.txt -Value 'Pester TestDrive works!'
+        'TestDrive:\test.txt' | Should -Exist                     # File exists in temp
+        Get-Content TestDrive:\test.txt | Should -Be 'Pester TestDrive works!'
+    }
+
+    # PESTER ▶ AfterAll — runs once after all tests in this Describe complete
+    # TestDrive is auto-cleaned, but this shows the AfterAll pattern.
+    AfterAll {
+        Write-Host "  → AfterAll: TestDrive auto-cleaned by Pester" -ForegroundColor Gray
+    }
+}
+
+

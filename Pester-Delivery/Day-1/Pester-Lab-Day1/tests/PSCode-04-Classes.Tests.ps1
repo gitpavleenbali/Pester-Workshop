@@ -34,6 +34,11 @@ Describe 'Module 04 · AzureResource Base Class' {
         Write-Host "  → Checking Name = 'my-storage'" -ForegroundColor Gray
         $r.Name | Should -Be 'my-storage'
     }
+    # PESTER ▶ Should -BeOfType — verifies the .NET type of the object
+    It 'Is of type AzureResource' {
+        Write-Host "  → Checking object type is AzureResource" -ForegroundColor Gray
+        $r | Should -BeOfType ([AzureResource])
+    }
     It 'Constructor sets Type' {
         Write-Host "  → Checking Type = 'StorageAccount'" -ForegroundColor Gray
         $r.Type | Should -Be 'StorageAccount'
@@ -133,4 +138,5 @@ Describe 'Module 04 · AzureVirtualMachine Inheritance' {
         $vm.GetDisplayName() | Should -Be 'VirtualMachine/vm-01'
     }
 }
+
 

@@ -33,6 +33,13 @@ Describe 'Module 02 · Get-AzureResourceSummary' {
         }
     }
 
+    # PESTER ▶ AfterEach — runs after EVERY It block
+    # Used for cleanup: reset variables, remove temp files, etc.
+    # Here we demonstrate the pattern even though no cleanup is strictly needed.
+    AfterEach {
+        # Cleanup would go here, e.g.: Remove-Variable result -ErrorAction SilentlyContinue
+    }
+
     # PESTER ▶ It '...' { <TestLogic> }
     # Each It is one test case. The string is the test name shown in results.
     # Should -Be asserts that the actual value equals the expected value (case-insensitive).
@@ -184,3 +191,4 @@ Describe 'Module 02 · Get-VMStatus' {
         Should -Invoke Get-AzVM -ParameterFilter { $Name -eq 'vm-web' }
     }
 }
+

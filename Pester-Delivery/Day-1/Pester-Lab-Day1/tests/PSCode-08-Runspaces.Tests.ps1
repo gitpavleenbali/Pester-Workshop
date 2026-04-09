@@ -52,6 +52,13 @@ Describe 'Module 08 · Invoke-ParallelWork' {
         $r.Count | Should -Be 3
     }
 
+    # PESTER ▶ Should -HaveCount — cleaner way to assert collection size
+    It 'Returns exactly 5 results for 5 inputs' {
+        Write-Host "  → Running: HaveCount assertion for 5 items" -ForegroundColor Gray
+        $r = Invoke-ParallelWork -Items @('a','b','c','d','e')
+        $r | Should -HaveCount 5
+    }
+
     # PESTER ▶ ForEach-Object with Should inside
     # You can loop through a collection and assert EACH item.
     # If any single assertion fails, the entire test fails.
@@ -85,3 +92,4 @@ Describe 'Module 08 · Invoke-ParallelWork' {
         $r[0].Item | Should -Be 'Solo'
     }
 }
+

@@ -143,5 +143,14 @@ Describe 'Module 09 · Get-VMStatus — Mocked Azure' {
         Write-Host "  → Mocked Get-AzVM('vm-gone') → returns null → expecting null" -ForegroundColor Gray
         Get-VMStatus -VMName 'vm-gone' | Should -BeNullOrEmpty
     }
+
+    # PESTER ▶ -Skip — marks a test as skipped (appears in report but doesn't run)
+    # Use -Skip for tests that are planned but not yet implemented,
+    # or tests that depend on an unavailable resource. Better than commenting out.
+    It 'Integration test: real Azure VM status check' -Skip {
+        # This would need real Azure credentials — skipped in workshop environment
+        $status = Get-VMStatus -VMName 'real-production-vm'
+        $status | Should -Not -BeNullOrEmpty
+    }
 }
 

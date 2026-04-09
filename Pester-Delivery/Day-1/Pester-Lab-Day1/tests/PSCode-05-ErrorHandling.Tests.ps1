@@ -23,8 +23,9 @@ Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
     BeforeAll {
         # PESTER ▶ Mock Get-AzResourceGroup — simulates finding an existing RG.
         Mock Get-AzResourceGroup { return @{ ResourceGroupName = 'rg-prod' } }
-        # PESTER ▶ Mock New-AzResource — simulates a successful deployment.
-        Mock New-AzResource { return @{ ProvisioningState = 'Succeeded' } }
+        # PESTER ▶ Mock with -Verifiable — marks this mock as REQUIRED to be called.
+        # At the end, Should -InvokeVerifiable checks all -Verifiable mocks were used.
+        Mock New-AzResource { return @{ ProvisioningState = 'Succeeded' } } -Verifiable
     }
 
     # PESTER ▶ Context — "happy path" scenario
@@ -90,3 +91,4 @@ Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
         }
     }
 }
+
