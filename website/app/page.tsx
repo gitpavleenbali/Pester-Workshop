@@ -14,7 +14,7 @@ const Mermaid = dynamic(() => import("@/components/Mermaid"), { ssr: false });
 
 const stats = [
   { val: "3", label: "Knowledge Modules", color: "text-violet-400" },
-  { val: "96", label: "Pester Tests", color: "text-green-400" },
+  { val: "107", label: "Pester Tests", color: "text-green-400" },
   { val: "9", label: "PowerShell Sources", color: "text-blue-400" },
   { val: "5", label: "Azure Scenarios", color: "text-cyan-400" },
   { val: "15+", label: "Mermaid Diagrams", color: "text-yellow-400" },
