@@ -13,11 +13,11 @@ import {
 const Mermaid = dynamic(() => import("@/components/Mermaid"), { ssr: false });
 
 const stats = [
-  { val: "3", label: "Modules", color: "text-violet-400" },
+  { val: "3", label: "Knowledge Modules", color: "text-violet-400" },
   { val: "96", label: "Pester Tests", color: "text-green-400" },
-  { val: "9", label: "PSCode Modules", color: "text-blue-400" },
-  { val: "5", label: "Source Files", color: "text-cyan-400" },
-  { val: "15+", label: "Pester Concepts", color: "text-yellow-400" },
+  { val: "9", label: "PowerShell Sources", color: "text-blue-400" },
+  { val: "5", label: "Azure Scenarios", color: "text-cyan-400" },
+  { val: "15+", label: "Mermaid Diagrams", color: "text-yellow-400" },
 ];
 
 const features = [
@@ -72,9 +72,14 @@ export default function Home() {
           </p>
 
           <div className="flex gap-2 justify-center flex-wrap mb-10">
-            {["Pester 5.x", "PowerShell 5.1 / 7.x", "96 Tests", "Azure Scenarios"].map((b) => (
-              <span key={b} className="px-3 py-1 text-xs font-semibold rounded-full border border-slate-700 bg-slate-800/50 text-slate-300">
-                {b}
+            {[
+              { text: "Pester 5.x", icon: "🧪" },
+              { text: "PowerShell 5.1 / 7.x", icon: "⚡" },
+              { text: "96 Tests", icon: "✅" },
+              { text: "Azure Scenarios", icon: "☁️" },
+            ].map((b) => (
+              <span key={b.text} className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-full bg-gradient-to-r from-slate-800/80 to-slate-800/40 border border-slate-600/40 text-slate-200 backdrop-blur-sm shadow-sm">
+                <span>{b.icon}</span> {b.text}
               </span>
             ))}
           </div>
@@ -90,14 +95,37 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Quick Start — first thing after hero */}
+      <section className="border-y border-slate-800 bg-slate-900/40">
+        <div className="max-w-4xl mx-auto px-4 py-16">
+          <h2 className="text-2xl font-bold mb-6">Quick Start</h2>
+          <div className="bg-[#0d1117] border border-slate-700 rounded-xl p-6 font-mono text-sm leading-relaxed">
+            <div className="text-slate-500"># 1. Clone the repository</div>
+            <div><span className="text-cyan-400">git clone</span> https://github.com/gitpavleenbali/Pester-Workshop.git</div>
+            <div><span className="text-violet-400">cd</span> Pester-Workshop</div>
+            <br />
+            <div className="text-slate-500"># 2. Set up the lab environment</div>
+            <div><span className="text-violet-400">cd</span> Pester-Delivery/Day-1/Pester-Lab-Day1</div>
+            <div><span className="text-cyan-400">.\Setup-Lab.ps1</span></div>
+            <br />
+            <div className="text-slate-500"># 3. Launch the lab</div>
+            <div><span className="text-cyan-400">.\Start-Lab.ps1</span>          <span className="text-slate-500"># Terminal mode</span></div>
+            <div><span className="text-cyan-400">.\Start-Lab.ps1</span> <span className="text-orange-400">-Web</span>     <span className="text-slate-500"># Browser mode (localhost:8080)</span></div>
+            <br />
+            <div className="text-slate-500"># 4. Run tests directly</div>
+            <div><span className="text-cyan-400">Invoke-Pester</span> ./tests <span className="text-orange-400">-Output</span> Detailed</div>
+          </div>
+        </div>
+      </section>
+
       {/* Stats */}
-      <section className="border-y border-slate-800 bg-slate-900/30">
-        <div className="max-w-5xl mx-auto px-4 py-8">
+      <section className="bg-slate-900/30">
+        <div className="max-w-5xl mx-auto px-4 py-10">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {stats.map((s) => (
-              <div key={s.label} className="text-center p-4 rounded-xl bg-slate-800/30 border border-slate-700/30">
-                <div className={`text-3xl font-extrabold ${s.color}`}>{s.val}</div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-1">{s.label}</div>
+              <div key={s.label} className="text-center p-5 rounded-2xl bg-gradient-to-b from-slate-800/50 to-slate-800/20 border border-slate-700/30 shadow-lg">
+                <div className={`text-4xl font-extrabold ${s.color}`}>{s.val}</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-1.5 font-semibold">{s.label}</div>
               </div>
             ))}
           </div>
@@ -109,9 +137,9 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-2">Architecture</h2>
         <p className="text-slate-400 text-sm mb-6">How PSCode modules flow into testable source files, Pester tests, and the interactive lab.</p>
         <Mermaid chart={`graph LR
-    A["PSCode/\\n9 PS modules"] --> B["src/\\n5 extracted files"]
-    B --> C["tests/\\n9 Pester files\\n96 tests"]
-    C --> D["Lab UI\\nTerminal + Browser"]
+    A["PSCode/<br/>9 PS modules"] --> B["src/<br/>5 extracted files"]
+    B --> C["tests/<br/>9 Pester files<br/>96 tests"]
+    C --> D["Lab UI<br/>Terminal + Browser"]
     style A fill:#1e1b4b,stroke:#818cf8,color:#f8fafc
     style B fill:#1e293b,stroke:#8b5cf6,color:#f8fafc
     style C fill:#052e16,stroke:#22c55e,color:#f8fafc
@@ -138,24 +166,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Quick start */}
-      <section className="border-t border-slate-800 bg-slate-900/40">
-        <div className="max-w-4xl mx-auto px-4 py-16">
-          <h2 className="text-2xl font-bold mb-6">Quick Start</h2>
-          <div className="bg-[#0d1117] border border-slate-700 rounded-xl p-6 font-mono text-sm leading-relaxed">
-            <div className="text-slate-500"># 1. Check prerequisites</div>
-            <div><span className="text-violet-400">cd</span> Pester-Delivery/Day-1/Pester-Lab-Day1</div>
-            <div><span className="text-cyan-400">.\Setup-Lab.ps1</span></div>
-            <br />
-            <div className="text-slate-500"># 2. Launch the lab</div>
-            <div><span className="text-cyan-400">.\Start-Lab.ps1</span>          <span className="text-slate-500"># Terminal mode</span></div>
-            <div><span className="text-cyan-400">.\Start-Lab.ps1</span> <span className="text-orange-400">-Web</span>     <span className="text-slate-500"># Browser mode (localhost:8080)</span></div>
-            <br />
-            <div className="text-slate-500"># 3. Run tests directly</div>
-            <div><span className="text-cyan-400">Invoke-Pester</span> ./tests <span className="text-orange-400">-Output</span> Detailed</div>
-          </div>
-        </div>
-      </section>
+
 
       <Footer />
     </>

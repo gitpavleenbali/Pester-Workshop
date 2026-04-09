@@ -58,11 +58,15 @@ export default function LabPage() {
         {/* Quick Start */}
         <h2 className="text-xl font-bold mb-4">Quick Start</h2>
         <div className="bg-[#0d1117] border border-slate-700 rounded-xl p-6 font-mono text-sm leading-relaxed mb-12">
-          <div className="text-slate-500"># 1. Check prerequisites (installs Pester 5 if needed)</div>
+          <div className="text-slate-500"># 1. Clone the Pester Workshop repository</div>
+          <div><span className="text-cyan-400">git clone</span> https://github.com/gitpavleenbali/Pester-Workshop.git</div>
+          <div><span className="text-violet-400">cd</span> Pester-Workshop</div>
+          <br />
+          <div className="text-slate-500"># 2. Navigate to the lab and check prerequisites</div>
           <div><span className="text-violet-400">cd</span> Pester-Delivery/Day-1/Pester-Lab-Day1</div>
           <div><span className="text-cyan-400">.\Setup-Lab.ps1</span></div>
           <br />
-          <div className="text-slate-500"># 2. Launch the lab</div>
+          <div className="text-slate-500"># 3. Launch the lab</div>
           <div><span className="text-cyan-400">.\Start-Lab.ps1</span>          <span className="text-slate-500"># Terminal mode</span></div>
           <div><span className="text-cyan-400">.\Start-Lab.ps1</span> <span className="text-orange-400">-Web</span>     <span className="text-slate-500"># Browser mode (localhost:8080)</span></div>
         </div>
