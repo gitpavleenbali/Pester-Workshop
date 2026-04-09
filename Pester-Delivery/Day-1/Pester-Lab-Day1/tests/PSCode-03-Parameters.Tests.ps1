@@ -10,7 +10,7 @@
 # Runs ONCE before all tests. Dot-sources the helper script so all functions are available.
 BeforeAll {
     # PESTER ▶ Dot-sourcing — loads functions from source into the test scope.
-    . $PSScriptRoot/../src/AzureResourceHelpers.ps1
+    . $PSScriptRoot/../../../../PSCode/02_advanced_functions/Azure-Resource-Manager.Functions.ps1
 }
 
 # PESTER ▶ Describe '...'
@@ -113,4 +113,5 @@ Describe 'Module 03 · Parameter Validation Patterns' {
         }
     }
 }
+
 

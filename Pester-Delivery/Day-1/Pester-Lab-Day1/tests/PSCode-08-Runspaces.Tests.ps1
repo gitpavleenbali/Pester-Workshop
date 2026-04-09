@@ -9,7 +9,7 @@
 # PESTER ▶ BeforeAll {}
 # Loads all functions once before tests. No mocking needed — these are pure functions.
 BeforeAll {
-    . $PSScriptRoot/../src/PSCodeModulesAdditional.ps1
+    . $PSScriptRoot/../../../../PSCode/08_runspaces/Azure-Runspaces.Functions.ps1
 }
 
 # PESTER ▶ Testing pure functions — no mocking required
@@ -92,4 +92,5 @@ Describe 'Module 08 · Invoke-ParallelWork' {
         $r[0].Item | Should -Be 'Solo'
     }
 }
+
 

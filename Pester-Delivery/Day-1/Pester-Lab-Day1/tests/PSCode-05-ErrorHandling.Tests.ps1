@@ -9,7 +9,7 @@
 # PESTER ▶ BeforeAll {}
 # Loads the source functions once before all tests in this file.
 BeforeAll {
-    . $PSScriptRoot/../src/PSCodeModuleExtracts.ps1
+    . $PSScriptRoot/../../../../PSCode/05_error_handling/Azure-Error-Handling.Functions.ps1
 }
 
 # PESTER ▶ Describe '...'
@@ -100,5 +100,6 @@ Describe 'Module 05 · Deploy-AzureResourceWithValidation' {
         }
     }
 }
+
 
 

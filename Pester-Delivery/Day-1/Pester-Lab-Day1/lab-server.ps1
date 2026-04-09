@@ -49,7 +49,16 @@ $testFiles = @{
 # SOURCE FILE PATHS: Used for code coverage analysis.
 # When /api/cov is called, Pester measures which lines in these files
 # were executed by the test suite and reports coverage percentage.
-$srcPaths = @('src/DataProcessing.ps1','src/AzureResourceHelpers.ps1','src/CostMonitorHelpers.ps1','src/PSCodeModuleExtracts.ps1','src/PSCodeModulesAdditional.ps1')
+$srcPaths = @(
+    '../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.Functions.ps1',
+    '../../../PSCode/02_advanced_functions/Azure-Resource-Manager.Functions.ps1',
+    '../../../PSCode/04_powershell_classes/Azure-Classes.Functions.ps1',
+    '../../../PSCode/05_error_handling/Azure-Error-Handling.Functions.ps1',
+    '../../../PSCode/06_debugging/Debug-Demo.Functions.ps1',
+    '../../../PSCode/07_git_integration/Azure-Git-Training.Functions.ps1',
+    '../../../PSCode/08_runspaces/Azure-Runspaces.Functions.ps1',
+    '../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.Functions.ps1'
+)
 
 # CORE FUNCTION: Runs Pester tests and returns structured results.
 # Uses New-PesterConfiguration (Pester 5 API) for full control over:

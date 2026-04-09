@@ -11,7 +11,7 @@
 # Dot-sources the class definitions so they're available to all tests.
 # Classes MUST be loaded at file scope (not inside Describe) in Pester 5.
 BeforeAll {
-    . $PSScriptRoot/../src/PSCodeModuleExtracts.ps1
+    . $PSScriptRoot/../../../../PSCode/04_powershell_classes/Azure-Classes.Functions.ps1
 }
 
 # PESTER ▶ Describe for class testing
@@ -138,5 +138,6 @@ Describe 'Module 04 · AzureVirtualMachine Inheritance' {
         $vm.GetDisplayName() | Should -Be 'VirtualMachine/vm-01'
     }
 }
+
 
 

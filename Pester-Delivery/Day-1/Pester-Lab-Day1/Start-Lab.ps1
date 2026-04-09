@@ -47,7 +47,16 @@ $items = [ordered]@{
     '8' = @{ Name='08 Runspaces';          File='tests/PSCode-08-Runspaces.Tests.ps1';         Desc=@("Get-AzureResourceCount, Invoke-ParallelWork","PSCode/08_runspaces/") }
     '9' = @{ Name='09 Capstone';           File='tests/PSCode-09-Capstone.Tests.ps1';          Desc=@("Invoke-SafeAzureCall (retry), Send-CostAlert (boundary)","PSCode/09_final_solution/") }
 }
-$srcFiles = @('src/DataProcessing.ps1','src/AzureResourceHelpers.ps1','src/CostMonitorHelpers.ps1','src/PSCodeModuleExtracts.ps1','src/PSCodeModulesAdditional.ps1')
+$srcFiles = @(
+    '../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.Functions.ps1',
+    '../../../PSCode/02_advanced_functions/Azure-Resource-Manager.Functions.ps1',
+    '../../../PSCode/04_powershell_classes/Azure-Classes.Functions.ps1',
+    '../../../PSCode/05_error_handling/Azure-Error-Handling.Functions.ps1',
+    '../../../PSCode/06_debugging/Debug-Demo.Functions.ps1',
+    '../../../PSCode/07_git_integration/Azure-Git-Training.Functions.ps1',
+    '../../../PSCode/08_runspaces/Azure-Runspaces.Functions.ps1',
+    '../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.Functions.ps1'
+)
 
 if ($Web) {
     Kill-OldServer

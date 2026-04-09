@@ -10,7 +10,7 @@
 # Loads pure functions (no Azure dependency). No mocks needed — these functions
 # are self-contained, making them ideal candidates for unit testing.
 BeforeAll {
-    . $PSScriptRoot/../src/DataProcessing.ps1
+    . $PSScriptRoot/../../../../PSCode/06_debugging/Debug-Demo.Functions.ps1
 }
 
 # PESTER ▶ Testing pure functions (no mocking needed)
@@ -163,5 +163,6 @@ Describe 'Module 06 · TestDrive Demo' {
         Write-Host "  → AfterAll: TestDrive auto-cleaned by Pester" -ForegroundColor Gray
     }
 }
+
 
 

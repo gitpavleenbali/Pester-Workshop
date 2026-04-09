@@ -10,8 +10,8 @@
 # Loads MULTIPLE source files — the capstone project combines helpers from different modules.
 # You can dot-source multiple files in the same BeforeAll block.
 BeforeAll {
-    . $PSScriptRoot/../src/CostMonitorHelpers.ps1
-    . $PSScriptRoot/../src/AzureResourceHelpers.ps1
+    . $PSScriptRoot/../../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.Functions.ps1
+    . $PSScriptRoot/../../../../PSCode/02_advanced_functions/Azure-Resource-Manager.Functions.ps1
 }
 
 # PESTER ▶ Testing retry logic without mocking
@@ -165,5 +165,6 @@ Describe 'Module 09 · Get-VMStatus — Mocked Azure' {
         $true | Should -BeTrue
     }
 }
+
 
 
