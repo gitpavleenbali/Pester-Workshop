@@ -25,15 +25,21 @@ function Write-Info ($l) { foreach ($x in $l) { Write-Host "  $x" -ForegroundCol
 function Pause-Lab { Write-Host ""; Read-Host "  Press Enter to continue" }
 
 function Kill-OldServer {
-    # Kill any existing server on the port
-    try {
-        $conns = Get-NetTCPConnection -LocalPort $Port -ErrorAction SilentlyContinue
-        if ($conns) {
-            $pids = $conns | Select-Object -ExpandProperty OwningProcess -Unique | Where-Object { $_ -ne 4 -and $_ -ne $PID }
-            foreach ($p in $pids) { try { Stop-Process -Id $p -Force -ErrorAction SilentlyContinue } catch {} }
-            Start-Sleep -Milliseconds 500
-        }
-    } catch {}
+    # Check if port is in use
+    $conns = Get-NetTCPConnection -LocalPort $Port -ErrorAction SilentlyContinue
+    if (-not $conns) { return }
+
+    # Try to kill user processes holding the port (not System PID 4)
+    $pids = $conns | Select-Object -ExpandProperty OwningProcess -Unique | Where-Object { $_ -ne 4 -and $_ -ne $PID }
+    foreach ($p in $pids) { try { Stop-Process -Id $p -Force -ErrorAction SilentlyContinue } catch {} }
+    if ($pids) { Start-Sleep -Milliseconds 500 }
+
+    # Re-check: if still held by System (PID 4 = orphaned HttpListener), bump port
+    $still = Get-NetTCPConnection -LocalPort $Port -ErrorAction SilentlyContinue
+    if ($still) {
+        Write-Host "  Port $Port in use (orphaned listener). Using port $(($Port+1))..." -ForegroundColor Yellow
+        $script:Port = $Port + 1
+    }
 }
 
 $items = [ordered]@{
@@ -61,7 +67,9 @@ if ($Web) {
     Kill-OldServer
     $srv = Join-Path $labRoot 'lab-server.ps1'
     if (-not (Test-Path $srv)) { Write-Host "[ERROR] lab-server.ps1 not found." -ForegroundColor Red; exit 1 }
-    Write-Host "`n  Pester Lab — http://localhost:$Port" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  Starting fresh server on port $Port..." -ForegroundColor Green
+    Write-Host "  Pester Lab — http://localhost:$Port" -ForegroundColor Cyan
     Write-Host "  Logs below. Ctrl+C to stop.`n" -ForegroundColor Gray
     Start-Process "http://localhost:$Port"
     & $srv -Port $Port -LabRoot $labRoot
