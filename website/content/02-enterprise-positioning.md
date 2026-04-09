@@ -5,7 +5,7 @@
 ---
 
 ## The Big Picture — Testing at Enterprise Scale
-In a billion-euro enterprise, PowerShell scripts are not "just scripts" — they are **infrastructure as code** that provisions Azure resources, configures Active Directory, enforces compliance, and drives CI/CD pipelines. Testing these scripts is not a nice-to-have — it is a **risk control**.
+In a big enterprise, PowerShell scripts are not "just scripts" — they are **infrastructure as code** that provisions Azure resources, configures Active Directory, enforces compliance, and drives CI/CD pipelines. Testing these scripts is not a nice-to-have — it is a **risk control**.
 
 ```mermaid
 graph TB
@@ -58,6 +58,140 @@ These principles come from Microsoft's engineering teams and the [Azure Well-Arc
 > *Source: [Microsoft — Shift left to make testing fast & reliable](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable)*
 ---
 
+## The Legacy Code Problem — Test Strategy for Real Codebases
+
+Most enterprise PowerShell wasn't written with testing in mind. You'll find 500-line scripts that mix logic, Azure calls, user prompts, and `Write-Host` output — all in one file with no functions. **You can't mock what isn't a function.**
+
+### The Two Approaches
+
+```mermaid
+graph TB
+    LEGACY["Legacy Script<br/>(monolithic, untestable)"]
+
+    LEGACY --> OPT_A["Option A: Modernize Source"]
+    LEGACY --> OPT_B["Option B: Extract & Wrap"]
+
+    OPT_A --> A1["Refactor into functions"]
+    A1 --> A2["1 file = 1 function (or set)"]
+    A2 --> A3["Test dot-sources the file directly"]
+    A3 --> IDEAL["Ideal: Zero duplication"]
+
+    OPT_B --> B1["Keep legacy script untouched"]
+    B1 --> B2["Create .Functions.ps1 wrapper<br/>with extracted/copied functions"]
+    B2 --> B3["Test dot-sources the wrapper"]
+    B3 --> RISK["Risk: Source drifts from wrapper"]
+
+    style LEGACY fill:#7f1d1d,stroke:#ef4444,color:#f8fafc,stroke-width:3px
+    style OPT_A fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style OPT_B fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style IDEAL fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style RISK fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style A1 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style A2 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style A3 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style B1 fill:#1e293b,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style B2 fill:#1e293b,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style B3 fill:#1e293b,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+```
+
+### Option A: Modernize the Source (Recommended)
+
+Refactor the script so **every function is in its own file** (or grouped logically). The test dot-sources the source file directly — no intermediate layer.
+
+```
+PSCode/02_advanced_functions/
+    Azure-Resource-Manager.ps1          ← source (contains the functions)
+
+tests/
+    PSCode-02-AdvancedFunctions.Tests.ps1  → dot-sources the .ps1 directly
+```
+
+**Pros:** Zero duplication. One source of truth. If the code changes, the tests test the real code.
+**Cons:** Requires touching the legacy script. May break existing consumers if the script structure changes.
+
+### Option B: Extract & Wrap (When You Can't Touch Legacy)
+
+Sometimes the legacy script is in production, has no tests, and **nobody wants to refactor it right now**. In that case, create a thin wrapper that copies or imports the testable parts.
+
+```
+PSCode/02_advanced_functions/
+    Azure-Resource-Manager.ps1           ← legacy (interactive, Write-Host everywhere)
+    Azure-Resource-Manager.Functions.ps1 ← extracted functions (testable copy)
+
+tests/
+    PSCode-02.Tests.ps1  → dot-sources .Functions.ps1
+```
+
+**Pros:** Original script is untouched. You can add tests incrementally without risk.
+**Cons:** Duplication. When someone updates the original, the wrapper goes stale — and the tests still pass on old code.
+
+### The Drift Problem
+
+| Scenario | What Happens |
+|---|---|
+| Developer fixes a bug in the legacy script | Wrapper still has the old buggy code — tests pass on stale logic |
+| Developer adds a new parameter | Wrapper doesn't have it — tests never cover the new param |
+| Developer changes return type | Wrapper returns the old type — tests are testing dead code |
+
+**This is the real danger of Option B.** The tests give false confidence because they validate a snapshot of old code, not the live code.
+
+### Decision Framework
+
+| Factor | Choose Option A | Choose Option B |
+|---|---|---|
+| Script is under active development | ✅ Refactor now | |
+| Script is in production, high risk | | ✅ Wrap cautiously |
+| Team owns the source code | ✅ Modernize it | |
+| Script is from another team / vendor | | ✅ Can't touch it |
+| Greenfield project | ✅ Always | |
+| Regulatory pressure for immediate coverage | | ✅ Quick wins first |
+
+### The Pragmatic Path: Option B → Option A
+
+The best enterprise strategy combines both:
+
+1. **Sprint 1:** Extract functions into a wrapper (Option B) — get test coverage fast.
+2. **Sprint 2–3:** Gradually move those functions back into the source script, deleting the wrapper.
+3. **Sprint 4+:** Source file IS the testable file. Wrapper deleted. Zero duplication.
+
+```mermaid
+graph LR
+    S1["Sprint 1<br/>Extract & Wrap<br/>(get tests fast)"] --> S2["Sprint 2-3<br/>Move functions<br/>back to source"]
+    S2 --> S3["Sprint 4+<br/>Source = testable<br/>(zero duplication)"]
+
+    style S1 fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
+    style S2 fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
+    style S3 fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:3px
+```
+
+### Writing Testable PowerShell — Best Practices
+
+To avoid the legacy problem in the first place, write code that is easy to test from the start:
+
+| Practice | Why It Helps |
+|---|---|
+| **Put logic in functions, not in the script body** | Functions can be dot-sourced and tested individually |
+| **Avoid `Write-Host` inside functions** | Use `Write-Verbose` or `Write-Output` — they are testable |
+| **Accept dependencies as parameters** | `param($Logger)` instead of hardcoded `Write-EventLog` — dependency injection |
+| **Return objects, not formatted strings** | Tests can assert on properties (`$r.Status`) instead of parsing text |
+| **Don't mix logic and side effects** | Separate "decide what to do" from "do it" — test the decision |
+| **Use `[CmdletBinding()]` and `param()`** | Enables parameter validation, pipeline input, `-ErrorAction` support |
+
+```powershell
+# ❌ Untestable — logic mixed with side effects and Write-Host
+$vms = Get-AzVM
+foreach ($vm in $vms) {
+    if ($vm.PowerState -eq 'Running') { Write-Host "$($vm.Name) is running" }
+}
+
+# ✅ Testable — pure function returns data, caller decides output
+function Get-RunningVMs {
+    param([array]$VMs)
+    $VMs | Where-Object { $_.PowerState -eq 'Running' }
+}
+```
+---
+
 ## Where Tests Live in Repositories
 ### Recommended: Separate Folders (Enterprise Standard)
 
@@ -108,109 +242,60 @@ scripts/
 Tests must **never** ship to production. The boundary is clear:
 
 ```mermaid
-graph LR
-    subgraph Repo["Git Repository"]
+graph TB
+    subgraph REPO["Git Repository"]
         direction TB
-        SRC["src/<br/>Production code"]
-        TST["tests/<br/>Pester tests"]
+
+        subgraph SRC["src/ — Production Code"]
+            direction TB
+            PUB["Public/"]
+            PRIV["Private/"]
+            MOD["MyModule.psd1"]
+        end
+
+        subgraph TST["tests/ — Pester Tests"]
+            direction TB
+            UNIT["Unit/"]
+            INT["Integration/"]
+        end
+
         CFG["PesterConfiguration.psd1"]
+        CIFILE[".github/workflows/pester.yml"]
     end
 
-    SRC -->|"dot-sourced<br/>in BeforeAll"| TST
-    TST -->|"validates"| SRC
-    CFG -->|"configures"| TST
+    SRC -->|"dot-sourced in BeforeAll<br/>or Import-Module"| TST
+    TST -->|"validates behavior of"| SRC
+    CFG -->|"configures test run"| TST
+    CIFILE -->|"triggers"| TST
 
-    SRC --> PROD["Production<br/>Deployment"]
-    TST --> CI["CI Pipeline Only<br/>Never deployed"]
+    SRC --> PROD["Production<br/>Deployed to servers"]
+    TST --> CI["CI Pipeline Only<br/>Never leaves the repo"]
 
-    style Repo fill:#0f172a,stroke:#334155,color:#f8fafc,stroke-width:2px
+    style REPO fill:#0f172a,stroke:#334155,color:#f8fafc,stroke-width:2px
     style SRC fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
-    style TST fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
+    style TST fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:3px
+    style PUB fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:1px
+    style PRIV fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:1px
+    style MOD fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:1px
+    style UNIT fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:1px
+    style INT fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:1px
     style CFG fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
+    style CIFILE fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
     style PROD fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:2px
     style CI fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
 ```
 
-**How tests import production code:**
+| What | Where | Deployed? |
+|---|---|---|
+| **Functions & modules** | `src/Public/`, `src/Private/` | ✅ Yes — to production |
+| **Unit tests** | `tests/Unit/*.Tests.ps1` | ❌ No — CI only |
+| **Integration tests** | `tests/Integration/*.Tests.ps1` | ❌ No — CI only |
+| **Pester config** | `PesterConfiguration.psd1` | ❌ No — repo only |
+| **CI workflow** | `.github/workflows/pester.yml` | ❌ No — triggers tests |
 
-```powershell
-# For standalone scripts — dot-source the file
-BeforeAll {
-    . $PSScriptRoot/../src/Public/Get-UserInfo.ps1
-}
+**How tests import production code:** dot-source in `BeforeAll` for scripts, or `Import-Module -Force` for modules. Use `-ModuleName` on `Mock` to inject mocks into a module's scope (avoid wrapping tests in `InModuleScope`).
 
-# For modules — preferred at enterprise scale
-BeforeAll {
-    Import-Module $PSScriptRoot/../src/MyModule.psd1 -Force
-}
-```
-
-**Mocking into module scope** — use `-ModuleName` on `Mock` instead of wrapping everything in `InModuleScope`:
-
-```powershell
-# ✅ Preferred — mock into the module scope
-Mock -ModuleName MyModule Get-ADUser { return @{ Name = 'Jane' } }
-
-# ⚠️ Avoid — InModuleScope around Describe/It blocks
-# (slows discovery, hides publishing issues, breaks test isolation)
-```
-
-> *Source: [pester.dev — Unit Testing within Modules](https://pester.dev/docs/usage/modules) — "Aim to avoid InModuleScope altogether by using -ModuleName on Mock."*
----
-
-## Pester Test Structure — Deep Dive
-### The Building Blocks
-
-```mermaid
-graph TB
-    DESC["Describe<br/>Top-level grouping<br/>Named after the function under test"]
-    CTX["Context<br/>Sub-grouping by scenario<br/>Optional, but recommended"]
-    IT["It<br/>Single test case<br/>One assertion per test ideally"]
-    SHOULD["Should<br/>Assertion operator<br/>-Be, -Throw, -Exist, etc."]
-
-    DESC --> CTX --> IT --> SHOULD
-
-    style DESC fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:3px
-    style CTX fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
-    style IT fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
-    style SHOULD fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px
-```
-
-### Full Structure with Setup/Teardown
-
-```powershell
-Describe 'Get-UserInfo' {
-    BeforeAll {
-        . $PSScriptRoot/../src/Get-UserInfo.ps1    # Runs ONCE — imports
-    }
-
-    Context 'When user exists' {
-        BeforeEach {
-            Mock Get-ADUser { return @{ Name = 'Jane' } }   # Fresh mock per test
-        }
-
-        It 'Returns the user name' {
-            (Get-UserInfo -UserId 'jane01').Name | Should -Be 'Jane'
-        }
-
-        It 'Does not return null' {
-            Get-UserInfo -UserId 'jane01' | Should -Not -BeNullOrEmpty
-        }
-    }
-
-    Context 'When user does not exist' {
-        BeforeEach {
-            Mock Get-ADUser { return $null }   # Override mock for this scenario
-        }
-
-        It 'Returns null' {
-            Get-UserInfo -UserId 'ghost' | Should -BeNullOrEmpty
-        }
-    }
-}
-```
-
-> For setup/teardown lifecycle, discovery vs execution phases, and assertion operators — see [Module 1: Fundamentals of Unit Testing](/modules/01-pester-introduction).
+> *Source: [pester.dev — Unit Testing within Modules](https://pester.dev/docs/usage/modules)*
 ---
 
 ## Local Execution vs CI Execution
@@ -260,65 +345,11 @@ graph TB
 | **Linting** | Optional PSScriptAnalyzer | **Mandatory** before tests run |
 | **Purpose** | Fast feedback loop | Quality gate + compliance artifact |
 
-### Enterprise CI Configuration (New-PesterConfiguration)
+### Enterprise CI Configuration
 
-```powershell
-$config = New-PesterConfiguration
-$config.Run.Path                        = './tests'
-$config.Run.Exit                        = $true              # Non-zero exit on failure
-$config.CodeCoverage.Enabled            = $true
-$config.CodeCoverage.Path               = './src'
-$config.CodeCoverage.CoveragePercentTarget = 80              # Enterprise threshold
-$config.CodeCoverage.OutputFormat       = 'JaCoCo'           # Standard CI format
-$config.TestResult.Enabled              = $true
-$config.TestResult.OutputFormat         = 'NUnitXml'         # Publish to dashboards
-$config.Output.Verbosity                = 'Detailed'
-$config.Output.CIFormat                 = 'GithubActions'    # Native CI annotations
+Use `New-PesterConfiguration` for full control — set `Run.Exit = $true` (non-zero exit on failure), `CodeCoverage.CoveragePercentTarget = 80`, output formats `NUnitXml` + `JaCoCo`, and `Output.CIFormat = 'GithubActions'` for native CI annotations.
 
-Invoke-Pester -Configuration $config
-```
-
-### GitHub Actions — Ready-to-Use Workflow
-
-> *Source: [pester.dev — Code Coverage / GitHub Actions Integration](https://pester.dev/docs/usage/code-coverage)*
-
-```yaml
-name: Run Pester Tests
-on:
-  push:
-    branches: ["dev", "main"]
-  pull_request:
-    branches: ["dev"]
-
-jobs:
-  pester:
-    runs-on: windows-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Install Pester
-      shell: pwsh
-      run: Install-Module -Name Pester -Force -Scope CurrentUser
-
-    - name: Run Pester Tests
-      shell: pwsh
-      run: |
-        $config = New-PesterConfiguration
-        $config.Run.Path = "./tests"
-        $config.CodeCoverage.Enabled = $true
-        $config.CodeCoverage.Path = "./src"
-        $config.TestResult.Enabled = $true
-        $config.Output.CIFormat = 'GithubActions'
-        Invoke-Pester -Configuration $config
-
-    - name: Upload coverage report
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: code-coverage-report
-        path: coverage.xml
-```
+> *GitHub Actions workflow and CI/CD integration are covered in **Day 2**.*
 ---
 
 ## Governance and Standardization
@@ -447,21 +478,7 @@ Pester is the core — but a well-architected enterprise pairs it with:
 
 > *Microsoft teams track these metrics on scorecards. One team runs 60,000 unit tests in parallel in under 6 minutes.* ([source](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable))
 
-### Generating Reports for Dashboards
-
-```powershell
-$config = New-PesterConfiguration
-$config.TestResult.Enabled       = $true
-$config.TestResult.OutputFormat  = 'NUnitXml'         # For CI dashboards
-$config.TestResult.OutputPath    = './testResults.xml'
-$config.CodeCoverage.Enabled     = $true
-$config.CodeCoverage.OutputFormat = 'JaCoCo'           # For Codecov/SonarQube
-$config.CodeCoverage.OutputPath  = './coverage.xml'
-
-Invoke-Pester -Configuration $config
-```
-
-> *Pester supports NUnit 2.5 and JUnit 4 schemas for test results, and JaCoCo format for coverage.* ([source](https://pester.dev/docs/usage/test-results))
+> *Pester supports NUnit 2.5, JUnit 4, and JaCoCo output formats for CI dashboard integration.* ([source](https://pester.dev/docs/usage/test-results))
 ---
 
 ## Enterprise Maturity Model

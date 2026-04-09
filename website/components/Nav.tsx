@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FlaskConical, BookOpen, Code2, GitCompare, Layers, Home, ExternalLink } from "lucide-react";
+import { FlaskConical, BookOpen, Code2, GitCompare, Layers, Home, ExternalLink, Play } from "lucide-react";
 
 const links = [
   { href: "/", label: "Home", icon: Home },
   { href: "/modules", label: "Modules", icon: BookOpen },
   { href: "/lab", label: "Lab", icon: FlaskConical },
+  { href: "/simulation", label: "Simulation", icon: Play },
   { href: "/pscode", label: "PSCode", icon: Code2 },
   { href: "/mapping", label: "Mapping", icon: GitCompare },
   { href: "/concepts", label: "Concepts", icon: Layers },

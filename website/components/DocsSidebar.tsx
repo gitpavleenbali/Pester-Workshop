@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Building2, Shield, FlaskConical, Code2, GitCompare, Layers, Home, ChevronRight } from "lucide-react";
+import { BookOpen, Building2, Shield, FlaskConical, Code2, GitCompare, Layers, Home, ChevronRight, Play } from "lucide-react";
 
 const sections = [
   {
@@ -10,6 +10,7 @@ const sections = [
     items: [
       { href: "/", label: "Home", icon: Home },
       { href: "/lab", label: "Interactive Lab", icon: FlaskConical },
+      { href: "/simulation", label: "Lab Simulation", icon: Play },
       { href: "/pscode", label: "PSCode Modules", icon: Code2 },
       { href: "/mapping", label: "Test Mapping", icon: GitCompare },
       { href: "/concepts", label: "Pester Concepts", icon: Layers },

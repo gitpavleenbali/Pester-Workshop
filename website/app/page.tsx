@@ -28,7 +28,7 @@ const features = [
   },
   {
     icon: FlaskConical, title: "Interactive Lab",
-    desc: "96 annotated Pester tests with inline # PESTER ▶ comments. Run in terminal, browser UI, or directly with Invoke-Pester.",
+    desc: "107 annotated Pester tests with inline # PESTER ▶ comments. Run in terminal, browser UI, or directly with Invoke-Pester.",
     href: "/lab",
   },
   {
@@ -38,7 +38,7 @@ const features = [
   },
   {
     icon: GitCompare, title: "1:1 Test Mapping",
-    desc: "Complete traceability from PSCode → src/ → tests/ with audited function-level mapping and mocking strategy.",
+    desc: "Complete traceability from PSCode → tests/ with 1:1 function-level mapping and mocking strategy.",
     href: "/mapping",
   },
   {
@@ -75,7 +75,7 @@ export default function Home() {
             {[
               { text: "Pester 5.x", icon: "🧪" },
               { text: "PowerShell 5.1 / 7.x", icon: "⚡" },
-              { text: "96 Tests", icon: "✅" },
+              { text: "107 Tests", icon: "✅" },
               { text: "Azure Scenarios", icon: "☁️" },
             ].map((b) => (
               <span key={b.text} className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-full bg-gradient-to-r from-slate-800/80 to-slate-800/40 border border-slate-600/40 text-slate-200 backdrop-blur-sm shadow-sm">
@@ -147,8 +147,8 @@ export default function Home() {
     end
     subgraph ENGINE["Test Engine"]
         direction LR
-        SRC["src/<br/>5 Extracted Files"]
-        TST["tests/<br/>9 Pester Files<br/>96 Tests"]
+        SRC["PSCode/<br/>9 Source Files"]
+        TST["tests/<br/>9 Pester Files<br/>107 Tests"]
     end
     subgraph OUTPUT["Delivery"]
         direction LR

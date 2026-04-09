@@ -13,11 +13,15 @@ const files = [
 ];
 
 const srcFiles = [
-  { name: "AzureResourceHelpers.ps1", funcs: "Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus", mock: true },
-  { name: "CostMonitorHelpers.ps1", funcs: "Invoke-SafeAzureCall, Send-CostAlert", mock: true },
-  { name: "DataProcessing.ps1", funcs: "Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData", mock: false },
-  { name: "PSCodeModuleExtracts.ps1", funcs: "Deploy-AzureResourceWithValidation, AzureResource class, AzureVirtualMachine class", mock: true },
-  { name: "PSCodeModulesAdditional.ps1", funcs: "Get-AzureResourceInsights, Test-GitEnvironment, Deploy-ResourceGroup, Get-AzureResourceCount, Invoke-ParallelWork", mock: true },
+  { name: "PSCode/01 — Azure-Cloud-Analyzer.ps1", funcs: "Get-AzureResourceInsights", mock: true },
+  { name: "PSCode/02 — Azure-Resource-Manager.ps1", funcs: "Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus", mock: true },
+  { name: "PSCode/03 — Azure-Parameter-Mastery.ps1", funcs: "(dot-sources Module 02 — tests parameter validation)", mock: false },
+  { name: "PSCode/04 — Azure-Classes.ps1", funcs: "AzureResource class, AzureVirtualMachine class, Deploy-AzureResourceWithValidation", mock: true },
+  { name: "PSCode/05 — Azure-Error-Handling.ps1", funcs: "(dot-sources Module 04 — tests error handling patterns)", mock: false },
+  { name: "PSCode/06 — Debug-Demo.ps1", funcs: "Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData", mock: false },
+  { name: "PSCode/07 — Azure-Git-Training.ps1", funcs: "Test-GitEnvironment, Deploy-ResourceGroup", mock: true },
+  { name: "PSCode/08 — Azure-Runspaces.ps1", funcs: "Get-AzureResourceCount, Invoke-ParallelWork", mock: false },
+  { name: "PSCode/09 — Azure-Cost-Monitor.ps1", funcs: "Invoke-SafeAzureCall, Send-CostAlert, Get-ResourceActualCost", mock: true },
 ];
 
 const modes = [
@@ -51,7 +55,7 @@ export default function LabPage() {
         <div className="text-xs uppercase tracking-widest text-violet-400 font-bold mb-1">Hands-On</div>
         <h1 className="text-3xl font-extrabold mb-2">Interactive Pester Lab</h1>
         <p className="text-slate-400 mb-10 max-w-2xl">
-          96 Pester tests across 9 modules. Every test has inline <code className="text-violet-400 bg-violet-500/10 px-1.5 py-0.5 rounded text-xs"># PESTER ▶</code> comments
+          107 Pester tests across 9 modules. Every test has inline <code className="text-violet-400 bg-violet-500/10 px-1.5 py-0.5 rounded text-xs"># PESTER ▶</code> comments
           explaining each construct. Run them in the terminal, browser, or directly.
         </p>
 
@@ -85,7 +89,7 @@ export default function LabPage() {
         </div>
 
         {/* Source Files */}
-        <h2 className="text-xl font-bold mb-4">Source Files (src/)</h2>
+        <h2 className="text-xl font-bold mb-4">PSCode Source Files</h2>
         <div className="overflow-x-auto mb-12">
           <table className="w-full text-sm">
             <thead>
@@ -132,7 +136,8 @@ export default function LabPage() {
         <div className="grid md:grid-cols-2 gap-3">
           {[
             ["Sidebar", "9 modules with progress tracker (✓ turns green on pass)"],
-            ["View Source", "Test file with syntax-highlighted line numbers"],
+            ["View Test File", "Test file with syntax-highlighted line numbers"],
+            ["View PSCode Source", "Source code being tested with line numbers"],
             ["Expand test", "Click any test to see its code with keyword highlighting"],
             ["Explain", "Identifies every Pester concept used in the test"],
             ["Run one test", "Run a single test by clicking ▶ on any expanded test"],

@@ -385,6 +385,51 @@ graph LR
 | `It` | The test itself | One assertion per test |
 | `AfterEach` | After every `It` | Clean up per-test artifacts |
 | `AfterAll` | Once per Describe/Context | Clean up shared resources |
+
+---
+
+## Pester v5 — Quick Cheat Sheet
+
+| Command / Block | Purpose | Example |
+|---|---|---|
+| `Describe` | Main test suite — groups all tests for a feature | `Describe "VM Validation" { }` |
+| `Context` | Sub-group related test cases by scenario | `Context "When VM is stopped" { }` |
+| `It` | Single test case — one behavior, one assertion | `It "Should return true" { }` |
+| `Should` | Assertion framework — pipes actual value | `$result \| Should -Be 'Running'` |
+| `BeforeAll` | Runs **once** before all tests in the block | `BeforeAll { . ./src/MyFunc.ps1 }` |
+| `BeforeEach` | Runs before **every** `It` block | `BeforeEach { Mock Get-AzVM { } }` |
+| `AfterEach` | Cleanup after each test — reset state | `AfterEach { Remove-Variable vm }` |
+| `AfterAll` | Runs **once** after all tests complete — final cleanup | `AfterAll { Remove-Module MyMod }` |
+| `BeforeDiscovery` | Runs during **discovery** phase — build test data | `BeforeDiscovery { $data = Import-Csv data.csv }` |
+| `Mock` | Replace a real command with a fake | `Mock Get-AzVM { @{Name="vm1"} }` |
+| `-Verifiable` | Mark a mock as required-to-be-called | `Mock Send-Mail {} -Verifiable` |
+| `Should -Invoke` | Verify a mocked command was called | `Should -Invoke Get-AzVM -Times 1` |
+| `Should -InvokeVerifiable` | Verify ALL `-Verifiable` mocks were called | `Should -InvokeVerifiable` |
+| `-ParameterFilter` | Route mock by input parameters | `Mock Get-AzVM {...} -ParameterFilter { $Name -eq 'x' }` |
+| `-TestCases` | Data-driven: run one `It` with multiple data | `It "tests <Name>" -TestCases @(@{Name='a'}) { }` |
+| `Invoke-Pester` | Run all tests in a folder/file | `Invoke-Pester ./tests -Output Detailed` |
+| `New-PesterConfiguration` | Configure run, coverage, output | `$c = New-PesterConfiguration` |
+| `-Tag` | Tag tests, run subsets | `It "Prod test" -Tag 'Prod' { }` |
+| `-Skip` | Skip a test (still appears in report) | `It "Future test" -Skip { }` |
+| `Set-ItResult` | Override result at runtime (Inconclusive/Skipped) | `Set-ItResult -Inconclusive -Because 'no Azure'` |
+| `TestDrive:` | Temp folder auto-cleaned per Describe | `Set-Content TestDrive:\f.txt 'data'` |
+| `InModuleScope` | Execute code inside a module's scope | `InModuleScope MyMod { func }` (avoid if possible) |
+| `New-MockObject` | Create typed mock object for complex types | `$mock = New-MockObject -Type [HttpClient]` |
+
+### CI/Export Commands (not used in test files — used in pipelines)
+
+| Command | Purpose |
+|---|---|
+| `Export-NUnitReport` | Export test results to NUnit XML format |
+| `Export-JUnitReport` | Export test results to JUnit XML format |
+| `ConvertTo-NUnitReport` | Convert Pester result object to NUnit report |
+| `ConvertTo-Pester4Result` | Convert v5 result to v4 format (backward compat) |
+| `Get-ShouldOperator` | List all available Should operators in your session |
+| `Add-ShouldOperator` | Register a custom Should assertion operator |
+| `New-PesterContainer` | Create a test container for advanced test run configs |
+
+> **Note:** Pester v4 used `Assert-MockCalled` — in v5, use `Should -Invoke` instead.
+
 ---
 
 ## Common Assertion Operators
@@ -475,25 +520,26 @@ Invoke-Pester -Configuration $config
 ## Quick Pester Example — See It in Action
 ```powershell
 # File: Get-Greeting.ps1
+# A simple function we want to test
 function Get-Greeting ($Name) {
-    if (-not $Name) { throw "Name is required" }
-    return "Hello, $Name!"
+    if (-not $Name) { throw "Name is required" }  # Guard clause — throws if no name given
+    return "Hello, $Name!"                          # Returns formatted greeting string
 }
 ```
 
 ```powershell
 # File: Get-Greeting.Tests.ps1
 BeforeAll {
-    . $PSScriptRoot/Get-Greeting.ps1
+    . $PSScriptRoot/Get-Greeting.ps1   # Dot-source imports the function into the test scope
 }
 
-Describe 'Get-Greeting' {
-    It 'Returns a greeting for a valid name' {
-        Get-Greeting -Name 'Workshop' | Should -Be 'Hello, Workshop!'
+Describe 'Get-Greeting' {              # Describe groups all tests for this function
+    It 'Returns a greeting for a valid name' {                          # Happy path test
+        Get-Greeting -Name 'Workshop' | Should -Be 'Hello, Workshop!'   # Should -Be = equality assertion
     }
 
-    It 'Throws when name is missing' {
-        { Get-Greeting -Name $null } | Should -Throw 'Name is required'
+    It 'Throws when name is missing' {                                  # Negative test — expects an error
+        { Get-Greeting -Name $null } | Should -Throw 'Name is required' # Wrap in { } then Should -Throw
     }
 }
 ```
