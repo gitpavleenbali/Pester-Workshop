@@ -2,10 +2,7 @@
 
 ---
 
-<details open>
-<summary><strong>What Is Software Testing?</strong></summary>
-
-
+## What Is Software Testing?
 Software testing is the practice of **verifying that code behaves as expected** before it reaches production. It reduces risk, increases confidence, and creates a safety net for change.
 
 ```mermaid
@@ -24,16 +21,9 @@ graph LR
     style E fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:2px
     style F fill:#7f1d1d,stroke:#ef4444,color:#f8fafc,stroke-width:2px
 ```
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Types of Software Testing</strong></summary>
-
-
+## Types of Software Testing
 Before diving into unit tests, it helps to see the **full landscape** of testing approaches.
 
 ```mermaid
@@ -75,16 +65,9 @@ graph TB
 | **Regression** | Verify old bugs stay fixed | Varies | Re-run all tests after a code change |
 | **Negative** | Verify correct behavior on bad input | Fast | Does it throw on `$null` input? |
 | **Idempotency** | Same result on repeated execution | Medium | Running the script twice produces no side effects |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Microsoft DevOps Test Taxonomy (L0–L4)</strong></summary>
-
-
+## Microsoft DevOps Test Taxonomy (L0–L4)
 Microsoft classifies tests into **levels** based on dependencies and execution time. This taxonomy is used across Azure DevOps, GitHub, and Microsoft engineering teams.
 
 > *Source: [Microsoft — Shift left to make testing fast & reliable](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable)*
@@ -98,16 +81,9 @@ Microsoft classifies tests into **levels** based on dependencies and execution t
 | **L4** | Integration (production) | Full product deployment | Minutes | Production canary |
 
 **Key insight:** L0 and L1 (unit tests) should form **70%+** of your test portfolio. Pester excels here.
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>The Testing Pyramid</strong></summary>
-
-
+## The Testing Pyramid
 Not all tests are equal. The pyramid prioritizes **fast, cheap, isolated tests** at the base.
 
 ```mermaid
@@ -130,16 +106,9 @@ graph TB
 | **Unit** | ~70% | Fast (milliseconds) | Low | Isolated, mocked, most tests live here |
 
 > *Origin: Mike Cohn's test pyramid, popularized by Martin Fowler. See [martinfowler.com/bliki/TestPyramid.html](https://martinfowler.com/bliki/TestPyramid.html)*
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Why Unit Testing Matters</strong></summary>
-
-
+## Why Unit Testing Matters
 ```mermaid
 graph LR
     UT["Unit Testing"]
@@ -170,16 +139,9 @@ Write tests that are:
 | **R**epeatable | Same result every time, on any machine |
 | **S**elf-validating | Pass or fail — no manual inspection needed |
 | **T**imely | Written close to when the code is written (ideally before) |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Unit Testing vs Integration Testing</strong></summary>
-
-
+## Unit Testing vs Integration Testing
 ```mermaid
 graph TB
     subgraph Unit["Unit Test — Isolated"]
@@ -208,16 +170,9 @@ graph TB
 | **Speed** | Very fast | Slower |
 | **Failure cause** | Clear & isolated | Ambiguous |
 | **When to use** | Logic, branching, calculations | End-to-end flows, API contracts |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>The AAA Pattern — Arrange, Act, Assert</strong></summary>
-
-
+## The AAA Pattern — Arrange, Act, Assert
 Every well-structured test follows this three-step pattern:
 
 ```powershell
@@ -238,16 +193,9 @@ It 'Returns Running for a running VM' {
 | **Arrange** | Set up test data, mocks, prerequisites | `BeforeAll`, `BeforeEach`, `Mock` |
 | **Act** | Execute the function/code under test | Call the function |
 | **Assert** | Verify the result matches expectations | `Should -Be`, `Should -Throw`, etc. |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Why Testing PowerShell in the Enterprise?</strong></summary>
-
-
+## Why Testing PowerShell in the Enterprise?
 PowerShell is no longer just a scripting language — in the enterprise it is **infrastructure as code**. Scripts manage Azure subscriptions, configure Active Directory, orchestrate CI/CD pipelines, and enforce compliance policies. A single untested script can cause outages, security gaps, or audit failures across environments.
 
 ```mermaid
@@ -286,16 +234,9 @@ graph LR
 | New team member changes code | No safety net, silent failures | Tests catch regressions immediately |
 | Audit / compliance review | No evidence of validation | Test reports as compliance artifacts |
 | Production incident at 3 AM | Long debugging, unclear root cause | Tests pinpoint the broken logic |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>What Is Pester?</strong></summary>
-
-
+## What Is Pester?
 > **Pester** is the ubiquitous **test and mock framework for PowerShell** — the standard tool for writing, running, and automating PowerShell tests.
 
 *Source: [pester.dev](https://pester.dev/) — "Pester provides a framework for writing and running tests. It is most commonly used for writing unit and integration tests, but it is not limited to just that."*
@@ -350,16 +291,9 @@ graph TB
 | `Write-Host` debugging | No assertions, no automation, no CI integration |
 | Custom test scripts | No standard structure, hard to maintain, no community |
 | **Pester** | **Structured, automated, integrated, community-standard** |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Where Pester Fits in DevOps</strong></summary>
-
-
+## Where Pester Fits in DevOps
 ```mermaid
 graph LR
     DEV["Developer<br/>writes code"] --> TEST["Pester<br/>tests locally"]
@@ -380,16 +314,9 @@ graph LR
 ```
 
 > *Microsoft principle: "Shift left to test earlier — move quality upstream by performing testing tasks earlier in the pipeline."* ([source](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable))
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Pester Test Structure — At a Glance</strong></summary>
-
-
+## Pester Test Structure — At a Glance
 ```powershell
 Describe 'Component under test' {          # Group of related tests
     Context 'Given a specific scenario' {   # Sub-group / scenario
@@ -431,16 +358,9 @@ Pester operates in **two distinct phases**. Understanding this avoids common pit
 | **Execution** | Runs `BeforeAll` → `BeforeEach` → `It` → `AfterEach` → `AfterAll` in sequence | All test logic goes here | Don't assume discovery-phase code persists |
 
 > **Common mistake:** Writing `$data = Get-Something` directly inside a `Describe` block. This runs during *Discovery*, not *Execution*. Move it into `BeforeAll`.
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Setup & Teardown — When Each Block Runs</strong></summary>
-
-
+## Setup & Teardown — When Each Block Runs
 ```mermaid
 graph LR
     BA["BeforeAll\nOnce before block"]
@@ -465,16 +385,9 @@ graph LR
 | `It` | The test itself | One assertion per test |
 | `AfterEach` | After every `It` | Clean up per-test artifacts |
 | `AfterAll` | Once per Describe/Context | Clean up shared resources |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Common Assertion Operators</strong></summary>
-
-
+## Common Assertion Operators
 | Operator | What It Checks | Example |
 |---|---|---|
 | `Should -Be` | Equality (case-insensitive) | `$x \| Should -Be 5` |
@@ -490,16 +403,9 @@ graph LR
 | `Should -Match` | Regex match | `$x \| Should -Match '^\d{3}$'` |
 | `Should -Invoke` | Mock was called | `Should -Invoke Get-AzVM -Times 1` |
 | `Should -InvokeVerifiable` | All `-Verifiable` mocks called | `Should -InvokeVerifiable` |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Pester 4 vs Pester 5 — What Changed?</strong></summary>
-
-
+## Pester 4 vs Pester 5 — What Changed?
 Windows ships Pester 3.x/4.x. This workshop uses **Pester 5**. Key differences:
 
 | Feature | Pester 4 | Pester 5 |
@@ -515,16 +421,9 @@ Windows ships Pester 3.x/4.x. This workshop uses **Pester 5**. Key differences:
 | **Install** | Ships with Windows | `Install-Module Pester -Force -SkipPublisherCheck` |
 
 > **Upgrade tip:** If you have Pester 4 tests, most work in Pester 5 with one change: move code from Describe/Context bodies into `BeforeAll`.
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>VS Code Integration</strong></summary>
-
-
+## VS Code Integration
 Pester integrates with VS Code out of the box via the **PowerShell extension**:
 
 | Feature | How to Use |
@@ -535,16 +434,9 @@ Pester integrates with VS Code out of the box via the **PowerShell extension**:
 | **Breakpoints in tests** | Set breakpoints inside `It` blocks and step through with F5 |
 | **Integrated terminal** | Run `Invoke-Pester` directly in the VS Code terminal |
 | **Code coverage** | Highlighted lines show which source code is covered |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Running Pester — Essential Commands</strong></summary>
-
-
+## Running Pester — Essential Commands
 ```powershell
 # Run all tests in a folder
 Invoke-Pester ./tests
@@ -578,16 +470,9 @@ Invoke-Pester -Configuration $config
 | `Invoke-Pester -Output Detailed` | See every test name and result |
 | `Invoke-Pester -CI` | CI pipelines — exit code + XML + coverage |
 | `New-PesterConfiguration` | Full control — the enterprise way |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Quick Pester Example — See It in Action</strong></summary>
-
-
+## Quick Pester Example — See It in Action
 ```powershell
 # File: Get-Greeting.ps1
 function Get-Greeting ($Name) {
@@ -621,16 +506,9 @@ Describing Get-Greeting
   [+] Throws when name is missing                 8ms
 Tests Passed: 2, Failed: 0, Skipped: 0
 ```
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Key Takeaways</strong></summary>
-
-
+## Key Takeaways
 1. **Test early, test often** — unit tests are your fastest feedback loop.
 2. **Follow the AAA pattern** — Arrange, Act, Assert keeps tests clear and consistent.
 3. **Apply the FIRST principles** — Fast, Isolated, Repeatable, Self-validating, Timely.
@@ -652,5 +530,3 @@ Tests Passed: 2, Failed: 0, Skipped: 0
 ---
 
 > *Next → Enterprise Positioning: Pester Architecture for Large Organizations*
-
-</details>

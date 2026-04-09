@@ -4,10 +4,7 @@
 
 ---
 
-<details open>
-<summary><strong>The Big Picture — Testing at Enterprise Scale</strong></summary>
-
-
+## The Big Picture — Testing at Enterprise Scale
 In a billion-euro enterprise, PowerShell scripts are not "just scripts" — they are **infrastructure as code** that provisions Azure resources, configures Active Directory, enforces compliance, and drives CI/CD pipelines. Testing these scripts is not a nice-to-have — it is a **risk control**.
 
 ```mermaid
@@ -43,16 +40,9 @@ graph TB
     style CICD fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:3px
     style PROD fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:2px
 ```
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Microsoft's DevOps Test Principles</strong></summary>
-
-
+## Microsoft's DevOps Test Principles
 These principles come from Microsoft's engineering teams and the [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable). Apply them to your PowerShell testing strategy.
 
 | Principle | What It Means | How Pester Helps |
@@ -66,16 +56,9 @@ These principles come from Microsoft's engineering teams and the [Azure Well-Arc
 | **Use shared test infrastructure** | Standardize across teams | Shared `PesterConfiguration.psd1` template, pinned version |
 
 > *Source: [Microsoft — Shift left to make testing fast & reliable](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable)*
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Where Tests Live in Repositories</strong></summary>
-
-
+## Where Tests Live in Repositories
 ### Recommended: Separate Folders (Enterprise Standard)
 
 ```
@@ -119,16 +102,9 @@ scripts/
 | **Enterprise recommendation** | **Yes** | Small utilities only |
 
 > **Rule:** Always use `.Tests.ps1` suffix — Pester discovers tests by this naming convention.
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Separation of Production Code and Tests</strong></summary>
-
-
+## Separation of Production Code and Tests
 Tests must **never** ship to production. The boundary is clear:
 
 ```mermaid
@@ -180,16 +156,9 @@ Mock -ModuleName MyModule Get-ADUser { return @{ Name = 'Jane' } }
 ```
 
 > *Source: [pester.dev — Unit Testing within Modules](https://pester.dev/docs/usage/modules) — "Aim to avoid InModuleScope altogether by using -ModuleName on Mock."*
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Pester Test Structure — Deep Dive</strong></summary>
-
-
+## Pester Test Structure — Deep Dive
 ### The Building Blocks
 
 ```mermaid
@@ -276,16 +245,9 @@ graph LR
 | **Execution** | Runs `BeforeAll` → `BeforeEach` → `It` → ... | All test logic, mocks, assertions | — |
 
 > **Common mistake:** `$data = Get-Something` directly inside a Describe block runs during Discovery, not Execution. Move it to `BeforeAll`.
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Common Assertion Operators</strong></summary>
-
-
+## Common Assertion Operators
 | Operator | What it checks | Example |
 |---|---|---|
 | `Should -Be` | Equality (case-insensitive) | `$x \| Should -Be 5` |
@@ -298,16 +260,9 @@ graph LR
 | `Should -HaveCount` | Collection count | `$arr \| Should -HaveCount 3` |
 | `Should -Match` | Regex match | `$x \| Should -Match '^\d+$'` |
 | `Should -Invoke` | Mock was called | `Should -Invoke Get-ADUser -Times 1` |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Local Execution vs CI Execution</strong></summary>
-
-
+## Local Execution vs CI Execution
 ```mermaid
 graph TB
     subgraph Local["Developer Machine"]
@@ -413,16 +368,9 @@ jobs:
         name: code-coverage-report
         path: coverage.xml
 ```
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Governance and Standardization</strong></summary>
-
-
+## Governance and Standardization
 In a large enterprise, testing is **governed** — not left to individual preference.
 
 ```mermaid
@@ -474,16 +422,9 @@ graph TB
 - [ ] Test results published as NUnit XML artifacts
 - [ ] Coverage reports exported as JaCoCo for dashboard integration
 - [ ] Shared `PesterConfiguration.psd1` template across all team repos
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Well-Architected Testing — Do's and Don'ts</strong></summary>
-
-
+## Well-Architected Testing — Do's and Don'ts
 ### Do
 
 | Practice | Why |
@@ -510,16 +451,9 @@ graph TB
 | **Skipping tests with `#` comments** | Use `-Skip` parameter instead — tracked in reports |
 | **Mocking everything** | Over-mocking hides real bugs — mock only external deps |
 | **No `-ErrorAction Stop` on pre-conditions** | Test continues with invalid state |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Gaps, Limitations, and Mitigations</strong></summary>
-
-
+## Gaps, Limitations, and Mitigations
 Every tool has boundaries. Understanding Pester's limits helps you architect around them.
 
 | Gap | Detail | Mitigation |
@@ -533,16 +467,9 @@ Every tool has boundaries. Understanding Pester's limits helps you architect aro
 | **Limited async/event testing** | Testing async PowerShell is awkward | Isolate async logic into testable functions; mock the event layer |
 
 > *Source: [pester.dev — Modules](https://pester.dev/docs/usage/modules) — "Injecting mocks inside a Binary module is not possible. Exported commands can still be tested and mocked for calls made in script or other modules."*
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Complementary Enterprise Tools</strong></summary>
-
-
+## Complementary Enterprise Tools
 Pester is the core — but a well-architected enterprise pairs it with:
 
 | Tool | Purpose | How It Fits |
@@ -554,16 +481,9 @@ Pester is the core — but a well-architected enterprise pairs it with:
 | **GitHub Actions / Azure Pipelines** | CI/CD | Run Pester, publish NUnit results, enforce quality gates |
 | **Codecov / SonarQube** | Coverage dashboards | Consume JaCoCo coverage XML from Pester |
 | **GitHub Copilot** | AI-assisted test generation | Scaffold Pester tests from function signatures (Day 2 topic) |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Key Test Metrics for Enterprise Reporting</strong></summary>
-
-
+## Key Test Metrics for Enterprise Reporting
 | Metric | Target | Why It Matters |
 |---|---|---|
 | **Pass rate** | 100% on `main` | Broken tests = blocked deployments |
@@ -591,16 +511,9 @@ Invoke-Pester -Configuration $config
 ```
 
 > *Pester supports NUnit 2.5 and JUnit 4 schemas for test results, and JaCoCo format for coverage.* ([source](https://pester.dev/docs/usage/test-results))
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Enterprise Maturity Model</strong></summary>
-
-
+## Enterprise Maturity Model
 Where does your team sit today?
 
 | Level | Name | Characteristics |
@@ -626,16 +539,9 @@ graph LR
 ```
 
 **Workshop goal: Move every team to at least Level 3.**
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Key Takeaways</strong></summary>
-
-
+## Key Takeaways
 1. **Tests are first-class** — they live in version control, structured under `tests/Unit/` and `tests/Integration/`.
 2. **Separate but connected** — `src/` for production code, `tests/` for Pester, linked via dot-sourcing or `Import-Module`.
 3. **Shift left** — developers run Pester locally for seconds-fast feedback; CI enforces quality gates.
@@ -656,5 +562,3 @@ graph LR
 ---
 
 > *Next → Lunch Break (12:00) · Then → Mocking & Test Isolation (13:00)*
-
-</details>

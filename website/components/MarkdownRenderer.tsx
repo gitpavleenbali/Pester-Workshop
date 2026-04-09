@@ -139,27 +139,6 @@ export default function MarkdownRenderer({
                   </code>
                 );
               },
-              details({ children, ...props }) {
-                return (
-                  <details
-                    className="group my-4 rounded-xl border border-slate-700/50 bg-slate-800/20 overflow-hidden"
-                    {...props}
-                  >
-                    {children}
-                  </details>
-                );
-              },
-              summary({ children, ...props }) {
-                return (
-                  <summary
-                    className="cursor-pointer px-5 py-3 text-base font-semibold text-slate-100 hover:bg-slate-700/20 transition-colors list-none flex items-center gap-2"
-                    {...props}
-                  >
-                    <span className="text-violet-400 text-xs">▶</span>
-                    <span>{children}</span>
-                  </summary>
-                );
-              },
             }}
           >
             {content}

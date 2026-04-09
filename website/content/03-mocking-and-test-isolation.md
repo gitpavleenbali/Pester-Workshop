@@ -4,10 +4,7 @@
 
 ---
 
-<details open>
-<summary><strong>The Problem — Why You Can't Just Run the Code</strong></summary>
-
-
+## The Problem — Why You Can't Just Run the Code
 Infrastructure scripts interact with **real systems**. Running them in a test means:
 
 ```mermaid
@@ -35,16 +32,9 @@ graph LR
 ```
 
 **You need a way to test logic without triggering side effects.** That's mocking.
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>What Is Mocking?</strong></summary>
-
-
+## What Is Mocking?
 Mocking replaces a real command with a **fake implementation** during a test. The fake returns controlled data so you can test your logic — not the dependency.
 
 ```mermaid
@@ -79,16 +69,9 @@ These terms are often used interchangeably, but they have subtle differences:
 
 > *In Pester, all three are created with `Mock`. The difference is whether you also call `Should -Invoke`.  
 > See: [Martin Fowler — Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html)*
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Pester Mocking — The Two Commands</strong></summary>
-
-
+## Pester Mocking — The Two Commands
 | Command | Purpose |
 |---|---|
 | `Mock` | Replace a command with a fake |
@@ -116,16 +99,9 @@ Describe 'Remove-OldBackups' {
 ```
 
 **Nothing was deleted.** The mock intercepted `Remove-Item` and did nothing. But you proved your function *called* it.
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Real-World Enterprise Examples</strong></summary>
-
-
+## Real-World Enterprise Examples
 ### Mocking Azure Cmdlets
 
 ```powershell
@@ -221,16 +197,9 @@ Describe 'Test-GitEnvironment' {
     }
 }
 ```
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Mock Scoping — Where Mocks Live</strong></summary>
-
-
+## Mock Scoping — Where Mocks Live
 Mocks are scoped to the block where they are defined. This is a **Pester 5 change** from v4.
 
 ```mermaid
@@ -287,16 +256,9 @@ Describe 'Scoping demo' {
 | Parameter filters | Required `param()` | No `param()` needed |
 
 > *Source: [pester.dev — Changes from Pester v4](https://pester.dev/docs/usage/mocking#changes-from-pester-v4)*
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>ParameterFilter — Conditional Mocks</strong></summary>
-
-
+## ParameterFilter — Conditional Mocks
 Return different results based on input:
 
 ```powershell
@@ -308,16 +270,9 @@ Mock Get-AzVM {
     return @{ Name = 'dev-test'; Status = 'Stopped' }
 } -ParameterFilter { $Name -eq 'dev-test' }
 ```
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Verifiable Mocks — Prove It Was Called</strong></summary>
-
-
+## Verifiable Mocks — Prove It Was Called
 Mark a mock as **verifiable** and assert all verifiable mocks were invoked:
 
 ```powershell
@@ -330,16 +285,9 @@ It 'Sends a notification after cleanup' {
     Should -InvokeVerifiable   # Fails if Send-MailMessage was never called
 }
 ```
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Mocking for Module Functions</strong></summary>
-
-
+## Mocking for Module Functions
 When mocking commands called **inside a module**, use `-ModuleName`:
 
 ```powershell
@@ -355,16 +303,9 @@ Should -Invoke -ModuleName MyModule Get-AzVM -Times 1
 Without `-ModuleName`, the mock is injected in the test scope and the module's internal calls bypass it.
 
 > **Note:** `InModuleScope` is an alternative but should be **avoided** around Describe/It blocks. Use it only inside `It` when testing private functions. ([source](https://pester.dev/docs/usage/modules))
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>$PesterBoundParameters — Forwarding Parameters in Mocks</strong></summary>
-
-
+## $PesterBoundParameters — Forwarding Parameters in Mocks
 Starting in Pester 5.2, `$PesterBoundParameters` replaces `$PSBoundParameters` inside mock scriptblocks (since the proxy function overwrites `$PSBoundParameters`):
 
 ```powershell
@@ -375,16 +316,9 @@ Mock Write-Host {
 ```
 
 > *Source: [pester.dev — $PesterBoundParameters](https://pester.dev/docs/usage/mocking#pesterboundparameters)*
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Test Isolation with TestDrive: and TestRegistry:</strong></summary>
-
-
+## Test Isolation with TestDrive: and TestRegistry:
 Pester provides **built-in isolation** for file system and registry operations:
 
 ### TestDrive: — Temporary File System
@@ -419,16 +353,9 @@ Describe 'Set-AppConfig' {
 |---|---|---|
 | `TestDrive:\` | Temp folder for file operations | Cleaned after each `Describe` |
 | `TestRegistry:\` | Temp registry hive (Windows only) | Cleaned after each `Describe` |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Testing Behavior, Not Side Effects</strong></summary>
-
-
+## Testing Behavior, Not Side Effects
 The mindset shift:
 
 ```mermaid
@@ -465,16 +392,9 @@ graph LR
 | "Does it handle errors?" | `Mock` throws, assert function catches | Cause a real failure |
 | "Does it use the right parameters?" | `ParameterFilter` on the mock | Inspect Azure portal |
 | "Does it skip when condition is false?" | `Should -Invoke -Times 0` | Manually verify nothing happened |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Common Cmdlets You Should Always Mock</strong></summary>
-
-
+## Common Cmdlets You Should Always Mock
 | Cmdlet | Why Mock It |
 |---|---|
 | `Get-AzVM`, `New-AzResourceGroup`, `Remove-AzResource` | Avoid hitting Azure |
@@ -484,16 +404,9 @@ graph LR
 | `Remove-Item`, `New-Item`, `Set-Content` | Avoid file system changes (or use `TestDrive:\`) |
 | `Start-Process`, `Stop-Service` | Avoid OS-level actions |
 | `Write-EventLog` | Avoid event log pollution |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Can You Test .NET Framework / C# Code with Pester?</strong></summary>
-
-
+## Can You Test .NET Framework / C# Code with Pester?
 **Yes — with caveats.** Pester can test .NET code in two ways:
 
 ### 1. Testing PowerShell Wrappers Around .NET
@@ -551,16 +464,9 @@ Describe 'MyLibrary.Calculator' {
 > **Best practice:** Wrap .NET calls in thin PowerShell functions. Mock the wrapper, not the .NET internals. This is the same pattern used for Azure cmdlets.
 
 > *Source: [pester.dev — Binary Modules](https://pester.dev/docs/usage/modules#binary-modules) — "Exported commands from a Binary module can be tested and mocked using Mock for calls made in script or other modules. InModuleScope and injecting mocks inside module are not possible."*
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Common Mocking Mistakes</strong></summary>
-
-
+## Common Mocking Mistakes
 | Mistake | What Happens | Fix |
 |---|---|---|
 | Mocking a command that doesn't exist | Pester throws `CommandNotFoundException` | Ensure the command is loaded (dot-source the file first) |
@@ -569,16 +475,9 @@ Describe 'MyLibrary.Calculator' {
 | Asserting `Should -Invoke` in wrong scope | Count is zero because Pester scopes to current `It` | Use `-Scope Describe` or `-Scope Context` to widen |
 | Over-mocking (mocking everything) | Tests pass but don't prove real behavior | Only mock **external dependencies**, not your own logic |
 | Mocking `Write-Host` without need | Hides useful test output | Only mock it if the function tests `Write-Host` calls |
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>When NOT to Mock</strong></summary>
-
-
+## When NOT to Mock
 Not everything should be mocked. Over-mocking is as bad as under-testing.
 
 | Don't Mock | Instead | Why |
@@ -589,16 +488,9 @@ Not everything should be mocked. Over-mocking is as bad as under-testing.
 | Everything | Just external deps | Tests that mock everything prove nothing about real behavior |
 
 > **Rule of thumb:** Mock at the **boundary** — where your code meets something you don't control (Azure, AD, APIs, file system, email, OS services).
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Quick Reference Card</strong></summary>
-
-
+## Quick Reference Card
 ```powershell
 # Create a mock
 Mock <CommandName> { <fake return value> }
@@ -624,16 +516,9 @@ Should -InvokeVerifiable
 # Access bound parameters inside a mock (Pester 5.2+)
 $PesterBoundParameters
 ```
-
-
-</details>
-
 ---
 
-<details>
-<summary><strong>Key Takeaways</strong></summary>
-
-
+## Key Takeaways
 1. **Never call real infrastructure in a unit test** — mock Azure, AD, APIs, file system.
 2. **Mock replaces, Should -Invoke verifies** — the two commands that make it work.
 3. **Test behavior, not outcomes** — assert the right cmdlet was called with the right parameters.
@@ -655,5 +540,3 @@ $PesterBoundParameters
 ---
 
 > *Next → Hands-on Lab: Unit Testing & Mocking (13:30)*
-
-</details>
