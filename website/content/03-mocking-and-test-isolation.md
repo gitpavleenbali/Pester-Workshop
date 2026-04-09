@@ -41,12 +41,12 @@ Mocking replaces a real command with a **fake implementation** during a test. Th
 graph LR
     subgraph Without["Without Mocking"]
         direction LR
-        F1["Your Function"] --> REAL["Get-AzVM\n(hits Azure API)"]
+        F1["Your Function"] --> REAL["Get-AzVM<br/>(hits Azure API)"]
     end
 
     subgraph With["With Mocking"]
         direction LR
-        F2["Your Function"] --> MOCK["Mock Get-AzVM\n(returns fake data)"]
+        F2["Your Function"] --> MOCK["Mock Get-AzVM<br/>(returns fake data)"]
     end
 
     style Without fill:#0f172a,stroke:#ef4444,color:#f8fafc,stroke-width:3px
@@ -205,12 +205,12 @@ Mocks are scoped to the block where they are defined. This is a **Pester 5 chang
 ```mermaid
 graph TB
     DESC["Describe"]
-    DESC --> BA["BeforeAll\nMock here = available to all Its"]
+    DESC --> BA["BeforeAll<br/>Mock here = available to all Its"]
     DESC --> CTX1["Context A"]
     DESC --> CTX2["Context B"]
-    CTX1 --> BE1["BeforeEach\nMock here = per-test setup"]
+    CTX1 --> BE1["BeforeEach<br/>Mock here = per-test setup"]
     CTX1 --> IT1["It — sees Context A mocks"]
-    CTX2 --> IT2["It — sees Context B mocks\n(not A's mocks)"]
+    CTX2 --> IT2["It — sees Context B mocks<br/>(not A's mocks)"]
 
     style DESC fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:3px
     style BA fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
@@ -372,7 +372,7 @@ graph LR
         direction TB
         N1["Mock dependencies"]
         N2["Run function"]
-        N3["Assert: correct cmdlet called\nwith correct parameters"]
+        N3["Assert: correct cmdlet called<br/>with correct parameters"]
         N1 --> N2 --> N3
     end
 

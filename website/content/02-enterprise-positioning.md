@@ -11,17 +11,17 @@ In a billion-euro enterprise, PowerShell scripts are not "just scripts" — they
 graph TB
     ENT["Enterprise PowerShell Estate"]
 
-    ENT --> TEAM1["Platform Team\nAzure provisioning"]
-    ENT --> TEAM2["Identity Team\nAD & Entra ID"]
-    ENT --> TEAM3["DevOps Team\nCI/CD pipelines"]
-    ENT --> TEAM4["Security Team\nCompliance scripts"]
+    ENT --> TEAM1["Platform Team<br/>Azure provisioning"]
+    ENT --> TEAM2["Identity Team<br/>AD & Entra ID"]
+    ENT --> TEAM3["DevOps Team<br/>CI/CD pipelines"]
+    ENT --> TEAM4["Security Team<br/>Compliance scripts"]
 
     TEAM1 --> REPO1["Repo + Pester Tests"]
     TEAM2 --> REPO2["Repo + Pester Tests"]
     TEAM3 --> REPO3["Repo + Pester Tests"]
     TEAM4 --> REPO4["Repo + Pester Tests"]
 
-    REPO1 --> CICD["Shared CI/CD\nQuality Gates"]
+    REPO1 --> CICD["Shared CI/CD<br/>Quality Gates"]
     REPO2 --> CICD
     REPO3 --> CICD
     REPO4 --> CICD
@@ -111,17 +111,17 @@ Tests must **never** ship to production. The boundary is clear:
 graph LR
     subgraph Repo["Git Repository"]
         direction TB
-        SRC["src/\nProduction code"]
-        TST["tests/\nPester tests"]
+        SRC["src/<br/>Production code"]
+        TST["tests/<br/>Pester tests"]
         CFG["PesterConfiguration.psd1"]
     end
 
-    SRC -->|"dot-sourced\nin BeforeAll"| TST
+    SRC -->|"dot-sourced<br/>in BeforeAll"| TST
     TST -->|"validates"| SRC
     CFG -->|"configures"| TST
 
-    SRC --> PROD["Production\nDeployment"]
-    TST --> CI["CI Pipeline Only\nNever deployed"]
+    SRC --> PROD["Production<br/>Deployment"]
+    TST --> CI["CI Pipeline Only<br/>Never deployed"]
 
     style Repo fill:#0f172a,stroke:#334155,color:#f8fafc,stroke-width:2px
     style SRC fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
@@ -163,10 +163,10 @@ Mock -ModuleName MyModule Get-ADUser { return @{ Name = 'Jane' } }
 
 ```mermaid
 graph TB
-    DESC["Describe\nTop-level grouping\nNamed after the function under test"]
-    CTX["Context\nSub-grouping by scenario\nOptional, but recommended"]
-    IT["It\nSingle test case\nOne assertion per test ideally"]
-    SHOULD["Should\nAssertion operator\n-Be, -Throw, -Exist, etc."]
+    DESC["Describe<br/>Top-level grouping<br/>Named after the function under test"]
+    CTX["Context<br/>Sub-grouping by scenario<br/>Optional, but recommended"]
+    IT["It<br/>Single test case<br/>One assertion per test ideally"]
+    SHOULD["Should<br/>Assertion operator<br/>-Be, -Throw, -Exist, etc."]
 
     DESC --> CTX --> IT --> SHOULD
 
@@ -210,56 +210,7 @@ Describe 'Get-UserInfo' {
 }
 ```
 
-### Setup & Teardown — When Each Runs
-
-```mermaid
-graph LR
-    BA["BeforeAll\nOnce before the block"]
-    BE["BeforeEach\nBefore every It"]
-    IT["It\nYour test"]
-    AE["AfterEach\nAfter every It"]
-    AA["AfterAll\nOnce after the block"]
-
-    BA --> BE --> IT --> AE --> AA
-
-    style BA fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
-    style BE fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
-    style IT fill:#065f46,stroke:#10b981,color:#f8fafc,stroke-width:3px
-    style AE fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
-    style AA fill:#1e293b,stroke:#94a3b8,color:#f8fafc,stroke-width:2px
-```
-
-| Block | Runs | Use Case |
-|---|---|---|
-| `BeforeAll` | Once per Describe/Context | Import modules, dot-source functions |
-| `BeforeEach` | Before every `It` | Set up mocks, reset state |
-| `It` | The test itself | One assertion per test |
-| `AfterEach` | After every `It` | Clean up per-test artifacts |
-| `AfterAll` | Once per Describe/Context | Clean up shared resources |
-
-### Discovery vs Execution — The Pester 5 Rule
-
-| Phase | What Happens | Keep Here | Never Here |
-|---|---|---|---|
-| **Discovery** | Scans files, parses block names | Block names (`Describe 'X'`) | Variables, function calls, logic |
-| **Execution** | Runs `BeforeAll` → `BeforeEach` → `It` → ... | All test logic, mocks, assertions | — |
-
-> **Common mistake:** `$data = Get-Something` directly inside a Describe block runs during Discovery, not Execution. Move it to `BeforeAll`.
----
-
-## Common Assertion Operators
-| Operator | What it checks | Example |
-|---|---|---|
-| `Should -Be` | Equality (case-insensitive) | `$x \| Should -Be 5` |
-| `Should -BeExactly` | Equality (case-sensitive) | `$x \| Should -BeExactly 'Hello'` |
-| `Should -BeNullOrEmpty` | Null or empty | `$x \| Should -BeNullOrEmpty` |
-| `Should -Not -Be` | Inequality | `$x \| Should -Not -Be 0` |
-| `Should -BeGreaterThan` | Greater than | `$x \| Should -BeGreaterThan 10` |
-| `Should -Exist` | File/path exists | `'C:\log.txt' \| Should -Exist` |
-| `Should -Throw` | Throws an exception | `{ Bad-Func } \| Should -Throw` |
-| `Should -HaveCount` | Collection count | `$arr \| Should -HaveCount 3` |
-| `Should -Match` | Regex match | `$x \| Should -Match '^\d+$'` |
-| `Should -Invoke` | Mock was called | `Should -Invoke Get-ADUser -Times 1` |
+> For setup/teardown lifecycle, discovery vs execution phases, and assertion operators — see [Module 1: Fundamentals of Unit Testing](/modules/01-pester-introduction).
 ---
 
 ## Local Execution vs CI Execution
@@ -268,7 +219,7 @@ graph TB
     subgraph Local["Developer Machine"]
         direction TB
         DEV["Write code + tests"]
-        RUN["Invoke-Pester ./tests\nSeconds, console output"]
+        RUN["Invoke-Pester ./tests<br/>Seconds, console output"]
         FIX["Fix and iterate"]
         DEV --> RUN --> FIX --> DEV
     end
@@ -276,8 +227,8 @@ graph TB
     subgraph CI["CI Pipeline"]
         direction TB
         TRIGGER["Git push / PR"]
-        LINT["PSScriptAnalyzer\nCode quality scan"]
-        TEST["Invoke-Pester -CI\nFull suite + coverage + XML"]
+        LINT["PSScriptAnalyzer<br/>Code quality scan"]
+        TEST["Invoke-Pester -CI<br/>Full suite + coverage + XML"]
         GATE{"Quality Gate"}
         PASS["Deploy"]
         FAIL["Block + notify"]
@@ -381,18 +332,18 @@ graph TB
     GOV --> ENFORCE["Enforcement"]
     GOV --> REPORT["Reporting"]
 
-    STD --> NAMING["Naming Convention\n*.Tests.ps1"]
-    STD --> STRUCTURE["Folder Structure\nsrc/ + tests/"]
-    STD --> VERSION["Pester Version Pinned\ne.g. 5.7.x"]
-    STD --> LINT["PSScriptAnalyzer Rules\nEnforced in CI"]
+    STD --> NAMING["Naming Convention<br/>*.Tests.ps1"]
+    STD --> STRUCTURE["Folder Structure<br/>src/ + tests/"]
+    STD --> VERSION["Pester Version Pinned<br/>e.g. 5.7.x"]
+    STD --> LINT["PSScriptAnalyzer Rules<br/>Enforced in CI"]
 
-    ENFORCE --> PR["PR Policy\nTests required to merge"]
-    ENFORCE --> GATE["Quality Gate\n80%+ coverage, 0 failures"]
-    ENFORCE --> BRANCH["Branch Protection\nNo direct push to main"]
+    ENFORCE --> PR["PR Policy<br/>Tests required to merge"]
+    ENFORCE --> GATE["Quality Gate<br/>80%+ coverage, 0 failures"]
+    ENFORCE --> BRANCH["Branch Protection<br/>No direct push to main"]
 
-    REPORT --> DASH["Test Dashboards\nPass rate, coverage trends"]
-    REPORT --> AUDIT["Compliance Artifacts\nXML reports for auditors"]
-    REPORT --> ALERT["Alerting\nNotify on regressions"]
+    REPORT --> DASH["Test Dashboards<br/>Pass rate, coverage trends"]
+    REPORT --> AUDIT["Compliance Artifacts<br/>XML reports for auditors"]
+    REPORT --> ALERT["Alerting<br/>Notify on regressions"]
 
     style GOV fill:#312e81,stroke:#818cf8,color:#f8fafc,stroke-width:3px
     style STD fill:#1e293b,stroke:#38bdf8,color:#f8fafc,stroke-width:2px
@@ -526,10 +477,10 @@ Where does your team sit today?
 
 ```mermaid
 graph LR
-    L0["Level 0\nNo Testing"] --> L1["Level 1\nAd Hoc"]
-    L1 --> L2["Level 2\nConsistent"]
-    L2 --> L3["Level 3\nGoverned"]
-    L3 --> L4["Level 4\nOptimized"]
+    L0["Level 0<br/>No Testing"] --> L1["Level 1<br/>Ad Hoc"]
+    L1 --> L2["Level 2<br/>Consistent"]
+    L2 --> L3["Level 3<br/>Governed"]
+    L3 --> L4["Level 4<br/>Optimized"]
 
     style L0 fill:#7f1d1d,stroke:#ef4444,color:#f8fafc,stroke-width:2px
     style L1 fill:#78350f,stroke:#f59e0b,color:#f8fafc,stroke-width:2px

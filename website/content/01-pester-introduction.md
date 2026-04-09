@@ -363,11 +363,11 @@ Pester operates in **two distinct phases**. Understanding this avoids common pit
 ## Setup & Teardown — When Each Block Runs
 ```mermaid
 graph LR
-    BA["BeforeAll\nOnce before block"]
-    BE["BeforeEach\nBefore every It"]
-    IT["It\nYour test"]
-    AE["AfterEach\nAfter every It"]
-    AA["AfterAll\nOnce after block"]
+    BA["BeforeAll<br/>Once before block"]
+    BE["BeforeEach<br/>Before every It"]
+    IT["It<br/>Your test"]
+    AE["AfterEach<br/>After every It"]
+    AA["AfterAll<br/>Once after block"]
 
     BA --> BE --> IT --> AE --> AA
 
