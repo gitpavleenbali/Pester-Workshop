@@ -51,7 +51,6 @@ $srcFiles = @(
     '../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.Functions.ps1',
     '../../../PSCode/02_advanced_functions/Azure-Resource-Manager.Functions.ps1',
     '../../../PSCode/04_powershell_classes/Azure-Classes.Functions.ps1',
-    '../../../PSCode/05_error_handling/Azure-Error-Handling.Functions.ps1',
     '../../../PSCode/06_debugging/Debug-Demo.Functions.ps1',
     '../../../PSCode/07_git_integration/Azure-Git-Training.Functions.ps1',
     '../../../PSCode/08_runspaces/Azure-Runspaces.Functions.ps1',

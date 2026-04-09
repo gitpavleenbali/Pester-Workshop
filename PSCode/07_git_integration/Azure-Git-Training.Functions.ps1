@@ -1,66 +1,9 @@
+﻿# ============================================================================
+# PSCode Module 07 — Git Integration: Testable Functions
+# SINGLE SOURCE OF TRUTH — tests dot-source this file directly.
+# Contains: Test-GitEnvironment, Deploy-ResourceGroup
+# Tested by: PSCode-07-GitIntegration.Tests.ps1
 # ============================================================================
-# Lab Source: Additional PSCode Module Extracts
-# Covers: Module 01 (Knowledge Refresh), Module 07 (Git), Module 08 (Runspaces)
-# Purpose: Functions from remaining PSCode modules for full workshop coverage
-#
-# WHY THIS FILE EXISTS:
-#   Modules 01, 07, 08 have functions that call external tools (Azure, git).
-#   Extracted here so Pester can mock those external calls. Git commands are
-#   mocked (Mock git { ... }), Azure cmdlets are mocked, and parallel work
-#   is simulated. SINGLE SOURCE OF TRUTH — one place to maintain.
-#
-# FUNCTIONS:
-#   Get-AzureResourceInsights — calls Get-AzResource (Module 01)
-#   Test-GitEnvironment       — calls git commands (Module 07)
-#   Deploy-ResourceGroup      — calls Get-AzResourceGroup (Module 07)
-#   Get-AzureResourceCount    — pure function, no mocking needed (Module 08)
-#   Invoke-ParallelWork       — simulated parallel processing (Module 08)
-#
-# TESTED BY: PSCode-01-KnowledgeRefresh.Tests.ps1,
-#            PSCode-07-GitIntegration.Tests.ps1,
-#            PSCode-08-Runspaces.Tests.ps1
-# ============================================================================
-#
-# TESTING NOTES:
-#   Get-AzureResourceInsights calls Get-AzResource → must be mocked.
-#   Test-GitEnvironment calls native 'git' executable → mocked with Mock git {}.
-#   Deploy-ResourceGroup calls Get-AzResourceGroup + New-AzResourceGroup → mocked.
-#   Get-AzureResourceCount and Invoke-ParallelWork are pure → no mocking needed.
-#   See: tests/PSCode-01, PSCode-07, PSCode-08
-# ============================================================================
-
-# ── Module 01: Knowledge Refresh ────────────────────────────────────────
-
-# TESTABILITY: Calls Get-AzResource → must be mocked.
-# Mock returns controlled fake resources so we can verify the grouping logic.
-# Tests check: Scope string, TotalResources count, UniqueTypes count.
-# Uses BeforeEach to reset mock data before each It block.
-# TESTED IN: PSCode-01-KnowledgeRefresh.Tests.ps1
-function Get-AzureResourceInsights {
-    <#
-    .SYNOPSIS
-        Analyzes Azure resources and returns insight summary.
-    #>
-    param(
-        [string]$ResourceGroupName = $null,
-        [switch]$ShowDetails
-    )
-
-    if ($ResourceGroupName) {
-        $resources = Get-AzResource -ResourceGroupName $ResourceGroupName
-        $scope = "Resource Group: $ResourceGroupName"
-    } else {
-        $resources = Get-AzResource
-        $scope = "Subscription-wide"
-    }
-
-    return [PSCustomObject]@{
-        Scope            = $scope
-        TotalResources   = $resources.Count
-        UniqueTypes      = ($resources | Group-Object ResourceType).Count
-        TopResourceTypes = ($resources | Group-Object ResourceType | Sort-Object Count -Descending | Select-Object -First 3)
-    }
-}
 
 # ── Module 07: Git Integration ──────────────────────────────────────────
 
@@ -132,59 +75,3 @@ function Deploy-ResourceGroup {
         return [PSCustomObject]@{ Name = $Name; Status = 'Exists'; Location = $rg.Location }
     }
 }
-
-# ── Module 08: Runspaces / Parallel ─────────────────────────────────────
-
-# TESTABILITY: Pure function — no mocking needed.
-# Returns a formatted string. Tests use Should -Be for exact match
-# and Should -Match for substring/regex checks.
-# TESTED IN: PSCode-08-Runspaces.Tests.ps1
-function Get-AzureResourceCount {
-    <#
-    .SYNOPSIS
-        Returns a resource count string for a given resource group.
-        Simple function used to demo runspace injection.
-    #>
-    param([string]$ResourceGroup)
-    "Found 42 resources in $ResourceGroup"
-}
-
-# TESTABILITY: Pure function that processes an array — no mocking needed.
-# Tests verify: correct count, each item marked Processed=$true, item values.
-# Edge cases tested: empty array input (PowerShell array unrolling gotcha),
-# single item input. Note [AllowEmptyCollection()] attribute — without it,
-# PowerShell's Mandatory validation would reject @() as empty.
-# TESTED IN: PSCode-08-Runspaces.Tests.ps1
-function Invoke-ParallelWork {
-    <#
-    .SYNOPSIS
-        Simulates parallel processing of items (safe for testing).
-    .PARAMETER Items
-        Array of items to process.
-    .PARAMETER ThrottleLimit
-        Max concurrent operations.
-    #>
-    param(
-        [Parameter(Mandatory)]
-        [AllowEmptyCollection()]
-        [array]$Items,
-
-        [int]$ThrottleLimit = 4
-    )
-
-    if ($Items.Count -eq 0) {
-        return @()
-    }
-
-    $results = @()
-    foreach ($item in $Items) {
-        $results += [PSCustomObject]@{
-            Item      = $item
-            Processed = $true
-            ThreadId  = [System.Threading.Thread]::CurrentThread.ManagedThreadId
-        }
-    }
-
-    return $results
-}
-
