@@ -310,8 +310,8 @@ try {
             elseif ($path -match '^/api/psfile/(\d)$') {
                 $n = $Matches[1]
                 if ($psFiles.ContainsKey($n)) {
-                    $filePath = Join-Path $LabRoot $psFiles[$n]
-                    if (Test-Path $filePath) {
+                    $filePath = (Resolve-Path (Join-Path $LabRoot $psFiles[$n]) -ErrorAction SilentlyContinue).Path
+                    if ($filePath -and (Test-Path $filePath)) {
                         $content = [System.IO.File]::ReadAllText($filePath)
                         Send-Response $res (@{content=$content;file=$psFiles[$n]} | ConvertTo-Json -Compress -Depth 3) 'application/json'
                     } else {
