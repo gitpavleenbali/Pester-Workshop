@@ -1,6 +1,6 @@
 # ============================================================================
 # PSCode Module 05 — Error Handling
-# SOURCE: PSCode/05_error_handling/Azure-Error-Handling-Training.ps1
+# SOURCE: PSCode/05_error_handling/Azure-Error-Handling.ps1
 # TESTS:  Deploy-AzureResourceWithValidation (input validation + mocked Azure)
 #
 # PESTER CONCEPTS: Should -Throw with wildcards, Mock override per Context
@@ -9,7 +9,7 @@
 # PESTER ▶ BeforeAll {}
 # Loads the source functions once before all tests in this file.
 BeforeAll {
-    . $PSScriptRoot/../../../../PSCode/04_powershell_classes/Azure-Classes.ps1
+    . $PSScriptRoot/../../../../PSCode/05_error_handling/Azure-Error-Handling.ps1
 }
 
 # PESTER ▶ Describe '...'
