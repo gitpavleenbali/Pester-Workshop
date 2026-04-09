@@ -3,7 +3,7 @@
 ---
 
 <details open>
-<summary><h2>What Is Software Testing?</h2></summary>
+<summary><strong>What Is Software Testing?</strong></summary>
 
 
 Software testing is the practice of **verifying that code behaves as expected** before it reaches production. It reduces risk, increases confidence, and creates a safety net for change.
@@ -31,7 +31,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Types of Software Testing</h2></summary>
+<summary><strong>Types of Software Testing</strong></summary>
 
 
 Before diving into unit tests, it helps to see the **full landscape** of testing approaches.
@@ -82,7 +82,7 @@ graph TB
 ---
 
 <details>
-<summary><h2>Microsoft DevOps Test Taxonomy (L0–L4)</h2></summary>
+<summary><strong>Microsoft DevOps Test Taxonomy (L0–L4)</strong></summary>
 
 
 Microsoft classifies tests into **levels** based on dependencies and execution time. This taxonomy is used across Azure DevOps, GitHub, and Microsoft engineering teams.
@@ -105,7 +105,7 @@ Microsoft classifies tests into **levels** based on dependencies and execution t
 ---
 
 <details>
-<summary><h2>The Testing Pyramid</h2></summary>
+<summary><strong>The Testing Pyramid</strong></summary>
 
 
 Not all tests are equal. The pyramid prioritizes **fast, cheap, isolated tests** at the base.
@@ -137,7 +137,7 @@ graph TB
 ---
 
 <details>
-<summary><h2>Why Unit Testing Matters</h2></summary>
+<summary><strong>Why Unit Testing Matters</strong></summary>
 
 
 ```mermaid
@@ -177,7 +177,7 @@ Write tests that are:
 ---
 
 <details>
-<summary><h2>Unit Testing vs Integration Testing</h2></summary>
+<summary><strong>Unit Testing vs Integration Testing</strong></summary>
 
 
 ```mermaid
@@ -215,7 +215,7 @@ graph TB
 ---
 
 <details>
-<summary><h2>The AAA Pattern — Arrange, Act, Assert</h2></summary>
+<summary><strong>The AAA Pattern — Arrange, Act, Assert</strong></summary>
 
 
 Every well-structured test follows this three-step pattern:
@@ -245,7 +245,7 @@ It 'Returns Running for a running VM' {
 ---
 
 <details>
-<summary><h2>Why Testing PowerShell in the Enterprise?</h2></summary>
+<summary><strong>Why Testing PowerShell in the Enterprise?</strong></summary>
 
 
 PowerShell is no longer just a scripting language — in the enterprise it is **infrastructure as code**. Scripts manage Azure subscriptions, configure Active Directory, orchestrate CI/CD pipelines, and enforce compliance policies. A single untested script can cause outages, security gaps, or audit failures across environments.
@@ -293,7 +293,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>What Is Pester?</h2></summary>
+<summary><strong>What Is Pester?</strong></summary>
 
 
 > **Pester** is the ubiquitous **test and mock framework for PowerShell** — the standard tool for writing, running, and automating PowerShell tests.
@@ -357,7 +357,7 @@ graph TB
 ---
 
 <details>
-<summary><h2>Where Pester Fits in DevOps</h2></summary>
+<summary><strong>Where Pester Fits in DevOps</strong></summary>
 
 
 ```mermaid
@@ -387,7 +387,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Pester Test Structure — At a Glance</h2></summary>
+<summary><strong>Pester Test Structure — At a Glance</strong></summary>
 
 
 ```powershell
@@ -438,7 +438,7 @@ Pester operates in **two distinct phases**. Understanding this avoids common pit
 ---
 
 <details>
-<summary><h2>Setup & Teardown — When Each Block Runs</h2></summary>
+<summary><strong>Setup & Teardown — When Each Block Runs</strong></summary>
 
 
 ```mermaid
@@ -472,7 +472,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Common Assertion Operators</h2></summary>
+<summary><strong>Common Assertion Operators</strong></summary>
 
 
 | Operator | What It Checks | Example |
@@ -497,7 +497,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Pester 4 vs Pester 5 — What Changed?</h2></summary>
+<summary><strong>Pester 4 vs Pester 5 — What Changed?</strong></summary>
 
 
 Windows ships Pester 3.x/4.x. This workshop uses **Pester 5**. Key differences:
@@ -522,7 +522,7 @@ Windows ships Pester 3.x/4.x. This workshop uses **Pester 5**. Key differences:
 ---
 
 <details>
-<summary><h2>VS Code Integration</h2></summary>
+<summary><strong>VS Code Integration</strong></summary>
 
 
 Pester integrates with VS Code out of the box via the **PowerShell extension**:
@@ -542,7 +542,7 @@ Pester integrates with VS Code out of the box via the **PowerShell extension**:
 ---
 
 <details>
-<summary><h2>Running Pester — Essential Commands</h2></summary>
+<summary><strong>Running Pester — Essential Commands</strong></summary>
 
 
 ```powershell
@@ -585,7 +585,7 @@ Invoke-Pester -Configuration $config
 ---
 
 <details>
-<summary><h2>Quick Pester Example — See It in Action</h2></summary>
+<summary><strong>Quick Pester Example — See It in Action</strong></summary>
 
 
 ```powershell
@@ -628,7 +628,7 @@ Tests Passed: 2, Failed: 0, Skipped: 0
 ---
 
 <details>
-<summary><h2>Key Takeaways</h2></summary>
+<summary><strong>Key Takeaways</strong></summary>
 
 
 1. **Test early, test often** — unit tests are your fastest feedback loop.

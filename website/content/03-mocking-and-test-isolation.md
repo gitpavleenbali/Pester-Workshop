@@ -5,7 +5,7 @@
 ---
 
 <details open>
-<summary><h2>The Problem — Why You Can't Just Run the Code</h2></summary>
+<summary><strong>The Problem — Why You Can't Just Run the Code</strong></summary>
 
 
 Infrastructure scripts interact with **real systems**. Running them in a test means:
@@ -42,7 +42,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>What Is Mocking?</h2></summary>
+<summary><strong>What Is Mocking?</strong></summary>
 
 
 Mocking replaces a real command with a **fake implementation** during a test. The fake returns controlled data so you can test your logic — not the dependency.
@@ -86,7 +86,7 @@ These terms are often used interchangeably, but they have subtle differences:
 ---
 
 <details>
-<summary><h2>Pester Mocking — The Two Commands</h2></summary>
+<summary><strong>Pester Mocking — The Two Commands</strong></summary>
 
 
 | Command | Purpose |
@@ -123,7 +123,7 @@ Describe 'Remove-OldBackups' {
 ---
 
 <details>
-<summary><h2>Real-World Enterprise Examples</h2></summary>
+<summary><strong>Real-World Enterprise Examples</strong></summary>
 
 
 ### Mocking Azure Cmdlets
@@ -228,7 +228,7 @@ Describe 'Test-GitEnvironment' {
 ---
 
 <details>
-<summary><h2>Mock Scoping — Where Mocks Live</h2></summary>
+<summary><strong>Mock Scoping — Where Mocks Live</strong></summary>
 
 
 Mocks are scoped to the block where they are defined. This is a **Pester 5 change** from v4.
@@ -294,7 +294,7 @@ Describe 'Scoping demo' {
 ---
 
 <details>
-<summary><h2>ParameterFilter — Conditional Mocks</h2></summary>
+<summary><strong>ParameterFilter — Conditional Mocks</strong></summary>
 
 
 Return different results based on input:
@@ -315,7 +315,7 @@ Mock Get-AzVM {
 ---
 
 <details>
-<summary><h2>Verifiable Mocks — Prove It Was Called</h2></summary>
+<summary><strong>Verifiable Mocks — Prove It Was Called</strong></summary>
 
 
 Mark a mock as **verifiable** and assert all verifiable mocks were invoked:
@@ -337,7 +337,7 @@ It 'Sends a notification after cleanup' {
 ---
 
 <details>
-<summary><h2>Mocking for Module Functions</h2></summary>
+<summary><strong>Mocking for Module Functions</strong></summary>
 
 
 When mocking commands called **inside a module**, use `-ModuleName`:
@@ -362,7 +362,7 @@ Without `-ModuleName`, the mock is injected in the test scope and the module's i
 ---
 
 <details>
-<summary><h2>$PesterBoundParameters — Forwarding Parameters in Mocks</h2></summary>
+<summary><strong>$PesterBoundParameters — Forwarding Parameters in Mocks</strong></summary>
 
 
 Starting in Pester 5.2, `$PesterBoundParameters` replaces `$PSBoundParameters` inside mock scriptblocks (since the proxy function overwrites `$PSBoundParameters`):
@@ -382,7 +382,7 @@ Mock Write-Host {
 ---
 
 <details>
-<summary><h2>Test Isolation with TestDrive: and TestRegistry:</h2></summary>
+<summary><strong>Test Isolation with TestDrive: and TestRegistry:</strong></summary>
 
 
 Pester provides **built-in isolation** for file system and registry operations:
@@ -426,7 +426,7 @@ Describe 'Set-AppConfig' {
 ---
 
 <details>
-<summary><h2>Testing Behavior, Not Side Effects</h2></summary>
+<summary><strong>Testing Behavior, Not Side Effects</strong></summary>
 
 
 The mindset shift:
@@ -472,7 +472,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Common Cmdlets You Should Always Mock</h2></summary>
+<summary><strong>Common Cmdlets You Should Always Mock</strong></summary>
 
 
 | Cmdlet | Why Mock It |
@@ -491,7 +491,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Can You Test .NET Framework / C# Code with Pester?</h2></summary>
+<summary><strong>Can You Test .NET Framework / C# Code with Pester?</strong></summary>
 
 
 **Yes — with caveats.** Pester can test .NET code in two ways:
@@ -558,7 +558,7 @@ Describe 'MyLibrary.Calculator' {
 ---
 
 <details>
-<summary><h2>Common Mocking Mistakes</h2></summary>
+<summary><strong>Common Mocking Mistakes</strong></summary>
 
 
 | Mistake | What Happens | Fix |
@@ -576,7 +576,7 @@ Describe 'MyLibrary.Calculator' {
 ---
 
 <details>
-<summary><h2>When NOT to Mock</h2></summary>
+<summary><strong>When NOT to Mock</strong></summary>
 
 
 Not everything should be mocked. Over-mocking is as bad as under-testing.
@@ -596,7 +596,7 @@ Not everything should be mocked. Over-mocking is as bad as under-testing.
 ---
 
 <details>
-<summary><h2>Quick Reference Card</h2></summary>
+<summary><strong>Quick Reference Card</strong></summary>
 
 
 ```powershell
@@ -631,7 +631,7 @@ $PesterBoundParameters
 ---
 
 <details>
-<summary><h2>Key Takeaways</h2></summary>
+<summary><strong>Key Takeaways</strong></summary>
 
 
 1. **Never call real infrastructure in a unit test** — mock Azure, AD, APIs, file system.

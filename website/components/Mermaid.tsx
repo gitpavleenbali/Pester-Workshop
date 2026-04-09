@@ -7,27 +7,34 @@ export default function Mermaid({ chart }: { chart: string }) {
 
   useEffect(() => {
     let cancelled = false;
-    import("mermaid").then((m) => {
-      if (cancelled) return;
-      m.default.initialize({
-        startOnLoad: false,
-        theme: "dark",
-        themeVariables: {
-          primaryColor: "#8b5cf6",
-          primaryTextColor: "#f8fafc",
-          primaryBorderColor: "#6366f1",
-          lineColor: "#64748b",
-          secondaryColor: "#1e293b",
-          tertiaryColor: "#0f172a",
-        },
-      });
-      const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
-      m.default.render(id, chart).then(({ svg }) => {
+    import("mermaid")
+      .then((m) => {
+        if (cancelled) return;
+        m.default.initialize({
+          startOnLoad: false,
+          theme: "dark",
+          themeVariables: {
+            primaryColor: "#8b5cf6",
+            primaryTextColor: "#f8fafc",
+            primaryBorderColor: "#6366f1",
+            lineColor: "#64748b",
+            secondaryColor: "#1e293b",
+            tertiaryColor: "#0f172a",
+          },
+        });
+        const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
+        return m.default.render(id, chart);
+      })
+      .then((result) => {
+        if (!cancelled && ref.current && result) {
+          ref.current.innerHTML = result.svg;
+        }
+      })
+      .catch((err) => {
         if (!cancelled && ref.current) {
-          ref.current.innerHTML = svg;
+          ref.current.textContent = chart;
         }
       });
-    });
     return () => {
       cancelled = true;
     };

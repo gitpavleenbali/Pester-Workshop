@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -152,11 +152,11 @@ export default function MarkdownRenderer({
               summary({ children, ...props }) {
                 return (
                   <summary
-                    className="cursor-pointer px-5 py-3 text-base font-semibold text-slate-100 hover:bg-slate-700/20 transition-colors list-none flex items-center gap-2 [&::-webkit-details-marker]:hidden"
+                    className="cursor-pointer px-5 py-3 text-base font-semibold text-slate-100 hover:bg-slate-700/20 transition-colors list-none flex items-center gap-2"
                     {...props}
                   >
-                    <span className="text-violet-400 text-xs group-open:rotate-90 transition-transform">▶</span>
-                    {children}
+                    <span className="text-violet-400 text-xs">▶</span>
+                    <span>{children}</span>
                   </summary>
                 );
               },

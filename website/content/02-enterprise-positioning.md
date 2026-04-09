@@ -5,7 +5,7 @@
 ---
 
 <details open>
-<summary><h2>The Big Picture — Testing at Enterprise Scale</h2></summary>
+<summary><strong>The Big Picture — Testing at Enterprise Scale</strong></summary>
 
 
 In a billion-euro enterprise, PowerShell scripts are not "just scripts" — they are **infrastructure as code** that provisions Azure resources, configures Active Directory, enforces compliance, and drives CI/CD pipelines. Testing these scripts is not a nice-to-have — it is a **risk control**.
@@ -50,7 +50,7 @@ graph TB
 ---
 
 <details>
-<summary><h2>Microsoft's DevOps Test Principles</h2></summary>
+<summary><strong>Microsoft's DevOps Test Principles</strong></summary>
 
 
 These principles come from Microsoft's engineering teams and the [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable). Apply them to your PowerShell testing strategy.
@@ -73,7 +73,7 @@ These principles come from Microsoft's engineering teams and the [Azure Well-Arc
 ---
 
 <details>
-<summary><h2>Where Tests Live in Repositories</h2></summary>
+<summary><strong>Where Tests Live in Repositories</strong></summary>
 
 
 ### Recommended: Separate Folders (Enterprise Standard)
@@ -126,7 +126,7 @@ scripts/
 ---
 
 <details>
-<summary><h2>Separation of Production Code and Tests</h2></summary>
+<summary><strong>Separation of Production Code and Tests</strong></summary>
 
 
 Tests must **never** ship to production. The boundary is clear:
@@ -187,7 +187,7 @@ Mock -ModuleName MyModule Get-ADUser { return @{ Name = 'Jane' } }
 ---
 
 <details>
-<summary><h2>Pester Test Structure — Deep Dive</h2></summary>
+<summary><strong>Pester Test Structure — Deep Dive</strong></summary>
 
 
 ### The Building Blocks
@@ -283,7 +283,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Common Assertion Operators</h2></summary>
+<summary><strong>Common Assertion Operators</strong></summary>
 
 
 | Operator | What it checks | Example |
@@ -305,7 +305,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Local Execution vs CI Execution</h2></summary>
+<summary><strong>Local Execution vs CI Execution</strong></summary>
 
 
 ```mermaid
@@ -420,7 +420,7 @@ jobs:
 ---
 
 <details>
-<summary><h2>Governance and Standardization</h2></summary>
+<summary><strong>Governance and Standardization</strong></summary>
 
 
 In a large enterprise, testing is **governed** — not left to individual preference.
@@ -481,7 +481,7 @@ graph TB
 ---
 
 <details>
-<summary><h2>Well-Architected Testing — Do's and Don'ts</h2></summary>
+<summary><strong>Well-Architected Testing — Do's and Don'ts</strong></summary>
 
 
 ### Do
@@ -517,7 +517,7 @@ graph TB
 ---
 
 <details>
-<summary><h2>Gaps, Limitations, and Mitigations</h2></summary>
+<summary><strong>Gaps, Limitations, and Mitigations</strong></summary>
 
 
 Every tool has boundaries. Understanding Pester's limits helps you architect around them.
@@ -540,7 +540,7 @@ Every tool has boundaries. Understanding Pester's limits helps you architect aro
 ---
 
 <details>
-<summary><h2>Complementary Enterprise Tools</h2></summary>
+<summary><strong>Complementary Enterprise Tools</strong></summary>
 
 
 Pester is the core — but a well-architected enterprise pairs it with:
@@ -561,7 +561,7 @@ Pester is the core — but a well-architected enterprise pairs it with:
 ---
 
 <details>
-<summary><h2>Key Test Metrics for Enterprise Reporting</h2></summary>
+<summary><strong>Key Test Metrics for Enterprise Reporting</strong></summary>
 
 
 | Metric | Target | Why It Matters |
@@ -598,7 +598,7 @@ Invoke-Pester -Configuration $config
 ---
 
 <details>
-<summary><h2>Enterprise Maturity Model</h2></summary>
+<summary><strong>Enterprise Maturity Model</strong></summary>
 
 
 Where does your team sit today?
@@ -633,7 +633,7 @@ graph LR
 ---
 
 <details>
-<summary><h2>Key Takeaways</h2></summary>
+<summary><strong>Key Takeaways</strong></summary>
 
 
 1. **Tests are first-class** — they live in version control, structured under `tests/Unit/` and `tests/Integration/`.
