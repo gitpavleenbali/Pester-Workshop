@@ -1,6 +1,24 @@
 # ============================================================================
 # Lab Source: Azure Resource Helpers
 # Origin: Extracted from PSCode/02_advanced_functions & 03_mastering_parameters
+# Purpose: Testable utility functions for Azure resource operations
+#
+# WHY THIS FILE EXISTS:
+#   The original PSCode scripts have Read-Host prompts, Connect-AzAccount calls,
+#   and exit statements that BLOCK Pester from running. These functions are
+#   extracted here as the SINGLE SOURCE OF TRUTH — tests dot-source this file
+#   via: . $PSScriptRoot/../src/AzureResourceHelpers.ps1
+#   If you change a function here, the tests automatically test the new version.
+#   No duplication — one source, tested by Pester.
+#
+# FUNCTIONS:
+#   Get-AzureResourceSummary  — calls Get-AzResource (mocked in tests)
+#   New-AzureResourceGroup    — simulated RG creation with ValidateSet
+#   Get-VMStatus              — calls Get-AzVM (mocked in tests)
+#
+# TESTED BY: PSCode-02-AdvancedFunctions.Tests.ps1,
+#            PSCode-03-Parameters.Tests.ps1
+# ============================================================================
 # Purpose: Testable utility functions for the Pester lab
 #
 # TESTING NOTES:
@@ -127,3 +145,4 @@ function Get-VMStatus {
         default          { return 'Unknown' }
     }
 }
+

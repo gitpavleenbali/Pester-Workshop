@@ -166,3 +166,4 @@ function Get-ProcessedData {
         ItemsCount      = $processedItems.Count
     }
 }
+

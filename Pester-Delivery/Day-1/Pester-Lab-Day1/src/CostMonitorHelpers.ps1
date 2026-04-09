@@ -3,6 +3,22 @@
 # Origin: Extracted from PSCode/09_final_solution_apply_learnings
 # Purpose: Functions with external dependencies — ideal for mocking exercises
 #
+# WHY THIS FILE EXISTS:
+#   The capstone Azure-Cost-Monitor.ps1 calls real Azure REST APIs and
+#   Send-MailMessage. Extracting these functions lets Pester mock the
+#   external calls (Invoke-RestMethod, Send-MailMessage, Get-AzAccessToken)
+#   so tests run safely without Azure credentials or SMTP servers.
+#   This file is the SINGLE SOURCE OF TRUTH — change it here, tests verify.
+#
+# FUNCTIONS:
+#   Invoke-SafeAzureCall   — retry wrapper (ScriptBlock + MaxRetries)
+#   Get-ResourceActualCost — calls Azure Cost Management API (not tested)
+#   Send-CostAlert         — sends email when cost > threshold (mocked)
+#
+# TESTED BY: PSCode-09-Capstone.Tests.ps1
+# ============================================================================
+# Purpose: Functions with external dependencies — ideal for mocking exercises
+#
 # TESTING NOTES:
 #   Invoke-SafeAzureCall accepts a ScriptBlock, so tests pass fake blocks
 #   directly — no mocking needed (dependency injection pattern).
@@ -167,3 +183,4 @@ function Send-CostAlert {
         Reason    = "Cost ($CurrentCost) exceeded threshold ($Threshold)"
     }
 }
+

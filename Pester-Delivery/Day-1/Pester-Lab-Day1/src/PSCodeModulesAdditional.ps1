@@ -1,6 +1,25 @@
 # ============================================================================
 # Lab Source: Additional PSCode Module Extracts
 # Covers: Module 01 (Knowledge Refresh), Module 07 (Git), Module 08 (Runspaces)
+# Purpose: Functions from remaining PSCode modules for full workshop coverage
+#
+# WHY THIS FILE EXISTS:
+#   Modules 01, 07, 08 have functions that call external tools (Azure, git).
+#   Extracted here so Pester can mock those external calls. Git commands are
+#   mocked (Mock git { ... }), Azure cmdlets are mocked, and parallel work
+#   is simulated. SINGLE SOURCE OF TRUTH — one place to maintain.
+#
+# FUNCTIONS:
+#   Get-AzureResourceInsights — calls Get-AzResource (Module 01)
+#   Test-GitEnvironment       — calls git commands (Module 07)
+#   Deploy-ResourceGroup      — calls Get-AzResourceGroup (Module 07)
+#   Get-AzureResourceCount    — pure function, no mocking needed (Module 08)
+#   Invoke-ParallelWork       — simulated parallel processing (Module 08)
+#
+# TESTED BY: PSCode-01-KnowledgeRefresh.Tests.ps1,
+#            PSCode-07-GitIntegration.Tests.ps1,
+#            PSCode-08-Runspaces.Tests.ps1
+# ============================================================================
 #
 # TESTING NOTES:
 #   Get-AzureResourceInsights calls Get-AzResource → must be mocked.
@@ -168,3 +187,4 @@ function Invoke-ParallelWork {
 
     return $results
 }
+

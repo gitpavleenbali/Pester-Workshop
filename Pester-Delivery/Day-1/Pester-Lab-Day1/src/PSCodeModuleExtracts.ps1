@@ -3,6 +3,25 @@
 # Origin: PSCode/05_error_handling + PSCode/04_powershell_classes
 # Purpose: Enterprise patterns for testing error handling and OOP
 #
+# WHY THIS FILE EXISTS:
+#   PowerShell classes and deployment functions with input validation.
+#   The original scripts have Azure login prompts and interactive sections.
+#   Extracted here so Pester can test class constructors, methods, inheritance,
+#   and error handling (Should -Throw) without hitting real Azure.
+#   SINGLE SOURCE OF TRUTH — modify here, tests verify automatically.
+#
+# CLASSES:
+#   AzureResource         — base class (Name, Type, Location, Status, Tags)
+#   AzureVirtualMachine   — inherits AzureResource (VMSize, Start/Stop, Cost)
+#
+# FUNCTIONS:
+#   Deploy-AzureResourceWithValidation — validates name + RG, then deploys
+#
+# TESTED BY: PSCode-04-Classes.Tests.ps1,
+#            PSCode-05-ErrorHandling.Tests.ps1
+# ============================================================================
+# Purpose: Enterprise patterns for testing error handling and OOP
+#
 # TESTING NOTES:
 #   Deploy-AzureResourceWithValidation calls Azure cmdlets → must be mocked.
 #   AzureResource/AzureVirtualMachine are pure classes → no mocking needed.
@@ -139,3 +158,4 @@ class AzureVirtualMachine : AzureResource {
         return [decimal]($this.CpuCores * 35.50)
     }
 }
+
