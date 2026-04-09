@@ -1,6 +1,6 @@
 # Pester Lab — Day 1 Setup Guide
 
-Welcome to the **Pester Lab**. This hands-on environment lets you run 96 Pester tests, explore source code, and learn unit testing patterns — all without needing an Azure subscription.
+Welcome to the **Pester Lab**. This hands-on environment lets you run 107 Pester tests, explore source code, and learn unit testing patterns — all without needing an Azure subscription.
 
 > Every function that calls Azure, Active Directory, or external APIs is **mocked** in the tests. You'll never touch a real cloud resource.
 
@@ -42,7 +42,7 @@ This checks 4 things:
 1. **PowerShell version** — 5.1+ required, 7+ recommended
 2. **Pester installed** — auto-installs 5.x if missing
 3. **Pester importable** — loads into the session
-4. **Lab files present** — all 5 source + 9 test files exist
+4. **Lab files present** — all 9 PSCode source + 9 test files exist
 
 You should see:
 
@@ -81,7 +81,7 @@ You'll see:
 | Command | Action |
 |---|---|
 | `1`–`9` | Run a module's tests step-by-step with colored output |
-| `A` | Run all 96 tests at once |
+| `A` | Run all 107 tests at once |
 | `C` | Code coverage report with visual progress bar (threshold: 75%) |
 | `S` | Re-run environment check |
 | `W` | Switch to browser mode |
@@ -98,7 +98,8 @@ Opens `http://localhost:8080` with a full web UI:
 | Feature | Description |
 |---|---|
 | **Sidebar** | 9 modules with progress tracker (✓ turns green on pass) |
-| **View Source** | Shows the test file with syntax-highlighted line numbers |
+| **View Test File** | Shows the test file with syntax-highlighted line numbers |
+| **View PSCode Source** | Shows the source code being tested |
 | **Expand test** | Click any test to see its code with Pester keyword highlighting |
 | **Explain** | Identifies every Pester concept in the test (`Mock`, `Should -Be`, `-ParameterFilter`, etc.) |
 | **Run one test** | Run a single test by clicking ▶ on any expanded test |
@@ -122,7 +123,7 @@ Invoke-Pester ./tests -Output Detailed
 $config = New-PesterConfiguration
 $config.Run.Path            = './tests'
 $config.CodeCoverage.Enabled = $true
-$config.CodeCoverage.Path   = './src'
+$config.CodeCoverage.Path   = '../../../PSCode'
 $config.Output.Verbosity    = 'Detailed'
 Invoke-Pester -Configuration $config
 ```
@@ -139,35 +140,33 @@ Pester-Lab-Day1/
 ├── lab-server.ps1         ← HTTP server for browser UI (REST API + Pester runner)
 ├── lab-ui/
 │   └── index.html         ← Browser UI (sidebar, dashboard, terminal, explain)
-├── src/                   ← Source functions (extracted from PSCode modules)
-│   ├── AzureResourceHelpers.ps1     ← Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus
-│   ├── CostMonitorHelpers.ps1       ← Invoke-SafeAzureCall (retry), Send-CostAlert (email)
-│   ├── DataProcessing.ps1           ← Pure functions: validate, split, process, pipeline
-│   ├── PSCodeModuleExtracts.ps1     ← Deploy-AzureResourceWithValidation, AzureResource/VM classes
-│   └── PSCodeModulesAdditional.ps1  ← Get-AzureResourceInsights, Test-GitEnvironment, Invoke-ParallelWork
-└── tests/                 ← Pester test files (one per PSCode module, 96 tests total)
-    ├── PSCode-01-KnowledgeRefresh.Tests.ps1    ← 5 tests:  Mock, Should -Be, Should -Invoke
+└── tests/                 ← Pester test files (one per PSCode module, 107 tests total)
+    ├── PSCode-01-KnowledgeRefresh.Tests.ps1    ←  5 tests: Mock, Should -Be, Should -Invoke
     ├── PSCode-02-AdvancedFunctions.Tests.ps1   ← 18 tests: -TestCases, -ParameterFilter, Should -Throw
-    ├── PSCode-03-Parameters.Tests.ps1          ← 5 tests:  ValidateSet, Mandatory metadata
-    ├── PSCode-04-Classes.Tests.ps1             ← 15 tests: Constructors, state transitions, inheritance
-    ├── PSCode-05-ErrorHandling.Tests.ps1       ← 6 tests:  Should -Throw '*wildcard*', mock override
-    ├── PSCode-06-Debugging.Tests.ps1           ← 16 tests: Pure functions, -TestCases, pipeline
-    ├── PSCode-07-GitIntegration.Tests.ps1      ← 9 tests:  Mock native git, Should -Invoke -Times 0
-    ├── PSCode-08-Runspaces.Tests.ps1           ← 8 tests:  Should -Match, edge cases, @() wrapping
-    └── PSCode-09-Capstone.Tests.ps1            ← 14 tests: Boundary -TestCases, $script: scope, retry
+    ├── PSCode-03-Parameters.Tests.ps1          ← 10 tests: Should -HaveParameter, BeTrue/BeFalse
+    ├── PSCode-04-Classes.Tests.ps1             ← 16 tests: Constructors, state transitions, inheritance
+    ├── PSCode-05-ErrorHandling.Tests.ps1       ←  7 tests: Should -Throw '*wildcard*', -Verifiable
+    ├── PSCode-06-Debugging.Tests.ps1           ← 17 tests: Pure functions, -TestCases, TestDrive:
+    ├── PSCode-07-GitIntegration.Tests.ps1      ←  9 tests: Mock native git, Should -Invoke -Times 0
+    ├── PSCode-08-Runspaces.Tests.ps1           ←  9 tests: Should -HaveCount, edge cases, @() wrapping
+    └── PSCode-09-Capstone.Tests.ps1            ← 16 tests: Boundary -TestCases, $script: scope, -Skip
 ```
 
 ### Source ↔ Test Mapping
 
-Each source file is dot-sourced in `BeforeAll` of its test file. This follows the enterprise pattern: **production code in `src/`, test code in `tests/`, linked via dot-sourcing**.
+Each test file dot-sources its PSCode module directly — **one source file, one test file, zero duplication**.
 
-| Source File | Functions | Tested By | Mocking Required? |
+| PSCode Source | Functions | Tested By | Mocking? |
 |---|---|---|---|
-| `AzureResourceHelpers.ps1` | Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus | PSCode-02, PSCode-03 | Yes — Mock Get-AzResource, Get-AzVM |
-| `CostMonitorHelpers.ps1` | Invoke-SafeAzureCall, Send-CostAlert | PSCode-09 | Partial — Send-CostAlert needs Mock; Invoke-SafeAzureCall uses dependency injection |
-| `DataProcessing.ps1` | Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData | PSCode-06 | **No** — pure functions |
-| `PSCodeModuleExtracts.ps1` | Deploy-AzureResourceWithValidation, AzureResource class, AzureVirtualMachine class | PSCode-04, PSCode-05 | Partial — Deploy needs Mock; classes are pure OOP |
-| `PSCodeModulesAdditional.ps1` | Get-AzureResourceInsights, Test-GitEnvironment, Deploy-ResourceGroup, Get-AzureResourceCount, Invoke-ParallelWork | PSCode-01, PSCode-07, PSCode-08 | Partial — Azure and git calls mocked; pure functions not |
+| `PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1` | Get-AzureResourceInsights | PSCode-01 | Yes — Mock Get-AzResource |
+| `PSCode/02_advanced_functions/Azure-Resource-Manager.ps1` | Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus | PSCode-02, PSCode-03 | Yes — Mock Get-AzResource, Get-AzVM |
+| `PSCode/03_mastering_parameters/Azure-Parameter-Mastery.ps1` | (dot-sources Module 02) | PSCode-03 | — |
+| `PSCode/04_powershell_classes/Azure-Classes.ps1` | AzureResource, AzureVirtualMachine, Deploy-AzureResourceWithValidation | PSCode-04, PSCode-05 | Partial — Deploy needs Mock; classes are pure OOP |
+| `PSCode/05_error_handling/Azure-Error-Handling.ps1` | (dot-sources Module 04) | PSCode-05 | — |
+| `PSCode/06_debugging/Debug-Demo.ps1` | Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData | PSCode-06 | **No** — pure functions |
+| `PSCode/07_git_integration/Azure-Git-Training.ps1` | Test-GitEnvironment, Deploy-ResourceGroup | PSCode-07 | Yes — Mock git, Get-AzResourceGroup |
+| `PSCode/08_runspaces/Azure-Runspaces.ps1` | Get-AzureResourceCount, Invoke-ParallelWork | PSCode-08 | **No** — pure functions |
+| `PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1` | Invoke-SafeAzureCall, Send-CostAlert, Get-ResourceActualCost | PSCode-09 | Partial — Send-CostAlert mocks Send-MailMessage |
 
 ---
 

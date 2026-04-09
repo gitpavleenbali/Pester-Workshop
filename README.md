@@ -1,7 +1,7 @@
 # Pester Workshop
 
 [![Deploy to GitHub Pages](https://github.com/gitpavleenbali/Pester-Workshop/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/gitpavleenbali/Pester-Workshop/actions/workflows/deploy-pages.yml)
-[![Pester Tests](https://img.shields.io/badge/tests-96%20passed-brightgreen)](https://gitpavleenbali.github.io/Pester-Workshop/)
+[![Pester Tests](https://img.shields.io/badge/tests-106%20passed-brightgreen)](https://gitpavleenbali.github.io/Pester-Workshop/)
 [![Pester](https://img.shields.io/badge/Pester-5.x-8b5cf6)](https://pester.dev/)
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207.x-blue)](https://learn.microsoft.com/en-us/powershell/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -32,26 +32,30 @@ This workshop teaches you to test PowerShell the way enterprises do — with **P
 | **Boundary Testing** | Off-by-one checks with systematic test cases | Module 09 |
 | **Code Coverage** | Measure tested vs untested lines with JaCoCo export | Lab |
 | **Enterprise Positioning** | CI/CD integration, quality gates, governance, maturity model | Module 02 |
-| **Testing .NET Code** | Load DLLs with `Add-Type`, wrap .NET calls, mock the wrappers | Module 03 |
+| **Legacy Code Strategy** | Modernize vs extract & wrap, the drift problem, decision framework | Module 02 |
 
 ## What's Inside
 
 ```
 Pester-Workshop/
 ├── README.md                        ← You are here
-├── PSCode/                          ← PowerShell source code (9 learning modules)
-│   ├── 01_knowledge_refresh/
-│   ├── 02_advanced_functions/
-│   ├── ...
-│   └── 09_final_solution_apply_learnings/
+├── PSCode/                          ← PowerShell source code (one .ps1 per module)
+│   ├── 01_knowledge_refresh/Azure-Cloud-Analyzer.ps1
+│   ├── 02_advanced_functions/Azure-Resource-Manager.ps1
+│   ├── 03_mastering_parameters/Azure-Parameter-Mastery.ps1
+│   ├── 04_powershell_classes/Azure-Classes.ps1
+│   ├── 05_error_handling/Azure-Error-Handling.ps1
+│   ├── 06_debugging/Debug-Demo.ps1
+│   ├── 07_git_integration/Azure-Git-Training.ps1
+│   ├── 08_runspaces/Azure-Runspaces.ps1
+│   └── 09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1
 └── Pester-Delivery/Day-1/
     ├── Modules/                     ← Presentation materials (enriched with references)
     │   ├── 01. Pester-Introduction.md       ← Testing fundamentals + Pester intro
-    │   ├── 02. Enterprise-Positioning.md    ← CI/CD, governance, maturity model
-    │   └── 03. Mocking-and-Test-Isolation.md ← Mocking, TestDrive, .NET testing
+    │   ├── 02. Enterprise-Positioning.md    ← Enterprise strategy, legacy code, governance
+    │   └── 03. Mocking-and-Test-Isolation.md ← Mocking, TestDrive, scoping
     └── Pester-Lab-Day1/             ← Interactive lab environment
-        ├── src/                     ← Testable functions (5 files, enriched with comments)
-        ├── tests/                   ← 9 Pester test files (96 tests, fully annotated)
+        ├── tests/                   ← 9 Pester test files (107 tests, fully annotated)
         ├── lab-ui/                  ← Browser-based lab UI with Explain feature
         ├── Start-Lab.ps1            ← Launch lab (terminal or browser)
         ├── Setup-Lab.ps1            ← Environment check & Pester install
@@ -60,33 +64,33 @@ Pester-Workshop/
 
 ## PSCode Modules
 
-| # | Module | PowerShell Topics | Pester Concepts Tested |
+| # | Module | Source File | Pester Concepts Tested |
 |---|---|---|---|
-| 01 | Knowledge Refresh | Cmdlets, arrays, pipeline, objects | Mock, Should -Be, BeforeEach, Context, Should -Invoke |
-| 02 | Advanced Functions | Function design, parameters, output objects | -TestCases, -ParameterFilter, Should -Throw, Should -BeNullOrEmpty |
-| 03 | Mastering Parameters | ValidateSet, Mandatory, parameter sets | Get-Command metadata inspection, Should -Not -BeNullOrEmpty |
-| 04 | PowerShell Classes | OOP, constructors, methods, inheritance | Class instantiation, state transitions, -TestCases, no mocking needed |
-| 05 | Error Handling | Try/catch, streams, error recovery | Should -Throw '*wildcard*', Context-scoped mock overrides |
-| 06 | Debugging | Breakpoints, call stacks, tracing | Pure function testing, Should -Match, Should -BeGreaterThan, pipeline tests |
-| 07 | Git Integration | Version control, branching, CI/CD | Mocking native executables (git), Should -Invoke -Times 0 |
-| 08 | Runspaces | Parallel execution, thread safety | Should -Match, edge cases (empty array), @() wrapping |
-| 09 | Capstone | Real-world Azure cost monitor | $script: scope, boundary -TestCases, Mock Send-MailMessage, retry logic |
+| 01 | Knowledge Refresh | `Azure-Cloud-Analyzer.ps1` | Mock, Should -Be, BeforeEach, Context, Should -Invoke |
+| 02 | Advanced Functions | `Azure-Resource-Manager.ps1` | -TestCases, -ParameterFilter, Should -Throw, Should -BeNullOrEmpty |
+| 03 | Mastering Parameters | `Azure-Parameter-Mastery.ps1` | Should -HaveParameter, Should -BeTrue/BeFalse, Get-Command metadata |
+| 04 | PowerShell Classes | `Azure-Classes.ps1` | Class instantiation, state transitions, -TestCases, no mocking needed |
+| 05 | Error Handling | `Azure-Error-Handling.ps1` | Should -Throw '*wildcard*', -Verifiable, Should -InvokeVerifiable |
+| 06 | Debugging | `Debug-Demo.ps1` | Pure function testing, Should -Match, TestDrive:, -TestCases |
+| 07 | Git Integration | `Azure-Git-Training.ps1` | Mocking native executables (git), Should -Invoke -Times 0 |
+| 08 | Runspaces | `Azure-Runspaces.ps1` | Should -HaveCount, Should -Match, edge cases, @() wrapping |
+| 09 | Capstone | `Azure-Cost-Monitor.ps1` | $script: scope, boundary -TestCases, -Skip, Set-ItResult, retry logic |
 
-## Pester Lab — 96 Tests
+## Pester Lab — 107 Tests
 
-Each PSCode module has a corresponding test file with **inline `# PESTER ▶` comments** explaining every concept:
+Each PSCode module has a corresponding test file with **inline `# PESTER ▶` comments** explaining every concept. Tests dot-source the PSCode `.ps1` file directly — zero duplication.
 
 | Test File | Tests | Pester Concepts |
 |---|---|---|
 | PSCode-01-KnowledgeRefresh | 5 | `Mock`, `Should -Be`, `BeforeEach`, `Should -Invoke`, Context override |
 | PSCode-02-AdvancedFunctions | 18 | `-TestCases`, `-ParameterFilter`, `Should -Throw`, `Should -BeNullOrEmpty` |
-| PSCode-03-Parameters | 5 | `Should -Not -BeNullOrEmpty`, `Get-Command` metadata, `ValidateSet` |
-| PSCode-04-Classes | 15 | Constructor testing, state lifecycle, inheritance, `-TestCases` |
-| PSCode-05-ErrorHandling | 6 | `Should -Throw '*pattern*'`, Context-scoped mock override |
-| PSCode-06-Debugging | 16 | `Should -Match`, `Should -BeGreaterThan`, data-driven `-TestCases` |
+| PSCode-03-Parameters | 10 | `Should -HaveParameter`, `Should -BeTrue/BeFalse`, `Get-Command` metadata |
+| PSCode-04-Classes | 16 | Constructor testing, state lifecycle, inheritance, `-TestCases` |
+| PSCode-05-ErrorHandling | 7 | `Should -Throw '*pattern*'`, `-Verifiable`, `Should -InvokeVerifiable` |
+| PSCode-06-Debugging | 17 | `Should -Match`, `TestDrive:`, data-driven `-TestCases`, `AfterAll` |
 | PSCode-07-GitIntegration | 9 | Mock native `git`, `Should -Invoke -Times 0`, branching logic |
-| PSCode-08-Runspaces | 8 | `Should -Match`, `ForEach-Object` + `Should`, edge cases |
-| PSCode-09-Capstone | 14 | `$script:` scope, boundary testing, `Should -Invoke -Exactly` |
+| PSCode-08-Runspaces | 9 | `Should -HaveCount`, `Should -Match`, edge cases, `@()` wrapping |
+| PSCode-09-Capstone | 16 | `$script:` scope, boundary testing, `-Skip`, `Set-ItResult` |
 
 ## Quick Start
 
@@ -103,7 +107,7 @@ cd Pester-Delivery/Day-1/Pester-Lab-Day1
 .\Start-Lab.ps1          # Terminal mode (interactive menu)
 .\Start-Lab.ps1 -Web     # Browser mode (localhost:8080)
 
-# 4. Or run tests directly with Pester
+# 4. Or run all 107 tests directly with Pester
 Invoke-Pester ./tests -Output Detailed
 ```
 
@@ -123,8 +127,8 @@ The `Modules/` folder contains three enriched markdown presentations:
 | Module | Duration | Topics | External References |
 |---|---|---|---|
 | **01. Pester Introduction** | 60 min | Testing types, testing pyramid, FIRST principles, AAA pattern, Pester 5 structure, Discovery vs Execution phases | [pester.dev](https://pester.dev/), [Microsoft Shift-Left](https://learn.microsoft.com/en-us/devops/develop/shift-left-make-testing-fast-reliable), [Martin Fowler — Test Pyramid](https://martinfowler.com/bliki/TestPyramid.html) |
-| **02. Enterprise Positioning** | 30 min | Repo structure, CI/CD integration, governance, quality gates, maturity model (Level 0–4), GitHub Actions workflow, test metrics | [pester.dev/modules](https://pester.dev/docs/usage/modules), [pester.dev/code-coverage](https://pester.dev/docs/usage/code-coverage) |
-| **03. Mocking & Test Isolation** | 30 min | Mock, Should -Invoke, ParameterFilter, Verifiable, TestDrive:\, TestRegistry:\, mocking native apps, .NET testing, Pester 5 scoping | [pester.dev/mocking](https://pester.dev/docs/usage/mocking), [Martin Fowler — Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html) |
+| **02. Enterprise Positioning** | 30 min | Repo structure, legacy code strategy (modernize vs extract), drift problem, CI/CD integration, governance, quality gates, maturity model (Level 0–4), test metrics | [pester.dev/modules](https://pester.dev/docs/usage/modules), [pester.dev/code-coverage](https://pester.dev/docs/usage/code-coverage) |
+| **03. Mocking & Test Isolation** | 30 min | Mock, Should -Invoke, ParameterFilter, Verifiable, TestDrive:\, mock scoping, when NOT to mock | [pester.dev/mocking](https://pester.dev/docs/usage/mocking), [Martin Fowler — Mocks Aren't Stubs](https://martinfowler.com/articles/mocksArentStubs.html) |
 
 ## Lab Features
 
@@ -137,7 +141,8 @@ The `Modules/` folder contains three enriched markdown presentations:
 ### Browser Mode (`.\Start-Lab.ps1 -Web`)
 - Full web UI at `http://localhost:8080`
 - Sidebar with module list and progress tracker
-- **View Source** button — shows test file with line numbers
+- **View Test File** button — shows test file with line numbers
+- **View PSCode Source** button — shows the source code being tested
 - **Expand test** — shows the test code with syntax highlighting
 - **Explain** button — identifies Pester concepts used in each test
 - **Run individual tests** — run a single test by name
@@ -153,7 +158,7 @@ Invoke-Pester ./tests/PSCode-01-KnowledgeRefresh.Tests.ps1 -Output Detailed
 $config = New-PesterConfiguration
 $config.Run.Path = './tests'
 $config.CodeCoverage.Enabled = $true
-$config.CodeCoverage.Path = './src'
+$config.CodeCoverage.Path = '../../../PSCode'
 Invoke-Pester -Configuration $config
 ```
 
