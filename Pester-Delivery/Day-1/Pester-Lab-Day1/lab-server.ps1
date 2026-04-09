@@ -142,7 +142,7 @@ function Invoke-Lab {
     if ($Coverage -and $r.CodeCoverage -and $r.CodeCoverage.CommandsAnalyzedCount -gt 0) {
         $cc = $r.CodeCoverage
         $covPct = [math]::Round($cc.CoveragePercent, 1)
-        $cov = "$covPct%"
+        $cov = [string]::Format([System.Globalization.CultureInfo]::InvariantCulture, "{0:F1}%", $covPct)
         $covAnalyzed = $cc.CommandsAnalyzedCount
         $covExecuted = $cc.CommandsExecutedCount
         $covMissed = $cc.CommandsMissedCount
@@ -158,7 +158,7 @@ function Invoke-Lab {
         failed = [int]$r.FailedCount
         total = [int]$r.TotalCount
         coverage = $cov
-        coveragePct = $covPct
+        coveragePct = $covPct.ToString([System.Globalization.CultureInfo]::InvariantCulture)
         covAnalyzed = $covAnalyzed
         covExecuted = $covExecuted
         covMissed = $covMissed
