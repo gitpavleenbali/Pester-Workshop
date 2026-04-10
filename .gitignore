@@ -19,4 +19,5 @@ website/.next/
 Thumbs.db
 .DS_Store
 
-Pester-Delivery/Customer-Questions/
+# Customer-specific data stays local
+Pester-Delivery/Customer-Questions/query.md
