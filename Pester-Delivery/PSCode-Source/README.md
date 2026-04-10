@@ -1,11 +1,11 @@
-﻿# PSCode — PowerShell Source Modules
+﻿# PSCode-Source — PowerShell Source Modules
 
-Source code for the Pester Workshop. Each folder contains **one `.ps1` file** with testable functions. The corresponding Pester tests live in `Pester-Delivery/Day-1/Pester-Lab-Day1/tests/`.
+Original source code for the Pester Workshop. Each folder contains **one `.ps1` file** with testable functions. The corresponding Pester tests live in `../Day-1/Pester-Lab-Day1/tests/`.
 
 ## Structure
 
 ```
-PSCode/
+PSCode-Source/
 ├── 01_knowledge_refresh/Azure-Cloud-Analyzer.ps1
 ├── 02_advanced_functions/Azure-Resource-Manager.ps1
 ├── 03_mastering_parameters/Azure-Parameter-Mastery.ps1   → dot-sources Module 02
@@ -37,7 +37,7 @@ Each test file dot-sources its module directly in `BeforeAll`:
 
 ```powershell
 BeforeAll {
-    . $PSScriptRoot/../../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1
+    . $PSScriptRoot/../../../PSCode-Source/02_advanced_functions/Azure-Resource-Manager.ps1
 }
 ```
 

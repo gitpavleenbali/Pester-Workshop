@@ -9,7 +9,7 @@
 # PESTER ▶ BeforeAll {}
 # Loads the source functions once before all tests in this file.
 BeforeAll {
-    . $PSScriptRoot/../../../../PSCode/05_error_handling/Azure-Error-Handling.ps1
+    . $PSScriptRoot/../../../PSCode-Source/05_error_handling/Azure-Error-Handling.ps1
 }
 
 # PESTER ▶ Describe '...'

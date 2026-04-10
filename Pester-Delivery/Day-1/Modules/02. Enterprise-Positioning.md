@@ -99,7 +99,7 @@ graph TB
 Refactor the script so **every function is in its own file** (or grouped logically). The test dot-sources the source file directly — no intermediate layer.
 
 ```
-PSCode/02_advanced_functions/
+PSCode-Source/02_advanced_functions/
     Azure-Resource-Manager.ps1          ← source (contains the functions)
 
 tests/
@@ -114,7 +114,7 @@ tests/
 Sometimes the legacy script is in production, has no tests, and **nobody wants to refactor it right now**. In that case, create a thin wrapper that copies or imports the testable parts.
 
 ```
-PSCode/02_advanced_functions/
+PSCode-Source/02_advanced_functions/
     Azure-Resource-Manager.ps1           ← legacy (interactive, Write-Host everywhere)
     Azure-Resource-Manager.Functions.ps1 ← extracted functions (testable copy)
 

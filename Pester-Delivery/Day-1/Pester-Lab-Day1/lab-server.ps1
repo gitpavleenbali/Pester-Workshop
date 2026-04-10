@@ -50,26 +50,26 @@ $testFiles = @{
 # When /api/cov is called, Pester measures which lines in these files
 # were executed by the test suite and reports coverage percentage.
 $srcPaths = @(
-    '../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1',
-    '../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1',
-    '../../../PSCode/04_powershell_classes/Azure-Classes.ps1',
-    '../../../PSCode/06_debugging/Debug-Demo.ps1',
-    '../../../PSCode/07_git_integration/Azure-Git-Training.ps1',
-    '../../../PSCode/08_runspaces/Azure-Runspaces.ps1',
-    '../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
+    '../../PSCode-Source/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1',
+    '../../PSCode-Source/02_advanced_functions/Azure-Resource-Manager.ps1',
+    '../../PSCode-Source/04_powershell_classes/Azure-Classes.ps1',
+    '../../PSCode-Source/06_debugging/Debug-Demo.ps1',
+    '../../PSCode-Source/07_git_integration/Azure-Git-Training.ps1',
+    '../../PSCode-Source/08_runspaces/Azure-Runspaces.ps1',
+    '../../PSCode-Source/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
 )
 # PSOURCE FILE REGISTRY: Maps module numbers to PSCode source files.
 # Used by /api/psfile/{n} to serve source code to the UI.
 $psFiles = @{
-    '1'='../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1'
-    '2'='../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1'
-    '3'='../../../PSCode/03_mastering_parameters/Azure-Parameter-Mastery.ps1'
-    '4'='../../../PSCode/04_powershell_classes/Azure-Classes.ps1'
-    '5'='../../../PSCode/05_error_handling/Azure-Error-Handling.ps1'
-    '6'='../../../PSCode/06_debugging/Debug-Demo.ps1'
-    '7'='../../../PSCode/07_git_integration/Azure-Git-Training.ps1'
-    '8'='../../../PSCode/08_runspaces/Azure-Runspaces.ps1'
-    '9'='../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
+    '1'='../../PSCode-Source/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1'
+    '2'='../../PSCode-Source/02_advanced_functions/Azure-Resource-Manager.ps1'
+    '3'='../../PSCode-Source/03_mastering_parameters/Azure-Parameter-Mastery.ps1'
+    '4'='../../PSCode-Source/04_powershell_classes/Azure-Classes.ps1'
+    '5'='../../PSCode-Source/05_error_handling/Azure-Error-Handling.ps1'
+    '6'='../../PSCode-Source/06_debugging/Debug-Demo.ps1'
+    '7'='../../PSCode-Source/07_git_integration/Azure-Git-Training.ps1'
+    '8'='../../PSCode-Source/08_runspaces/Azure-Runspaces.ps1'
+    '9'='../../PSCode-Source/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
 }
 
 # CORE FUNCTION: Runs Pester tests and returns structured results.

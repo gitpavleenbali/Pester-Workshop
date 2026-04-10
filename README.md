@@ -39,27 +39,24 @@ This workshop teaches you to test PowerShell the way enterprises do — with **P
 ```
 Pester-Workshop/
 ├── README.md                        ← You are here
-├── PSCode/                          ← PowerShell source code (one .ps1 per module)
-│   ├── 01_knowledge_refresh/Azure-Cloud-Analyzer.ps1
-│   ├── 02_advanced_functions/Azure-Resource-Manager.ps1
-│   ├── 03_mastering_parameters/Azure-Parameter-Mastery.ps1
-│   ├── 04_powershell_classes/Azure-Classes.ps1
-│   ├── 05_error_handling/Azure-Error-Handling.ps1
-│   ├── 06_debugging/Debug-Demo.ps1
-│   ├── 07_git_integration/Azure-Git-Training.ps1
-│   ├── 08_runspaces/Azure-Runspaces.ps1
-│   └── 09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1
-└── Pester-Delivery/Day-1/
-    ├── Modules/                     ← Presentation materials (enriched with references)
-    │   ├── 01. Pester-Introduction.md       ← Testing fundamentals + Pester intro
-    │   ├── 02. Enterprise-Positioning.md    ← Enterprise strategy, legacy code, governance
-    │   └── 03. Mocking-and-Test-Isolation.md ← Mocking, TestDrive, scoping
-    └── Pester-Lab-Day1/             ← Interactive lab environment
-        ├── tests/                   ← 9 Pester test files (107 tests, fully annotated)
-        ├── lab-ui/                  ← Browser-based lab UI with Explain feature
-        ├── Start-Lab.ps1            ← Launch lab (terminal or browser)
-        ├── Setup-Lab.ps1            ← Environment check & Pester install
-        └── lab-server.ps1           ← HTTP server powering the web UI
+├── website/                         ← GitHub Pages (Next.js)
+└── Pester-Delivery/
+    ├── PSCode-Source/                ← PowerShell source code (one .ps1 per module)
+    │   ├── 01_knowledge_refresh/Azure-Cloud-Analyzer.ps1
+    │   ├── 02_advanced_functions/Azure-Resource-Manager.ps1
+    │   ├── 03_mastering_parameters/Azure-Parameter-Mastery.ps1
+    │   ├── 04_powershell_classes/Azure-Classes.ps1
+    │   ├── 05_error_handling/Azure-Error-Handling.ps1
+    │   ├── 06_debugging/Debug-Demo.ps1
+    │   ├── 07_git_integration/Azure-Git-Training.ps1
+    │   ├── 08_runspaces/Azure-Runspaces.ps1
+    │   └── 09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1
+    ├── Day-1/
+    │   ├── Modules/                 ← Presentation materials
+    │   └── Pester-Lab-Day1/         ← Interactive lab (107 tests)
+    └── Day-2/
+        ├── Modules/                 ← Advanced Patterns presentation
+        └── Pester-Lab-Day2/         ← Fill-in exercises + solutions
 ```
 
 ## PSCode Modules

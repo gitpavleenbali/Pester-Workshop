@@ -142,12 +142,12 @@ export default function Home() {
         <Mermaid chart={`graph TB
     subgraph INPUT["Source Material"]
         direction LR
-        PS["PSCode/<br/>9 PowerShell Modules"]
+        PS["PSCode-Source/<br/>9 PowerShell Modules"]
         MOD["Modules/<br/>3 Knowledge Decks"]
     end
     subgraph ENGINE["Test Engine"]
         direction LR
-        SRC["PSCode/<br/>9 Source Files"]
+        SRC["PSCode-Source/<br/>9 Source Files"]
         TST["tests/<br/>9 Pester Files<br/>107 Tests"]
     end
     subgraph OUTPUT["Delivery"]

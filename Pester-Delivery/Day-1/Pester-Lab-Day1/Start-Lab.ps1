@@ -1,4 +1,4 @@
-﻿# ============================================================================
+# ============================================================================
 # Start-Lab.ps1 — Pester Lab Day 1 Launcher
 #
 # Two modes:
@@ -54,13 +54,13 @@ $items = [ordered]@{
     '9' = @{ Name='09 Capstone';           File='tests/PSCode-09-Capstone.Tests.ps1';          Desc=@("Invoke-SafeAzureCall (retry), Send-CostAlert (boundary)","PSCode/09_final_solution/") }
 }
 $srcFiles = @(
-    '../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1',
-    '../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1',
-    '../../../PSCode/04_powershell_classes/Azure-Classes.ps1',
-    '../../../PSCode/06_debugging/Debug-Demo.ps1',
-    '../../../PSCode/07_git_integration/Azure-Git-Training.ps1',
-    '../../../PSCode/08_runspaces/Azure-Runspaces.ps1',
-    '../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
+    '../../PSCode-Source/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1',
+    '../../PSCode-Source/02_advanced_functions/Azure-Resource-Manager.ps1',
+    '../../PSCode-Source/04_powershell_classes/Azure-Classes.ps1',
+    '../../PSCode-Source/06_debugging/Debug-Demo.ps1',
+    '../../PSCode-Source/07_git_integration/Azure-Git-Training.ps1',
+    '../../PSCode-Source/08_runspaces/Azure-Runspaces.ps1',
+    '../../PSCode-Source/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1'
 )
 
 if ($Web) {

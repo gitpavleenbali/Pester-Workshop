@@ -14,7 +14,7 @@ BeforeAll {
     # PESTER ▶ Dot-sourcing (. operator)
     # Loads functions from the source file into the current scope so they can be tested.
     # $PSScriptRoot = directory of THIS test file; we navigate up to PSCode/ for the source.
-    . $PSScriptRoot/../../../../PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1
+    . $PSScriptRoot/../../../PSCode-Source/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1
 }
 
 # PESTER ▶ Describe '...'

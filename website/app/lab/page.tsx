@@ -13,15 +13,15 @@ const files = [
 ];
 
 const srcFiles = [
-  { name: "PSCode/01 — Azure-Cloud-Analyzer.ps1", funcs: "Get-AzureResourceInsights", mock: true },
-  { name: "PSCode/02 — Azure-Resource-Manager.ps1", funcs: "Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus", mock: true },
-  { name: "PSCode/03 — Azure-Parameter-Mastery.ps1", funcs: "(dot-sources Module 02 — tests parameter validation)", mock: false },
-  { name: "PSCode/04 — Azure-Classes.ps1", funcs: "AzureResource class, AzureVirtualMachine class, Deploy-AzureResourceWithValidation", mock: true },
-  { name: "PSCode/05 — Azure-Error-Handling.ps1", funcs: "(dot-sources Module 04 — tests error handling patterns)", mock: false },
-  { name: "PSCode/06 — Debug-Demo.ps1", funcs: "Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData", mock: false },
-  { name: "PSCode/07 — Azure-Git-Training.ps1", funcs: "Test-GitEnvironment, Deploy-ResourceGroup", mock: true },
-  { name: "PSCode/08 — Azure-Runspaces.ps1", funcs: "Get-AzureResourceCount, Invoke-ParallelWork", mock: false },
-  { name: "PSCode/09 — Azure-Cost-Monitor.ps1", funcs: "Invoke-SafeAzureCall, Send-CostAlert, Get-ResourceActualCost", mock: true },
+  { name: "PSCode-Source/01 — Azure-Cloud-Analyzer.ps1", funcs: "Get-AzureResourceInsights", mock: true },
+  { name: "PSCode-Source/02 — Azure-Resource-Manager.ps1", funcs: "Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus", mock: true },
+  { name: "PSCode-Source/03 — Azure-Parameter-Mastery.ps1", funcs: "(dot-sources Module 02 — tests parameter validation)", mock: false },
+  { name: "PSCode-Source/04 — Azure-Classes.ps1", funcs: "AzureResource class, AzureVirtualMachine class, Deploy-AzureResourceWithValidation", mock: true },
+  { name: "PSCode-Source/05 — Azure-Error-Handling.ps1", funcs: "(dot-sources Module 04 — tests error handling patterns)", mock: false },
+  { name: "PSCode-Source/06 — Debug-Demo.ps1", funcs: "Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData", mock: false },
+  { name: "PSCode-Source/07 — Azure-Git-Training.ps1", funcs: "Test-GitEnvironment, Deploy-ResourceGroup", mock: true },
+  { name: "PSCode-Source/08 — Azure-Runspaces.ps1", funcs: "Get-AzureResourceCount, Invoke-ParallelWork", mock: false },
+  { name: "PSCode-Source/09 — Azure-Cost-Monitor.ps1", funcs: "Invoke-SafeAzureCall, Send-CostAlert, Get-ResourceActualCost", mock: true },
 ];
 
 const modes = [

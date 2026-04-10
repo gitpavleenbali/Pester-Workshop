@@ -10,8 +10,8 @@
 # Loads MULTIPLE source files — the capstone project combines helpers from different modules.
 # You can dot-source multiple files in the same BeforeAll block.
 BeforeAll {
-    . $PSScriptRoot/../../../../PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1
-    . $PSScriptRoot/../../../../PSCode/02_advanced_functions/Azure-Resource-Manager.ps1
+    . $PSScriptRoot/../../../PSCode-Source/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1
+    . $PSScriptRoot/../../../PSCode-Source/02_advanced_functions/Azure-Resource-Manager.ps1
 }
 
 # PESTER ▶ Testing retry logic without mocking

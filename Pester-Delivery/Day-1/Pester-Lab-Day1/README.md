@@ -158,15 +158,15 @@ Each test file dot-sources its PSCode module directly — **one source file, one
 
 | PSCode Source | Functions | Tested By | Mocking? |
 |---|---|---|---|
-| `PSCode/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1` | Get-AzureResourceInsights | PSCode-01 | Yes — Mock Get-AzResource |
-| `PSCode/02_advanced_functions/Azure-Resource-Manager.ps1` | Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus | PSCode-02, PSCode-03 | Yes — Mock Get-AzResource, Get-AzVM |
-| `PSCode/03_mastering_parameters/Azure-Parameter-Mastery.ps1` | (dot-sources Module 02) | PSCode-03 | — |
-| `PSCode/04_powershell_classes/Azure-Classes.ps1` | AzureResource, AzureVirtualMachine, Deploy-AzureResourceWithValidation | PSCode-04, PSCode-05 | Partial — Deploy needs Mock; classes are pure OOP |
-| `PSCode/05_error_handling/Azure-Error-Handling.ps1` | (dot-sources Module 04) | PSCode-05 | — |
-| `PSCode/06_debugging/Debug-Demo.ps1` | Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData | PSCode-06 | **No** — pure functions |
-| `PSCode/07_git_integration/Azure-Git-Training.ps1` | Test-GitEnvironment, Deploy-ResourceGroup | PSCode-07 | Yes — Mock git, Get-AzResourceGroup |
-| `PSCode/08_runspaces/Azure-Runspaces.ps1` | Get-AzureResourceCount, Invoke-ParallelWork | PSCode-08 | **No** — pure functions |
-| `PSCode/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1` | Invoke-SafeAzureCall, Send-CostAlert, Get-ResourceActualCost | PSCode-09 | Partial — Send-CostAlert mocks Send-MailMessage |
+| `PSCode-Source/01_knowledge_refresh/Azure-Cloud-Analyzer.ps1` | Get-AzureResourceInsights | PSCode-01 | Yes — Mock Get-AzResource |
+| `PSCode-Source/02_advanced_functions/Azure-Resource-Manager.ps1` | Get-AzureResourceSummary, New-AzureResourceGroup, Get-VMStatus | PSCode-02, PSCode-03 | Yes — Mock Get-AzResource, Get-AzVM |
+| `PSCode-Source/03_mastering_parameters/Azure-Parameter-Mastery.ps1` | (dot-sources Module 02) | PSCode-03 | — |
+| `PSCode-Source/04_powershell_classes/Azure-Classes.ps1` | AzureResource, AzureVirtualMachine, Deploy-AzureResourceWithValidation | PSCode-04, PSCode-05 | Partial — Deploy needs Mock; classes are pure OOP |
+| `PSCode-Source/05_error_handling/Azure-Error-Handling.ps1` | (dot-sources Module 04) | PSCode-05 | — |
+| `PSCode-Source/06_debugging/Debug-Demo.ps1` | Test-InputValidation, Split-DataIntoChunks, Process-DataChunk, Get-ProcessedData | PSCode-06 | **No** — pure functions |
+| `PSCode-Source/07_git_integration/Azure-Git-Training.ps1` | Test-GitEnvironment, Deploy-ResourceGroup | PSCode-07 | Yes — Mock git, Get-AzResourceGroup |
+| `PSCode-Source/08_runspaces/Azure-Runspaces.ps1` | Get-AzureResourceCount, Invoke-ParallelWork | PSCode-08 | **No** — pure functions |
+| `PSCode-Source/09_final_solution_apply_learnings/Azure-Cost-Monitor.ps1` | Invoke-SafeAzureCall, Send-CostAlert, Get-ResourceActualCost | PSCode-09 | Partial — Send-CostAlert mocks Send-MailMessage |
 
 ---
 

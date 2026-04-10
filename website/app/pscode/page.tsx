@@ -4,7 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import DocsSidebar from "@/components/DocsSidebar";
 
-const GITHUB_BASE = "https://github.com/gitpavleenbali/Pester-Workshop/blob/master/PSCode";
+const GITHUB_BASE = "https://github.com/gitpavleenbali/Pester-Workshop/blob/master/Pester-Delivery/PSCode-Source";
 
 const modules = [
   { num: "01", name: "Knowledge Refresh", file: "Azure-Cloud-Analyzer.ps1", folder: "01_knowledge_refresh", difficulty: "Beginner", desc: "Cmdlets, arrays, pipeline, objects — Azure resource analysis", tags: ["Mock Get-AzResource", "Should -Be"] },
