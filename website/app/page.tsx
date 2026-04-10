@@ -13,7 +13,7 @@ import {
 const Mermaid = dynamic(() => import("@/components/Mermaid"), { ssr: false });
 
 const stats = [
-  { val: "3", label: "Knowledge Modules", color: "text-violet-400" },
+  { val: "4", label: "Knowledge Modules", color: "text-violet-400" },
   { val: "107", label: "Pester Tests", color: "text-green-400" },
   { val: "9", label: "PowerShell Sources", color: "text-blue-400" },
   { val: "5", label: "Azure Scenarios", color: "text-cyan-400" },
@@ -23,7 +23,7 @@ const stats = [
 const features = [
   {
     icon: BookOpen, title: "Workshop Modules",
-    desc: "3 enriched presentations with collapsible sections, Mermaid diagrams, and external references from pester.dev, Microsoft, and Martin Fowler.",
+    desc: "4 enriched presentations across Day 1 and Day 2 — Mermaid diagrams, inline comments, and external references from pester.dev and Microsoft.",
     href: "/modules",
   },
   {
@@ -143,7 +143,7 @@ export default function Home() {
     subgraph INPUT["Source Material"]
         direction LR
         PS["PSCode-Source/<br/>9 PowerShell Modules"]
-        MOD["Modules/<br/>3 Knowledge Decks"]
+        MOD["Modules/<br/>4 Knowledge Decks"]
     end
     subgraph ENGINE["Test Engine"]
         direction LR

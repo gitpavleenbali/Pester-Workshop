@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Building2, Shield, FlaskConical, Code2, GitCompare, Layers, Home, ChevronRight, Play } from "lucide-react";
+import { BookOpen, Building2, Shield, FlaskConical, Code2, GitCompare, Layers, Home, ChevronRight, Play, Zap } from "lucide-react";
 
 const sections = [
   {
@@ -17,11 +17,17 @@ const sections = [
     ],
   },
   {
-    label: "Modules",
+    label: "Day 1 Modules",
     items: [
       { href: "/modules/01-pester-introduction", label: "01. Pester Introduction", icon: BookOpen },
       { href: "/modules/02-enterprise-positioning", label: "02. Enterprise Positioning", icon: Building2 },
       { href: "/modules/03-mocking-and-test-isolation", label: "03. Mocking & Isolation", icon: Shield },
+    ],
+  },
+  {
+    label: "Day 2 Modules",
+    items: [
+      { href: "/modules/04-advanced-pester-patterns", label: "04. Advanced Patterns", icon: Zap },
     ],
   },
 ];

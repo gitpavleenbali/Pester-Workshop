@@ -13,14 +13,14 @@ export default function ModulesIndex() {
         <DocsSidebar />
         <main className="flex-1 px-6 md:px-10 py-10 max-w-4xl">
           <div className="text-xs uppercase tracking-widest text-violet-400 font-bold mb-1">
-            Day 1 — Presentation Materials
+            Day 1 & Day 2 — Presentation Materials
           </div>
           <h1 className="text-3xl font-extrabold mb-3 bg-gradient-to-r from-cyan-400 to-violet-400 bg-clip-text text-transparent">
             Workshop Modules
           </h1>
           <p className="text-slate-400 mb-10 max-w-xl leading-relaxed">
-            Three enriched presentations with collapsible sections, Mermaid diagrams,
-            and external references. Click any module to read the full content.
+            Four enriched presentations across Day 1 (fundamentals, enterprise, mocking)
+            and Day 2 (advanced patterns). Click any module to read the full content.
           </p>
 
           <div className="space-y-4">
